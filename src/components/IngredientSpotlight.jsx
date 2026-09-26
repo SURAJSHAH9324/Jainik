@@ -1,8 +1,34 @@
 import React, { useState } from 'react';
 import { INGREDIENTS, JAINIK_PRODUCT } from '../data/products';
-import { Sparkles, CheckCircle2, ZoomIn, ShieldCheck, Heart, Zap, Award, Flame, Leaf } from 'lucide-react';
+import { 
+  Zap, 
+  Dumbbell, 
+  Heart, 
+  Brain, 
+  Activity, 
+  ShieldCheck, 
+  Bone, 
+  Scale, 
+  Sparkles, 
+  Users, 
+  Leaf, 
+  ChevronRight 
+} from 'lucide-react';
 
-export default function IngredientSpotlight({ onOpenImage }) {
+const benefitIcons = [
+  Zap,          // 1. Natural Energy Boost
+  Dumbbell,     // 2. Supports Muscle Strength
+  Heart,        // 3. Improves Heart Health
+  Brain,        // 4. Enhances Brain Function
+  Activity,     // 5. Aids Digestion
+  Bone,         // 6. Strengthens Bones
+  ShieldCheck,  // 7. Boosts Immunity
+  Scale,        // 8. Helps in Weight Management
+  Sparkles,     // 9. Rich in Vitamins & Minerals
+  Users         // 10. Perfect for All Ages
+];
+
+export default function IngredientSpotlight() {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const categories = [
@@ -28,7 +54,7 @@ export default function IngredientSpotlight({ onOpenImage }) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
+        {/* Section 1 Header: 10 Pure Ingredients */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 text-xs font-black shadow-lg">
             <Leaf className="w-4 h-4 text-emerald-400" />
@@ -38,7 +64,7 @@ export default function IngredientSpotlight({ onOpenImage }) {
             10 Authentic <span className="text-gold-gradient">Superfood Ingredients</span>
           </h2>
           <p className="text-slate-300 text-base sm:text-lg">
-            Hand-selected, clean, traditional ingredients. Zero preservatives, zero artificial colours, zero chemical additives, and zero added white sugar.
+            Zero chemical preservatives. Zero synthetic food colorings. Zero added white sugar. Only wholesome whole foods.
           </p>
 
           {/* Interactive Category Filter Pills */}
@@ -60,14 +86,13 @@ export default function IngredientSpotlight({ onOpenImage }) {
         </div>
 
         {/* 10 Ingredients Luxury Glass Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-24">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-28">
           {filteredIngredients.map((item, idx) => (
             <div
               key={idx}
               className="glass-card p-5 rounded-3xl border border-white/5 hover:border-amber-500/40 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5 shadow-xl hover:shadow-amber-500/10"
             >
               <div className="space-y-2.5">
-                {/* Number Badge with glowing circle */}
                 <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-yellow-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-center font-black text-sm group-hover:scale-110 group-hover:border-amber-400 transition-all shadow-md">
                   {idx + 1}
                 </div>
@@ -94,7 +119,7 @@ export default function IngredientSpotlight({ onOpenImage }) {
           ))}
         </div>
 
-        {/* 10 Amazing Benefits Section with Poster */}
+        {/* Section 2: 10 Amazing Benefits (PURE NATIVE UI - NO POSTER) */}
         <div id="benefits" className="pt-8 border-t border-slate-800/80">
           
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
@@ -105,81 +130,43 @@ export default function IngredientSpotlight({ onOpenImage }) {
               10 Amazing <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500">Health Benefits</span>
             </h2>
             <p className="text-slate-300 text-base sm:text-lg">
-              A perfect blend of natural ingredients to boost your daily energy, stamina, muscle strength & holistic wellness.
+              A scientifically balanced combination of ancient superfoods formulated to enhance endurance, strength, and vitality.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
-            {/* Left: Luxury Display of the 10 Benefits Poster */}
-            <div className="lg:col-span-5 relative">
-              
-              <div className="absolute -inset-2 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-[32px] blur-xl opacity-70" />
-
-              <div className="glass-gold rounded-3xl p-3 sm:p-5 relative overflow-hidden shadow-2xl border border-emerald-500/30 group">
-                
-                {/* Header inside frame */}
-                <div className="flex items-center justify-between px-3 py-2 border-b border-slate-800/80 mb-3 text-xs">
-                  <span className="text-emerald-400 font-black flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4" /> 10 Benefits Infographic
-                  </span>
-                  <button
-                    onClick={() => onOpenImage('/jainik-10-benefits.png', '10 Amazing Health Benefits', 'Natural Energy for a Better You! • 100% Pure')}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white hover:border-emerald-400 transition-all font-bold text-[11px]"
-                  >
-                    <ZoomIn className="w-3.5 h-3.5" />
-                    <span>Click to Zoom</span>
-                  </button>
-                </div>
-
-                {/* Poster Image */}
-                <div 
-                  onClick={() => onOpenImage('/jainik-10-benefits.png', '10 Amazing Health Benefits', 'Natural Energy for a Better You! • 100% Pure')}
-                  className="relative rounded-2xl overflow-hidden bg-black/60 cursor-pointer group/infographic"
-                >
-                  <img 
-                    src="/jainik-10-benefits.png" 
-                    alt="Jainik 10 Amazing Benefits Official Poster" 
-                    className="w-full h-auto object-cover rounded-2xl transition-transform duration-700 group-hover/infographic:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/infographic:opacity-100 transition-opacity flex items-end justify-center pb-5">
-                    <span className="bg-slate-900/90 text-emerald-300 text-xs font-black px-4 py-2 rounded-full border border-emerald-500/50 shadow-2xl flex items-center gap-2">
-                      <ZoomIn className="w-4 h-4" /> Tap to inspect infographic
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-3 px-3 py-2 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                  <span className="font-bold text-slate-300">Pure Natural Power</span>
-                  <span className="text-emerald-400 font-black">All Ages Approved</span>
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* Right: The 10 Interactive Benefit Cards */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              {JAINIK_PRODUCT.tenBenefits.map((b) => (
+          {/* Clean 10-Grid of Modern Interactive Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {JAINIK_PRODUCT.tenBenefits.map((b, idx) => {
+              const Icon = benefitIcons[idx] || Sparkles;
+              return (
                 <div 
                   key={b.num} 
-                  className="glass-card p-4 rounded-2xl border border-white/5 hover:border-emerald-500/40 transition-all group flex items-start gap-3.5"
+                  className="glass-card p-5 rounded-3xl border border-white/5 hover:border-emerald-500/40 transition-all duration-300 group hover:-translate-y-1.5 flex flex-col justify-between shadow-xl"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-black text-xs flex-shrink-0 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all shadow-sm">
-                    {b.num}
-                  </div>
-                  <div>
-                    <h4 className="font-black text-white text-sm group-hover:text-emerald-300 transition-colors">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-black text-sm group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all shadow-sm">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <span className="text-xs font-black text-slate-500">0{b.num}</span>
+                    </div>
+
+                    <h4 className="font-black text-white text-base group-hover:text-emerald-300 transition-colors leading-snug">
                       {b.title}
                     </h4>
-                    <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+
+                    <p className="text-xs text-slate-400 leading-relaxed">
                       {b.desc}
                     </p>
                   </div>
-                </div>
-              ))}
-            </div>
 
+                  <div className="pt-4 mt-4 border-t border-slate-800/80 flex items-center gap-1.5 text-[11px] font-bold text-emerald-400/90">
+                    <span>100% Proven</span>
+                    <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
         </div>

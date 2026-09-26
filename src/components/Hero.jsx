@@ -13,7 +13,7 @@ export default function Hero({ product, onAddToCart, onOpenNutrition, onOpenImag
   };
 
   return (
-    <section id="product" className="relative min-h-[96vh] pt-36 pb-24 flex items-center justify-center overflow-hidden bg-[#070B14] text-slate-100">
+    <section id="product" className="relative min-h-[96vh] pt-28 sm:pt-32 pb-24 flex items-center justify-center overflow-hidden bg-[#070B14] text-slate-100">
       
       {/* Background radial luxury lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-amber-600/15 via-yellow-500/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
