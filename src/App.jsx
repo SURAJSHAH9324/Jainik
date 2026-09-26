@@ -11,6 +11,8 @@ import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import CartDrawer from './components/CartDrawer';
 import Footer from './components/Footer';
+import CustomCursor from './components/CustomCursor';
+import QuickActionDock from './components/QuickActionDock';
 import { JAINIK_PRODUCT } from './data/products';
 import { Check, MessageSquare, Sparkles } from 'lucide-react';
 import { openWhatsAppDirectChat } from './utils/whatsapp';
@@ -106,18 +108,28 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#070B14] text-slate-100 selection:bg-amber-500 selection:text-slate-950 font-sans">
       
+      {/* 60fps Hardware-Accelerated Custom Magnetic Cursor */}
+      <CustomCursor />
+
+      {/* Floating Quick Action Dock */}
+      <QuickActionDock 
+        onOpenCart={() => setCartOpen(true)}
+        onOpenNutrition={() => setNutritionOpen(true)}
+      />
+
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-20 sm:bottom-6 right-6 z-50 bg-slate-900 border border-amber-500/40 text-white font-black text-xs px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 animate-bounce">
+        <div className="fixed bottom-20 sm:bottom-6 left-6 z-50 bg-slate-900 border border-amber-500/40 text-white font-black text-xs px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 animate-bounce">
           <Check className="w-4 h-4 text-emerald-400" /> {toastMessage}
         </div>
       )}
 
-      {/* Floating WhatsApp Quick Order Button (Desktop) */}
+      {/* Floating WhatsApp Quick Order Button (Desktop Left) */}
       <button 
         onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I would like to order Jainik Energy Bars (₹80/bar)!')}
         className="hidden md:flex fixed bottom-6 left-6 z-40 bg-gradient-to-r from-whatsapp-600 to-whatsapp-500 hover:from-whatsapp-500 hover:to-whatsapp-600 text-white font-black text-xs px-4 py-3 rounded-full shadow-2xl items-center gap-2.5 transition-all hover:scale-105 border border-whatsapp-400 shadow-whatsapp-500/25"
         title="Direct WhatsApp: 9325578244"
+        data-cursor-interactive="true"
       >
         <MessageSquare className="w-5 h-5 fill-white" />
         <span>WhatsApp Order: 9325578244 (₹80/Bar)</span>
