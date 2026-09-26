@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Star, Plus, Minus, Check, Info, Sparkles, MessageSquare, CheckCircle2 } from 'lucide-react';
+import { Star, Plus, Minus, Check, Sparkles, MessageSquare, ShieldCheck, Flame, Heart } from 'lucide-react';
 
-export default function FlavorSelector({ product, onAddToCart, onOpenNutrition }) {
+export default function FlavorSelector({ product, onAddToCart, onOpenNutrition, onOpenImage }) {
   const [quantity, setQuantity] = useState(1);
   const [addedToast, setAddedToast] = useState(false);
 
@@ -11,133 +11,130 @@ export default function FlavorSelector({ product, onAddToCart, onOpenNutrition }
     setTimeout(() => setAddedToast(false), 2000);
   };
 
+  const textureFeatures = [
+    { title: 'Chewy Sun-Dried Dates & Jaggery', desc: '100% natural fruit and unrefined cane sweetness. No artificial sugar crash.' },
+    { title: 'Crunchy California Almonds & Cashews', desc: 'Whole dry-roasted nuts providing wholesome bite, magnesium, and healthy fats.' },
+    { title: 'Velvety 72% Dark Chocolate', desc: 'Real melted dark cocoa chunks delivering deep antioxidant-rich richness.' },
+    { title: 'Crisp Roasted Chana & Ancient Seeds', desc: 'Adds wholesome texture while packing in essential amino acids and dietary fiber.' }
+  ];
+
   return (
-    <section id="details" className="py-24 bg-white relative overflow-hidden border-t border-slate-200">
+    <section id="texture" className="py-28 bg-[#090E1A] text-slate-100 relative overflow-hidden border-t border-amber-500/10">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-black">
-            <Sparkles className="w-4 h-4 text-jain-orange" /> Handcrafted Sattvic Recipe • ₹80 / Bar
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/70 border border-amber-500/40 text-amber-300 text-xs font-black shadow-lg">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <span>Handcrafted In Small Batches • ₹80 / Bar</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-            Inside The <span className="text-gradient-jain">Jainik Chocolate Chunk Nut</span>
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
+            Sensory Taste & <span className="text-gold-gradient">Nutrient Density</span>
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg">
-            A delicious blend of traditional Indian millets, roasted whole nuts, and real dark chocolate chunks. Pure clean energy with zero compromise.
+          <p className="text-slate-300 text-base sm:text-lg">
+            Look at the genuine cross-section of the <strong>Jainik Energy Bar</strong>. Not a processed paste — real whole nuts, visible seeds, and generous dark chocolate chunks.
           </p>
         </div>
 
-        {/* Deep-Dive Grid */}
-        <div className="bg-slate-50 rounded-3xl p-6 sm:p-10 border border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center shadow-lg">
+        {/* 2-Column Showcase */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
-          {/* Left: Real Broken Bar Texture Photo */}
-          <div className="lg:col-span-6">
-            <div className="relative rounded-2xl overflow-hidden shadow-md border border-slate-200 group">
-              <img 
-                src="/jainik-bar-hero.jpg" 
-                alt="Jainik Multigrain Bar Broken Texture" 
-                className="w-full h-80 sm:h-96 object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute top-4 left-4 bg-slate-950/80 text-white text-xs font-black px-3 py-1.5 rounded-full backdrop-blur-sm">
-                Authentic Chewy & Crunchy Texture
+          {/* Left: Broken Bar Cross-Section Image */}
+          <div className="lg:col-span-6 relative">
+            <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/20 to-yellow-500/10 rounded-[32px] blur-xl opacity-75" />
+
+            <div className="glass-gold rounded-3xl p-4 sm:p-5 relative overflow-hidden shadow-2xl border border-amber-500/30 group">
+              <div 
+                onClick={() => onOpenImage('/jainik-bar-hero.jpg', 'Authentic Chewy & Crunchy Texture', 'Whole Almonds, Cashews, Millets, and Dark Chocolate Chunks')}
+                className="relative rounded-2xl overflow-hidden bg-black/60 cursor-pointer group/img"
+              >
+                <img 
+                  src="/jainik-bar-hero.jpg" 
+                  alt="Jainik Energy Bar Cross Section" 
+                  className="w-full h-80 sm:h-96 object-cover rounded-2xl group-hover/img:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute top-4 left-4 bg-slate-950/80 text-amber-300 border border-amber-500/40 text-xs font-black px-3.5 py-1.5 rounded-full backdrop-blur-md shadow-lg">
+                  Real Whole Foods Texture
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                  <span className="text-white text-xs font-black bg-slate-900/90 px-3.5 py-2 rounded-full border border-amber-500/40 shadow-xl">
+                    🔍 Click to inspect ingredients up close
+                  </span>
+                </div>
               </div>
-              <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-4 rounded-xl border border-slate-200 shadow-sm text-xs text-slate-700">
-                <span className="font-black text-slate-900 block mb-1">Look closely at the cross-section:</span>
-                Rolled super millets, whole crunchy California almonds, creamy cashew pieces, and melted dark chocolate chunks.
+
+              <div className="mt-3 px-2 py-2 flex items-center justify-between text-xs text-slate-400">
+                <span className="font-bold text-slate-300">Net Wt: 40g (₹80)</span>
+                <span className="text-amber-400 font-bold">18.62g Protein / 100g</span>
               </div>
             </div>
           </div>
 
-          {/* Right: The 3 Core Wrapper Claims & Buy Controls */}
+          {/* Right: Texture Highlights & Direct Order Unit */}
           <div className="lg:col-span-6 space-y-6">
             
-            {/* Wrapper Core Badges */}
             <div className="space-y-3">
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 text-jain-orange flex items-center justify-center font-black text-sm flex-shrink-0">
-                  🌾
+              {textureFeatures.map((t, idx) => (
+                <div key={idx} className="glass-card p-4 rounded-2xl border border-white/5 hover:border-amber-500/30 transition-all flex items-start gap-3.5">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center font-black text-xs flex-shrink-0 mt-0.5">
+                    ✓
+                  </div>
+                  <div>
+                    <h4 className="font-black text-white text-sm sm:text-base">{t.title}</h4>
+                    <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">{t.desc}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-black text-slate-900 text-base">Rich in Dietary Fibre (8g)</h4>
-                  <p className="text-xs text-slate-600 mt-0.5">
-                    Naturally sourced from super millets (Ragi, Foxtail) and whole Medjool dates to promote smooth digestion and steady energy.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-jain-blue flex items-center justify-center font-black text-sm flex-shrink-0">
-                  💪
-                </div>
-                <div>
-                  <h4 className="font-black text-slate-900 text-base">High Plant Protein (16g)</h4>
-                  <p className="text-xs text-slate-600 mt-0.5">
-                    Fermented pea isolate, golden flax seeds, and dry-roasted nuts provide all essential amino acids for lean muscle recovery.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-sm flex-shrink-0">
-                  🩺
-                </div>
-                <div>
-                  <h4 className="font-black text-slate-900 text-base">Zero Cholesterol & 0g Added Sugar</h4>
-                  <p className="text-xs text-slate-600 mt-0.5">
-                    No palm oil, no trans fat, and no corn syrup. Sweetened exclusively with natural dry dates for heart-healthy stamina.
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* Quantity Selector & WhatsApp Button */}
-            <div className="p-5 rounded-2xl bg-white border border-slate-200 space-y-4 shadow-sm">
+            {/* Quick Order Calculator */}
+            <div className="glass-gold p-6 rounded-3xl border border-amber-500/30 space-y-4 shadow-xl">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Single Bar Unit Price</span>
-                  <span className="text-3xl font-black text-slate-900">₹{(product.price * quantity).toFixed(0)}</span>
+                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block">Single Bar Unit Pricing</span>
+                  <span className="text-3xl font-black text-gold-gradient">₹{80 * quantity}</span>
+                  <span className="text-xs text-slate-400 pl-2">({quantity} × ₹80)</span>
                 </div>
 
-                {/* Quantity Control */}
-                <div className="flex items-center border border-slate-300 bg-slate-50 rounded-xl">
+                <div className="flex items-center bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden shadow-inner">
                   <button 
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="p-2.5 text-slate-600 hover:text-slate-900 transition-colors"
+                    className="p-3 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-4 font-black text-slate-900 text-sm">{quantity}</span>
+                  <span className="px-4 font-black text-white text-base">{quantity}</span>
                   <button 
                     onClick={() => setQuantity(quantity + 1)}
-                    className="p-2.5 text-slate-600 hover:text-slate-900 transition-colors"
+                    className="p-3 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              {/* Order via WhatsApp */}
               <button 
                 onClick={handleAdd}
-                className="w-full py-4 px-6 rounded-xl font-black text-sm flex items-center justify-center gap-2 bg-gradient-to-r from-whatsapp-600 to-whatsapp-500 hover:from-whatsapp-500 hover:to-whatsapp-600 text-white shadow-lg shadow-whatsapp-500/25 transition-all"
+                className="w-full py-4 rounded-2xl btn-gold-shimmer text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
               >
                 {addedToast ? (
                   <>
-                    <Check className="w-5 h-5 text-white" /> Added to WhatsApp Order!
+                    <Check className="w-5 h-5 text-slate-950" />
+                    <span>Added {quantity} Bar{quantity > 1 ? 's' : ''} to WhatsApp Order!</span>
                   </>
                 ) : (
                   <>
-                    <MessageSquare className="w-4 h-4 fill-white" /> Order {quantity} Bar{quantity > 1 ? 's' : ''} on WhatsApp — ₹{(product.price * quantity).toFixed(0)}
+                    <MessageSquare className="w-4 h-4 fill-slate-950" />
+                    <span>Order {quantity} Bar{quantity > 1 ? 's' : ''} on WhatsApp — ₹{80 * quantity}</span>
                   </>
                 )}
               </button>
 
-              <div className="flex items-center justify-between text-xs text-slate-500 font-bold pt-1">
+              <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
                 <span>Free Express Shipping across India</span>
-                <button onClick={onOpenNutrition} className="text-jain-blue underline">
-                  Nutrition Facts Label
+                <button onClick={onOpenNutrition} className="text-amber-400 hover:underline font-bold">
+                  View Nutrition Facts
                 </button>
               </div>
             </div>

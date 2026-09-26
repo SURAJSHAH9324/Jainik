@@ -1,22 +1,23 @@
 import React from 'react';
 import { TESTIMONIALS } from '../data/products';
-import { Star, CheckCircle, Quote } from 'lucide-react';
+import { Star, CheckCircle, Quote, Sparkles } from 'lucide-react';
 
 export default function Testimonials() {
   return (
-    <section id="reviews" className="py-24 bg-slate-50 relative border-t border-slate-200">
+    <section id="reviews" className="py-28 bg-[#090E1A] text-slate-100 relative border-t border-amber-500/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-brand-700 bg-brand-50 px-3.5 py-1 rounded-full border border-brand-200">
-            Athlete & Practitioner Approved
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
-            Trusted By High Performers
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/70 border border-amber-500/40 text-amber-300 text-xs font-black shadow-lg">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <span>Customer & Athlete Feedback</span>
+          </div>
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
+            Loved By <span className="text-gold-gradient">High Performers</span>
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg">
-            Over 4,000+ athletes, marathoners, doctors, and busy professionals rely on Jainik for clean daily energy.
+          <p className="text-slate-300 text-base sm:text-lg">
+            Over 2,850+ athletes, marathoners, fitness coaches, and wellness seekers rely on Jainik for clean daily fuel.
           </p>
         </div>
 
@@ -25,9 +26,9 @@ export default function Testimonials() {
           {TESTIMONIALS.map((item, idx) => (
             <div 
               key={idx}
-              className="glass-panel-light rounded-3xl p-8 border border-slate-200 flex flex-col justify-between relative group hover:border-brand-300 transition-all duration-300 bg-white shadow-sm"
+              className="glass-card rounded-3xl p-8 border border-white/5 hover:border-amber-500/40 transition-all duration-300 flex flex-col justify-between relative group hover:-translate-y-1 shadow-2xl"
             >
-              <Quote className="absolute top-6 right-6 w-8 h-8 text-brand-200 transition-colors" />
+              <Quote className="absolute top-6 right-6 w-8 h-8 text-amber-500/20 group-hover:text-amber-500/40 transition-colors" />
 
               <div className="space-y-4">
                 {/* Rating Stars */}
@@ -37,25 +38,25 @@ export default function Testimonials() {
                   ))}
                 </div>
 
-                <p className="text-slate-700 text-sm leading-relaxed italic">
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed italic">
                   "{item.content}"
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-slate-100 flex items-center gap-4">
+              <div className="pt-6 mt-6 border-t border-slate-800 flex items-center gap-4">
                 <img 
                   src={item.avatar} 
                   alt={item.name} 
-                  className="w-12 h-12 rounded-full object-cover border-2 border-brand-500"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-amber-500/50 shadow-md"
                 />
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                  <h4 className="font-black text-white text-sm flex items-center gap-1.5">
                     {item.name}
-                    <CheckCircle className="w-3.5 h-3.5 text-brand-600" />
+                    <CheckCircle className="w-4 h-4 text-emerald-400" />
                   </h4>
-                  <p className="text-xs text-slate-500">{item.role}</p>
-                  <span className="text-[10px] text-brand-700 font-semibold block mt-0.5">
-                    Favorite: {item.flavor}
+                  <p className="text-xs text-slate-400">{item.role}</p>
+                  <span className="text-[10px] text-amber-400 font-bold block mt-0.5">
+                    Verified WhatsApp Buyer
                   </span>
                 </div>
               </div>
