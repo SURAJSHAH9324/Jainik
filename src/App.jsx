@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import FlavorSelector from './components/FlavorSelector';
-import WhyJainik from './components/WhyJainik';
-import IngredientSpotlight from './components/IngredientSpotlight';
-import NutritionModal from './components/NutritionModal';
-import ImageModal from './components/ImageModal';
 import BundleBuilder from './components/BundleBuilder';
+import VisualShowcase from './components/VisualShowcase';
+import IngredientSpotlight from './components/IngredientSpotlight';
+import WhyJainik from './components/WhyJainik';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import CartDrawer from './components/CartDrawer';
 import Footer from './components/Footer';
 import QuickActionDock from './components/QuickActionDock';
+import NutritionModal from './components/NutritionModal';
+import ImageModal from './components/ImageModal';
 import { JAINIK_PRODUCT } from './data/products';
 import { Check, MessageSquare } from 'lucide-react';
 import { openWhatsAppDirectChat } from './utils/whatsapp';
@@ -105,7 +105,7 @@ export default function App() {
   const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-warm-100 text-warm-900 selection:bg-warm-300 selection:text-warm-900 font-sans">
+    <div className="min-h-screen bg-[#FAF6F0] text-warm-900 selection:bg-warm-300 selection:text-warm-900 font-sans">
       
       {/* Floating Quick Action Dock */}
       <QuickActionDock 
@@ -126,7 +126,7 @@ export default function App() {
         className="hidden md:flex fixed bottom-6 left-6 z-40 bg-white hover:bg-warm-50 text-warm-900 font-bold text-xs px-4 py-3 rounded-full shadow-warm-lg items-center gap-2.5 transition-all hover:scale-105 border border-warm-300"
         title="Direct WhatsApp: 9325578244"
       >
-        <MessageSquare className="w-4 h-4 text-whatsapp-600 fill-whatsapp-600" />
+        <MessageSquare className="w-4 h-4 text-[#128C7E] fill-[#128C7E]" />
         <span>WhatsApp: 9325578244 (₹80/Bar)</span>
       </button>
 
@@ -153,9 +153,9 @@ export default function App() {
         onOpenNutrition={() => setNutritionOpen(true)}
       />
 
-      {/* Main Page Sections */}
+      {/* Main Page Content */}
       <main>
-        {/* 1. Hero Section */}
+        {/* 1. Hero Section: Compact above the fold, featuring jainik-bar-hero.jpg */}
         <Hero 
           product={JAINIK_PRODUCT}
           onAddToCart={handleAddToCart}
@@ -163,30 +163,27 @@ export default function App() {
           onOpenImage={handleOpenImage}
         />
 
-        {/* 2. Texture & Craftsmanship */}
-        <FlavorSelector 
-          product={JAINIK_PRODUCT}
-          onAddToCart={handleAddToCart}
-          onOpenNutrition={() => setNutritionOpen(true)}
-          onOpenImage={handleOpenImage}
-        />
-
-        {/* 3. Ancestral Wisdom & Quality Specifications */}
-        <WhyJainik />
-
-        {/* 4. 10 Ingredients & Everyday Benefits */}
-        <IngredientSpotlight />
-
-        {/* 5. 3, 6, 12, 24 Packs Selector */}
+        {/* 2. Barefruit-Style Product Collection Grid: 3, 6, 12, 24 Packs with Package.png */}
         <BundleBuilder 
           product={JAINIK_PRODUCT}
           onAddBundleToCart={handleAddBundleToCart}
         />
 
-        {/* 6. Customer Reviews */}
+        {/* 3. Visual Brand Gallery: Interactive showcase for jainik-1.png to jainik-5.png */}
+        <VisualShowcase 
+          onOpenImage={handleOpenImage}
+        />
+
+        {/* 4. 10 Superfoods & Key Nutrition Chips (Streamlined) */}
+        <IngredientSpotlight />
+
+        {/* 5. Why Jainik: 4 Clean Heritage & Quality Pillars */}
+        <WhyJainik />
+
+        {/* 6. Customer Testimonials */}
         <Testimonials />
 
-        {/* 7. FAQ */}
+        {/* 7. Frequently Asked Questions */}
         <FAQ />
       </main>
 
@@ -201,7 +198,7 @@ export default function App() {
         />
       )}
 
-      {/* Packaging Lightbox Modal */}
+      {/* Packaging & Visual Lightbox Modal */}
       {lightboxImage && (
         <ImageModal
           imageSrc={lightboxImage.src}

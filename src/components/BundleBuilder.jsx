@@ -1,207 +1,209 @@
 import React, { useState } from 'react';
-import { PackageCheck, Sparkles, Check, Truck, MessageSquare, Crown, Flame, ShieldCheck } from 'lucide-react';
-import { openWhatsAppOrder } from '../utils/whatsapp';
+import { Star, ShoppingBag, MessageSquare, Truck, Check, Crown, Flame, Sparkles } from 'lucide-react';
 import { PACKS } from '../data/products';
+import { openWhatsAppOrder } from '../utils/whatsapp';
 
 export default function BundleBuilder({ product, onAddBundleToCart }) {
-  const [packSize, setPackSize] = useState(12); // 3, 6, 12, 24
   const [isReturningCustomer, setIsReturningCustomer] = useState(false);
+  const [activePackId, setActivePackId] = useState(12);
 
-  const currentPack = PACKS.find(p => p.size === packSize) || PACKS[2];
-  
-  // Returning customer 10% loyalty discount
-  const returningDiscount = isReturningCustomer ? Math.round(currentPack.price * 0.10) : 0;
-  const finalPrice = currentPack.price - returningDiscount;
-  const totalSavings = currentPack.savings + returningDiscount;
-  const perBarFinal = (finalPrice / packSize).toFixed(0);
+  const handleDirectWhatsApp = (pack) => {
+    const returningDiscount = isReturningCustomer ? Math.round(pack.price * 0.10) : 0;
+    const finalPrice = pack.price - returningDiscount;
+    const totalSavings = pack.savings + returningDiscount;
 
-  const packTitle = `Jainik Energy Bar (${packSize}-Pack Box)`;
+    openWhatsAppOrder({
+      customerName: 'Direct Pack Buyer',
+      customerPhone: '',
+      items: [{ name: `Jainik Energy Bar (${pack.size}-Pack Box)`, quantity: 1, price: finalPrice }],
+      total: finalPrice,
+      notes: `Order for Jainik Energy Bar (${pack.size}-Pack Box, 40g each)`,
+      isReturningCustomer,
+      discountAmount: totalSavings
+    });
+  };
 
-  const handleAddBundle = () => {
+  const handleAddToCart = (pack) => {
+    const returningDiscount = isReturningCustomer ? Math.round(pack.price * 0.10) : 0;
+    const finalPrice = pack.price - returningDiscount;
+
     const bundleItem = {
-      id: `pack-${packSize}-${isReturningCustomer ? 'vip' : 'standard'}`,
-      name: packTitle,
+      id: `pack-${pack.size}-${isReturningCustomer ? 'vip' : 'standard'}`,
+      name: `Jainik Energy Bar (${pack.size}-Pack Box)`,
       price: finalPrice,
       isBundle: true,
-      packSize: packSize,
-      badge: `${packSize}-Pack Box`,
+      packSize: pack.size,
+      badge: `${pack.size}-Pack Box`,
       accentColor: '#5C361D'
     };
 
     onAddBundleToCart(bundleItem);
   };
 
-  const handleDirectWhatsAppOrder = () => {
-    openWhatsAppOrder({
-      customerName: 'Direct Pack Buyer',
-      customerPhone: '',
-      items: [{ name: packTitle, quantity: 1, price: finalPrice }],
-      total: finalPrice,
-      notes: `Order for Jainik Energy Bar (${packSize}-Pack Box, 40g each)`,
-      isReturningCustomer,
-      discountAmount: totalSavings
-    });
-  };
-
   return (
-    <section id="packs" className="py-24 bg-warm-100 text-warm-900 relative border-t border-warm-200">
+    <section id="packs" className="py-20 bg-white text-warm-900 relative border-b border-warm-200">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-          <div className="badge-toasted">
-            <Flame className="w-3.5 h-3.5 text-warm-600" />
-            <span>Direct Manufacturer Pricing • 40g / Bar</span>
+        {/* Barefruit-Style Collection Header */}
+        <div className="text-center max-w-2xl mx-auto space-y-2 mb-12">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-warm-100 border border-warm-300 text-warm-800 text-xs font-bold">
+            <Flame className="w-3.5 h-3.5 text-amber-600" />
+            <span>Direct Manufacturer Pricing • ₹80 Base Unit</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-warm-900 tracking-tight">
-            Choose Your <span className="text-warm-600">Pack Size</span>
+          <h2 className="text-2xl sm:text-4xl font-black text-warm-900 tracking-tight">
+            Shop <span className="text-warm-600">Pack Boxes</span>
           </h2>
-          <p className="text-warm-700 text-base sm:text-lg">
-            Single bar rate is ₹80. Save with multi-pack boxes with free express courier delivery across India.
+          <p className="text-warm-700 text-xs sm:text-sm">
+            Freshly prepared in Karanja (Lad), Maharashtra. Save more with multi-pack boxes with free delivery.
           </p>
         </div>
 
-        {/* 4-Pack Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {PACKS.map(pack => {
-            const isSelected = packSize === pack.size;
+        {/* VIP Returning Customer Banner */}
+        <div className="max-w-3xl mx-auto mb-10 bg-warm-50 border border-warm-300 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-warm-200 text-warm-800 flex items-center justify-center flex-shrink-0">
+              <Crown className="w-5 h-5 text-warm-800" />
+            </div>
+            <div>
+              <span className="text-xs sm:text-sm font-extrabold text-warm-900 block">
+                Returning Customer? Get an extra 10% Loyalty Discount
+              </span>
+              <span className="text-[11px] text-warm-600 font-medium">
+                Automatically calculated on your direct WhatsApp invoice.
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsReturningCustomer(!isReturningCustomer)}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              isReturningCustomer 
+                ? 'bg-warm-900 text-white shadow-xs' 
+                : 'bg-white border border-warm-300 text-warm-800 hover:bg-warm-100'
+            }`}
+          >
+            {isReturningCustomer ? '✓ VIP 10% Active' : '+ Apply 10% VIP'}
+          </button>
+        </div>
+
+        {/* Barefruit-Style 4 Product Collection Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {PACKS.map((pack) => {
+            const returningDiscount = isReturningCustomer ? Math.round(pack.price * 0.10) : 0;
+            const finalPrice = pack.price - returningDiscount;
+            const effectivePerBar = (finalPrice / pack.size).toFixed(0);
+
             return (
               <div
                 key={pack.size}
-                onClick={() => setPackSize(pack.size)}
-                className={`card-artisanal p-6 text-center transition-all cursor-pointer relative flex flex-col justify-between ${
-                  isSelected
-                    ? 'border-2 border-warm-700 shadow-warm-lg scale-[1.02] bg-white'
-                    : 'bg-white/80 hover:bg-white hover:border-warm-300'
+                className={`rounded-2xl border transition-all duration-300 flex flex-col justify-between overflow-hidden bg-white group ${
+                  pack.popular
+                    ? 'border-warm-900 shadow-warm-md ring-1 ring-warm-900'
+                    : 'border-warm-200 hover:border-warm-400 hover:shadow-warm-sm'
                 }`}
               >
-                {pack.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-warm-900 text-white font-black text-[10px] px-3.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-                    MOST POPULAR
-                  </span>
-                )}
+                {/* Product Image Area */}
+                <div className="relative aspect-[4/3] bg-warm-50 p-4 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={pack.image}
+                    alt={pack.label}
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
 
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-black text-warm-600 uppercase tracking-wider block">
-                    {pack.badge}
+                  {/* Badge */}
+                  <div className="absolute top-3 left-3 flex flex-col gap-1">
+                    {pack.popular && (
+                      <span className="bg-warm-900 text-white font-black text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                        BESTSELLER
+                      </span>
+                    )}
+                    {pack.savings > 0 && (
+                      <span className="bg-emerald-600 text-white font-black text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                        SAVE ₹{pack.savings}
+                      </span>
+                    )}
+                  </div>
+
+                  <span className="absolute bottom-2 right-2 text-[10px] font-extrabold text-warm-600 bg-white/90 px-2 py-0.5 rounded-md border border-warm-200">
+                    40g × {pack.size} Bars
                   </span>
-                  <h3 className="text-2xl font-black text-warm-900">{pack.size} Bars Box</h3>
-                  <p className="text-xs text-warm-500">{pack.sub}</p>
                 </div>
 
-                <div className="my-6 py-4 bg-warm-50 rounded-2xl border border-warm-200">
-                  <div className="text-3xl font-black text-warm-900">₹{pack.price}</div>
-                  {pack.savings > 0 ? (
-                    <div className="text-xs text-sage-700 font-bold mt-1">
-                      Save ₹{pack.savings} (MRP: ₹{pack.regularPrice})
+                {/* Card Content */}
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600">
+                      <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                      <span>4.9 (Official Rating)</span>
                     </div>
-                  ) : (
-                    <div className="text-xs text-warm-500 font-medium mt-1">
-                      Standard MRP (₹80/Bar)
+
+                    <h3 className="text-lg font-black text-warm-900 leading-snug">
+                      {pack.size}-Pack Box
+                    </h3>
+
+                    <p className="text-xs text-warm-600">
+                      {pack.sub}
+                    </p>
+                  </div>
+
+                  {/* Price Section */}
+                  <div className="pt-2 border-t border-warm-100 flex items-baseline justify-between">
+                    <div>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-2xl font-black text-warm-900">
+                          ₹{finalPrice}
+                        </span>
+                        {pack.regularPrice > pack.price && (
+                          <span className="text-xs font-semibold text-warm-400 line-through">
+                            ₹{pack.regularPrice}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[11px] font-extrabold text-emerald-700 block">
+                        ₹{effectivePerBar} / Bar
+                      </span>
                     </div>
-                  )}
+
+                    {isReturningCustomer && (
+                      <span className="text-[10px] font-extrabold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full">
+                        -10% VIP
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="space-y-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => handleDirectWhatsApp(pack)}
+                      className="w-full py-2.5 rounded-xl btn-whatsapp-pill text-xs font-bold flex items-center justify-center gap-1.5"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5 fill-white" />
+                      <span>Order on WhatsApp</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleAddToCart(pack)}
+                      className="w-full py-2 rounded-xl btn-warm-secondary text-xs font-bold flex items-center justify-center gap-1.5"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      <span>+ Add to Cart</span>
+                    </button>
+                  </div>
                 </div>
 
-                <button
-                  type="button"
-                  className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all ${
-                    isSelected
-                      ? 'bg-warm-900 text-white shadow-sm'
-                      : 'bg-warm-100 text-warm-800 hover:bg-warm-200'
-                  }`}
-                >
-                  {isSelected ? '✓ Selected Box' : 'Select Box'}
-                </button>
               </div>
             );
           })}
         </div>
 
-        {/* Selected Box Details & Checkout */}
-        <div className="card-artisanal p-6 sm:p-10 border-2 border-warm-300 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white shadow-warm-md">
-          
-          <div className="lg:col-span-7 space-y-5">
-            <div>
-              <span className="text-xs font-black uppercase tracking-widest text-warm-600 block mb-1">
-                Selected: {currentPack.size}-Pack Box ({currentPack.label})
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-black text-warm-900">
-                Freshly Packed Jainik Energy Bars
-              </h3>
-              <p className="text-xs sm:text-sm text-warm-700 mt-1 leading-relaxed">
-                Direct dispatch from our certified kitchen in Karanja (Lad), Maharashtra. Nitrogen-flushed foil for optimal freshness and crunch.
-              </p>
-            </div>
-
-            {/* VIP Returning Customer Toggle */}
-            <div className="bg-warm-50 p-4 rounded-2xl border border-warm-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-warm-200 text-warm-800 flex items-center justify-center flex-shrink-0">
-                  <Crown className="w-5 h-5 text-warm-700" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-warm-900 text-sm">Returning Customer?</h4>
-                  <p className="text-xs text-warm-600">Claim an extra 10% repeat loyalty bonus on your order!</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsReturningCustomer(!isReturningCustomer)}
-                className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                  isReturningCustomer 
-                    ? 'bg-warm-800 text-white shadow-sm' 
-                    : 'bg-white border border-warm-300 text-warm-800 hover:bg-warm-100'
-                }`}
-              >
-                {isReturningCustomer ? '✓ VIP 10% Applied' : '+ Claim 10% Off'}
-              </button>
-            </div>
-
-            {/* Courier Guarantee */}
-            <div className="flex items-center gap-2 text-xs font-bold text-warm-700">
-              <Truck className="w-4 h-4 text-sage-500 flex-shrink-0" />
-              <span>Free Express Courier Across India • Dispatched in 24 Hours</span>
-            </div>
-          </div>
-
-          {/* Pricing Summary & Action */}
-          <div className="lg:col-span-5 bg-warm-50 p-6 sm:p-7 rounded-2xl border border-warm-200 space-y-4">
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs font-bold text-warm-500 uppercase">Effective Price Per Bar</span>
-              <span className="text-lg font-black text-warm-800">₹{perBarFinal} / Bar</span>
-            </div>
-
-            <div className="pt-2 border-t border-warm-200 flex justify-between items-baseline">
-              <span className="text-base font-bold text-warm-900">Total Amount</span>
-              <span className="text-3xl font-black text-warm-900">₹{finalPrice}</span>
-            </div>
-
-            {totalSavings > 0 && (
-              <p className="text-xs text-sage-700 font-bold text-right -mt-2">
-                🎉 Total Savings: ₹{totalSavings} (Save ₹{currentPack.savings} + VIP ₹{returningDiscount})!
-              </p>
-            )}
-
-            {/* Actions */}
-            <div className="space-y-2 pt-2">
-              <button
-                onClick={handleDirectWhatsAppOrder}
-                className="w-full py-3.5 btn-whatsapp-pill text-sm flex items-center justify-center gap-2"
-              >
-                <MessageSquare className="w-4 h-4 fill-white" />
-                <span>Order {packSize}-Pack via WhatsApp (₹{finalPrice})</span>
-              </button>
-
-              <button
-                onClick={handleAddBundle}
-                className="w-full py-2.5 rounded-xl btn-warm-secondary text-xs font-bold"
-              >
-                + Add {packSize}-Pack Box to Cart Drawer
-              </button>
-            </div>
-          </div>
-
+        {/* Free Shipping Footer Bar */}
+        <div className="mt-10 text-center flex items-center justify-center gap-2 text-xs font-bold text-warm-600">
+          <Truck className="w-4 h-4 text-emerald-600" />
+          <span>All multi-pack orders include Free Express Courier Delivery Across India</span>
         </div>
 
       </div>

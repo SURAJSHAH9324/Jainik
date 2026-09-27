@@ -9,8 +9,8 @@ export const JAINIK_PRODUCT = {
   reviews: 2850,
   logoImage: '/jainik-logo.jpg',
   wrapperImage: '/jainik-wrapper-mockup.png',
-  posterImage: '/jainik-poster-marathi.png',
-  benefitsPoster: '/jainik-10-benefits.png',
+  heroImage: '/jainik-bar-hero.jpg',
+  packageImage: '/Package.png',
   nutritionLabelImage: '/jainik-nutrition-label.jpg',
   fssaiLic: '21526066000742',
   manufacturer: 'JAINIK FOODS, Chunapura, Karanja (Lad), Dist. Washim',
@@ -67,10 +67,80 @@ export const JAINIK_PRODUCT = {
 export const INGREDIENTS = JAINIK_PRODUCT.ingredients;
 
 export const PACKS = [
-  { size: 3, price: 240, regularPrice: 240, savings: 0, label: '3-Pack Box', sub: 'Starter Trial (₹80 / Bar)', badge: 'Trial Pack' },
-  { size: 6, price: 460, regularPrice: 480, savings: 20, label: '6-Pack Box', sub: 'Save ₹20 (₹76.6 / Bar)', badge: 'Weekly Fuel' },
-  { size: 12, price: 890, regularPrice: 960, savings: 70, label: '12-Pack Box', sub: 'Save ₹70 (₹74 / Bar)', badge: '🔥 Most Popular', popular: true },
-  { size: 24, price: 1720, regularPrice: 1920, savings: 200, label: '24-Pack Box', sub: 'Save ₹200 (₹71.6 / Bar)', badge: '👑 Mega Value' }
+  { 
+    size: 3, 
+    price: 240, 
+    regularPrice: 240, 
+    savings: 0, 
+    label: '3-Pack Box', 
+    sub: 'Starter Trial (₹80 / Bar)', 
+    badge: 'Trial Pack',
+    image: '/jainik-wrapper-mockup.png'
+  },
+  { 
+    size: 6, 
+    price: 460, 
+    regularPrice: 480, 
+    savings: 20, 
+    label: '6-Pack Box', 
+    sub: 'Save ₹20 (₹76.6 / Bar)', 
+    badge: 'Weekly Fuel',
+    image: '/Package.png'
+  },
+  { 
+    size: 12, 
+    price: 890, 
+    regularPrice: 960, 
+    savings: 70, 
+    label: '12-Pack Box', 
+    sub: 'Save ₹70 (₹74 / Bar)', 
+    badge: '🔥 Most Popular', 
+    popular: true,
+    image: '/Package.png'
+  },
+  { 
+    size: 24, 
+    price: 1720, 
+    regularPrice: 1920, 
+    savings: 200, 
+    label: '24-Pack Box', 
+    sub: 'Save ₹200 (₹71.6 / Bar)', 
+    badge: '👑 Mega Value',
+    image: '/Package.png'
+  }
+];
+
+export const SHOWCASE_SLIDES = [
+  {
+    id: 1,
+    image: '/jainik-1.png',
+    title: 'Natural Energy & Sattvic Heritage',
+    subtitle: 'Inspired by ancient Indian culinary power. Zero chemicals, 100% pure nutrition.'
+  },
+  {
+    id: 2,
+    image: '/jainik-2.png',
+    title: '10 Authentic Superfood Ingredients',
+    subtitle: 'Whole California almonds, cashews, pistachios, dates, jaggery, seeds & dark chocolate.'
+  },
+  {
+    id: 3,
+    image: '/jainik-3.png',
+    title: '18.62g Plant Protein & Prebiotic Fibre',
+    subtitle: 'Clean fuel for fitness, gym workouts, endurance runners, and busy professionals.'
+  },
+  {
+    id: 4,
+    image: '/jainik-4.png',
+    title: 'Zero White Sugar • Real Fruit Sweetness',
+    subtitle: 'Sweetened solely with whole dates and unrefined jaggery for sustained energy without dips.'
+  },
+  {
+    id: 5,
+    image: '/jainik-5.png',
+    title: 'Freshly Handcrafted in Maharashtra',
+    subtitle: 'FSSAI Certified kitchen in Karanja (Lad). Dispatched fresh in 24 hours across India.'
+  }
 ];
 
 export const TESTIMONIALS = [

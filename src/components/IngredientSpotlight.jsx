@@ -1,170 +1,97 @@
-import React, { useState } from 'react';
-import { INGREDIENTS, JAINIK_PRODUCT } from '../data/products';
-import { 
-  Zap, 
-  Dumbbell, 
-  Heart, 
-  Brain, 
-  Activity, 
-  ShieldCheck, 
-  Bone, 
-  Scale, 
-  Sparkles, 
-  Users, 
-  Leaf, 
-  ChevronRight 
-} from 'lucide-react';
-
-const benefitIcons = [
-  Zap,          // 1. Natural Energy Boost
-  Dumbbell,     // 2. Supports Muscle Strength
-  Heart,        // 3. Improves Heart Health
-  Brain,        // 4. Enhances Brain Function
-  Activity,     // 5. Aids Digestion
-  Bone,         // 6. Strengthens Bones
-  ShieldCheck,  // 7. Boosts Immunity
-  Scale,        // 8. Helps in Weight Management
-  Sparkles,     // 9. Rich in Vitamins & Minerals
-  Users         // 10. Perfect for All Ages
-];
+import React from 'react';
+import { INGREDIENTS } from '../data/products';
+import { Leaf, Sparkles, Zap, Heart, ShieldCheck, Dumbbell } from 'lucide-react';
 
 export default function IngredientSpotlight() {
-  const [activeCategory, setActiveCategory] = useState('all');
-
-  const categories = [
-    { id: 'all', label: 'All 10 Ingredients' },
-    { id: 'nuts', label: 'Dry Fruits & Nuts' },
-    { id: 'seeds', label: 'Super Seeds & Oats' },
-    { id: 'energy', label: 'Natural Sweeteners & Cocoa' }
-  ];
-
-  const filteredIngredients = INGREDIENTS.filter(item => {
-    if (activeCategory === 'nuts') return item.english.includes('Almonds') || item.english.includes('Cashews') || item.english.includes('Pistachios') || item.english.includes('Chana');
-    if (activeCategory === 'seeds') return item.english.includes('Seeds') || item.english.includes('Oats');
-    if (activeCategory === 'energy') return item.english.includes('Dates') || item.english.includes('Jaggery') || item.english.includes('Chocolate');
-    return true;
-  });
-
   return (
-    <section id="ingredients" className="py-24 bg-warm-50 text-warm-900 relative border-t border-warm-200">
+    <section id="ingredients" className="py-20 bg-[#FAF6F0] text-warm-900 relative border-b border-warm-200">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section 1: 10 Pure Ingredients Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
-          <div className="badge-sattvic">
-            <Leaf className="w-3.5 h-3.5 text-sage-500" />
-            <span>सर्व नैसर्गिक, पारंपरिक आणि पौष्टिक घटक</span>
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto space-y-2 mb-12">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white border border-warm-300 text-warm-800 text-xs font-bold shadow-xs">
+            <Leaf className="w-3.5 h-3.5 text-emerald-600" />
+            <span>100% Real Whole Foods</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-warm-900 tracking-tight">
-            10 Authentic <span className="text-warm-600">Superfood Ingredients</span>
+          <h2 className="text-2xl sm:text-4xl font-black text-warm-900 tracking-tight">
+            10 Authentic <span className="text-warm-600">Superfoods</span>
           </h2>
-          <p className="text-warm-700 text-base sm:text-lg">
-            Zero chemical preservatives. Zero synthetic colorings. Zero added white sugar. Only wholesome whole foods.
+          <p className="text-warm-700 text-xs sm:text-sm">
+            Zero chemical preservatives • Zero artificial colors • Zero added white sugar.
           </p>
-
-          {/* Interactive Category Filter Pills */}
-          <div className="flex flex-wrap justify-center gap-2 pt-3">
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  activeCategory === cat.id
-                    ? 'bg-warm-900 text-white shadow-sm scale-105'
-                    : 'bg-white border border-warm-300 text-warm-700 hover:text-warm-950 hover:border-warm-400'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
         </div>
 
-        {/* 10 Ingredients Artisanal Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-24">
-          {filteredIngredients.map((item, idx) => (
+        {/* 10 Ingredients Grid - Clean, Modern, Scannable */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4 mb-12">
+          {INGREDIENTS.map((item, idx) => (
             <div
               key={idx}
-              className="card-artisanal p-5 flex flex-col justify-between hover:border-warm-400 transition-all duration-300 bg-white"
+              className="bg-white rounded-2xl border border-warm-200 p-4 hover:border-warm-400 hover:shadow-warm-sm transition-all flex flex-col justify-between"
             >
-              <div className="space-y-2.5">
-                <div className="w-8 h-8 rounded-xl bg-warm-100 border border-warm-200 text-warm-800 flex items-center justify-center font-extrabold text-xs shadow-xs">
-                  {idx + 1}
-                </div>
+              <div>
+                <span className="text-[10px] font-black text-warm-500 bg-warm-100 px-2 py-0.5 rounded-md inline-block mb-2">
+                  #{idx + 1}
+                </span>
 
-                <div>
-                  <h3 className="text-base font-bold text-warm-900 leading-snug">
-                    {item.name}
-                  </h3>
-                  <p className="text-xs font-semibold text-warm-500 mt-0.5">
-                    {item.english}
-                  </p>
-                </div>
+                <h3 className="text-sm sm:text-base font-black text-warm-900 leading-snug">
+                  {item.name}
+                </h3>
+                <span className="text-xs font-semibold text-warm-500 block">
+                  {item.english}
+                </span>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-warm-100">
-                <span className="text-[10px] font-black uppercase tracking-wider text-warm-600 block mb-0.5">
+              <div className="mt-3 pt-2.5 border-t border-warm-100">
+                <span className="text-[11px] font-extrabold text-warm-700 block">
                   {item.role}
                 </span>
-                <p className="text-xs text-warm-700 leading-snug">
-                  {item.benefit}
-                </p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Section 2: 10 Amazing Benefits */}
-        <div id="benefits" className="pt-12 border-t border-warm-200">
-          
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
-            <span className="badge-sattvic">
-              Natural Energy for a Better You!
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-black text-warm-900 tracking-tight">
-              10 Everyday <span className="text-warm-600">Health Benefits</span>
-            </h2>
-            <p className="text-warm-700 text-base sm:text-lg">
-              A balanced blend of traditional Indian dry fruits, ancient seeds, and unrefined sweeteners.
-            </p>
+        {/* 4 Clean Value Pills (No dense walls of text) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div className="bg-white p-4 rounded-2xl border border-warm-200 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center flex-shrink-0">
+              <Zap className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-xs font-bold text-warm-500 block">Plant Protein</span>
+              <span className="text-sm font-black text-warm-900">18.62g / 100g</span>
+            </div>
           </div>
 
-          {/* Clean 10-Grid of Modern Benefit Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {JAINIK_PRODUCT.tenBenefits.map((b, idx) => {
-              const Icon = benefitIcons[idx] || Sparkles;
-              return (
-                <div 
-                  key={b.num} 
-                  className="card-artisanal p-5 flex flex-col justify-between hover:border-warm-400 transition-all duration-300 bg-white"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-xl bg-warm-100 text-warm-800 border border-warm-200 flex items-center justify-center font-bold text-xs">
-                        <Icon className="w-4 h-4 text-warm-700" />
-                      </div>
-                      <span className="text-xs font-extrabold text-warm-400">0{b.num}</span>
-                    </div>
-
-                    <h4 className="font-bold text-warm-900 text-base leading-snug">
-                      {b.title}
-                    </h4>
-
-                    <p className="text-xs text-warm-600 leading-relaxed">
-                      {b.desc}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 mt-3 border-t border-warm-100 flex items-center gap-1 text-[11px] font-bold text-warm-700">
-                    <span>Clean Whole Food</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-warm-400" />
-                  </div>
-                </div>
-              );
-            })}
+          <div className="bg-white p-4 rounded-2xl border border-warm-200 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center flex-shrink-0">
+              <Leaf className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-xs font-bold text-warm-500 block">Dietary Fibre</span>
+              <span className="text-sm font-black text-warm-900">10g / 100g</span>
+            </div>
           </div>
 
+          <div className="bg-white p-4 rounded-2xl border border-warm-200 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center flex-shrink-0">
+              <Heart className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-xs font-bold text-warm-500 block">Trans Fat & Cholesterol</span>
+              <span className="text-sm font-black text-warm-900">0% Trans Fat</span>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 rounded-2xl border border-warm-200 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center flex-shrink-0">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-xs font-bold text-warm-500 block">FSSAI Certified</span>
+              <span className="text-sm font-black text-warm-900">21526066000742</span>
+            </div>
+          </div>
         </div>
 
       </div>
