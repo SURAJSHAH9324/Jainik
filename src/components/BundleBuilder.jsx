@@ -9,7 +9,7 @@ export default function BundleBuilder({ product, onAddBundleToCart }) {
 
   const currentPack = PACKS.find(p => p.size === packSize) || PACKS[2];
   
-  // Additional returning customer 10% loyalty discount
+  // Returning customer 10% loyalty discount
   const returningDiscount = isReturningCustomer ? Math.round(currentPack.price * 0.10) : 0;
   const finalPrice = currentPack.price - returningDiscount;
   const totalSavings = currentPack.savings + returningDiscount;
@@ -25,7 +25,7 @@ export default function BundleBuilder({ product, onAddBundleToCart }) {
       isBundle: true,
       packSize: packSize,
       badge: `${packSize}-Pack Box`,
-      accentColor: '#F59E0B'
+      accentColor: '#5C361D'
     };
 
     onAddBundleToCart(bundleItem);
@@ -44,24 +44,21 @@ export default function BundleBuilder({ product, onAddBundleToCart }) {
   };
 
   return (
-    <section id="packs" className="py-28 bg-[#070B14] text-slate-100 relative overflow-hidden border-t border-amber-500/10">
+    <section id="packs" className="py-24 bg-warm-100 text-warm-900 relative border-t border-warm-200">
       
-      {/* Background glow orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-amber-500/5 rounded-full blur-[160px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/70 border border-amber-500/40 text-amber-300 text-xs font-black shadow-lg">
-            <Flame className="w-4 h-4 text-amber-400" />
+          <div className="badge-toasted">
+            <Flame className="w-3.5 h-3.5 text-warm-600" />
             <span>Direct Manufacturer Pricing • 40g / Bar</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
-            Choose Your <span className="text-gold-gradient">Pack Size</span>
+          <h2 className="text-3xl sm:text-5xl font-black text-warm-900 tracking-tight">
+            Choose Your <span className="text-warm-600">Pack Size</span>
           </h2>
-          <p className="text-slate-300 text-base sm:text-lg">
-            Single bar rate is ₹80. Save significantly with multi-pack bundles plus free express doorstep shipping across India.
+          <p className="text-warm-700 text-base sm:text-lg">
+            Single bar rate is ₹80. Save with multi-pack boxes with free express courier delivery across India.
           </p>
         </div>
 
@@ -73,34 +70,34 @@ export default function BundleBuilder({ product, onAddBundleToCart }) {
               <div
                 key={pack.size}
                 onClick={() => setPackSize(pack.size)}
-                className={`p-6 rounded-3xl border transition-all duration-300 cursor-pointer relative flex flex-col justify-between ${
+                className={`card-artisanal p-6 text-center transition-all cursor-pointer relative flex flex-col justify-between ${
                   isSelected
-                    ? 'glass-gold border-amber-500 shadow-2xl scale-[1.03] ring-1 ring-amber-400/40'
-                    : 'glass-card border-white/5 hover:border-white/20'
+                    ? 'border-2 border-warm-700 shadow-warm-lg scale-[1.02] bg-white'
+                    : 'bg-white/80 hover:bg-white hover:border-warm-300'
                 }`}
               >
                 {pack.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-[10px] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-lg">
-                    🔥 MOST POPULAR
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-warm-900 text-white font-black text-[10px] px-3.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                    MOST POPULAR
                   </span>
                 )}
 
-                <div className="space-y-2 text-center">
-                  <span className="text-xs font-black text-amber-400 uppercase tracking-wider block">
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-black text-warm-600 uppercase tracking-wider block">
                     {pack.badge}
                   </span>
-                  <h3 className="text-2xl font-black text-white">{pack.size} Bars Box</h3>
-                  <p className="text-xs text-slate-400">{pack.sub}</p>
+                  <h3 className="text-2xl font-black text-warm-900">{pack.size} Bars Box</h3>
+                  <p className="text-xs text-warm-500">{pack.sub}</p>
                 </div>
 
-                <div className="my-6 py-5 bg-slate-950/80 rounded-2xl border border-slate-800 text-center">
-                  <div className="text-3xl font-black text-gold-gradient">₹{pack.price}</div>
+                <div className="my-6 py-4 bg-warm-50 rounded-2xl border border-warm-200">
+                  <div className="text-3xl font-black text-warm-900">₹{pack.price}</div>
                   {pack.savings > 0 ? (
-                    <div className="text-xs text-emerald-400 font-bold mt-1">
+                    <div className="text-xs text-sage-700 font-bold mt-1">
                       Save ₹{pack.savings} (MRP: ₹{pack.regularPrice})
                     </div>
                   ) : (
-                    <div className="text-xs text-slate-400 font-bold mt-1">
+                    <div className="text-xs text-warm-500 font-medium mt-1">
                       Standard MRP (₹80/Bar)
                     </div>
                   )}
@@ -108,97 +105,97 @@ export default function BundleBuilder({ product, onAddBundleToCart }) {
 
                 <button
                   type="button"
-                  className={`w-full py-3 rounded-xl font-black text-xs transition-all ${
+                  className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all ${
                     isSelected
-                      ? 'btn-gold-shimmer text-slate-950 shadow-lg'
-                      : 'bg-slate-900 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800'
+                      ? 'bg-warm-900 text-white shadow-sm'
+                      : 'bg-warm-100 text-warm-800 hover:bg-warm-200'
                   }`}
                 >
-                  {isSelected ? '✓ Selected Box' : 'Select This Box'}
+                  {isSelected ? '✓ Selected Box' : 'Select Box'}
                 </button>
               </div>
             );
           })}
         </div>
 
-        {/* Selected Box Checkout Details Banner */}
-        <div className="glass-gold rounded-3xl p-6 sm:p-10 border border-amber-500/30 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-2xl">
+        {/* Selected Box Details & Checkout */}
+        <div className="card-artisanal p-6 sm:p-10 border-2 border-warm-300 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white shadow-warm-md">
           
-          <div className="lg:col-span-7 space-y-6">
+          <div className="lg:col-span-7 space-y-5">
             <div>
-              <span className="text-xs font-black uppercase tracking-widest text-amber-400 block mb-1">
+              <span className="text-xs font-black uppercase tracking-widest text-warm-600 block mb-1">
                 Selected: {currentPack.size}-Pack Box ({currentPack.label})
               </span>
-              <h3 className="text-2xl sm:text-3xl font-black text-white">
+              <h3 className="text-2xl sm:text-3xl font-black text-warm-900">
                 Freshly Packed Jainik Energy Bars
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
-                Direct dispatch from our certified food laboratory in Karanja (Lad), Maharashtra. Sealed for optimal freshness and crunch.
+              <p className="text-xs sm:text-sm text-warm-700 mt-1 leading-relaxed">
+                Direct dispatch from our certified kitchen in Karanja (Lad), Maharashtra. Nitrogen-flushed foil for optimal freshness and crunch.
               </p>
             </div>
 
             {/* VIP Returning Customer Toggle */}
-            <div className="bg-slate-950/80 p-4 rounded-2xl border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="bg-warm-50 p-4 rounded-2xl border border-warm-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
-                  <Crown className="w-5 h-5 text-amber-400" />
+                <div className="w-10 h-10 rounded-xl bg-warm-200 text-warm-800 flex items-center justify-center flex-shrink-0">
+                  <Crown className="w-5 h-5 text-warm-700" />
                 </div>
                 <div>
-                  <h4 className="font-black text-white text-sm">Returning Customer?</h4>
-                  <p className="text-xs text-slate-400">Claim an extra 10% repeat loyalty bonus on your order!</p>
+                  <h4 className="font-bold text-warm-900 text-sm">Returning Customer?</h4>
+                  <p className="text-xs text-warm-600">Claim an extra 10% repeat loyalty bonus on your order!</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setIsReturningCustomer(!isReturningCustomer)}
-                className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black transition-all ${
+                className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
                   isReturningCustomer 
-                    ? 'btn-gold-shimmer text-slate-950 shadow-lg' 
-                    : 'bg-slate-900 border border-slate-700 text-slate-300 hover:text-white'
+                    ? 'bg-warm-800 text-white shadow-sm' 
+                    : 'bg-white border border-warm-300 text-warm-800 hover:bg-warm-100'
                 }`}
               >
                 {isReturningCustomer ? '✓ VIP 10% Applied' : '+ Claim 10% Off'}
               </button>
             </div>
 
-            {/* Shipping Guarantee */}
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-300">
-              <Truck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            {/* Courier Guarantee */}
+            <div className="flex items-center gap-2 text-xs font-bold text-warm-700">
+              <Truck className="w-4 h-4 text-sage-500 flex-shrink-0" />
               <span>Free Express Courier Across India • Dispatched in 24 Hours</span>
             </div>
           </div>
 
-          {/* Pricing & Order CTA */}
-          <div className="lg:col-span-5 bg-slate-950/90 p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-4 shadow-xl">
+          {/* Pricing Summary & Action */}
+          <div className="lg:col-span-5 bg-warm-50 p-6 sm:p-7 rounded-2xl border border-warm-200 space-y-4">
             <div className="flex justify-between items-baseline">
-              <span className="text-xs font-bold text-slate-400 uppercase">Effective Price Per Bar</span>
-              <span className="text-xl font-black text-amber-400">₹{perBarFinal} / Bar</span>
+              <span className="text-xs font-bold text-warm-500 uppercase">Effective Price Per Bar</span>
+              <span className="text-lg font-black text-warm-800">₹{perBarFinal} / Bar</span>
             </div>
 
-            <div className="pt-2 border-t border-slate-800 flex justify-between items-baseline">
-              <span className="text-base font-black text-white">Total Payable</span>
-              <span className="text-3xl sm:text-4xl font-black text-gold-gradient">₹{finalPrice}</span>
+            <div className="pt-2 border-t border-warm-200 flex justify-between items-baseline">
+              <span className="text-base font-bold text-warm-900">Total Amount</span>
+              <span className="text-3xl font-black text-warm-900">₹{finalPrice}</span>
             </div>
 
             {totalSavings > 0 && (
-              <p className="text-xs text-emerald-400 font-bold text-right -mt-2">
+              <p className="text-xs text-sage-700 font-bold text-right -mt-2">
                 🎉 Total Savings: ₹{totalSavings} (Save ₹{currentPack.savings} + VIP ₹{returningDiscount})!
               </p>
             )}
 
-            {/* Action Buttons */}
-            <div className="space-y-2.5 pt-2">
+            {/* Actions */}
+            <div className="space-y-2 pt-2">
               <button
                 onClick={handleDirectWhatsAppOrder}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-whatsapp-600 to-whatsapp-500 hover:from-whatsapp-500 hover:to-whatsapp-600 text-white font-black text-sm shadow-xl shadow-whatsapp-500/25 transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
+                className="w-full py-3.5 btn-whatsapp-pill text-sm flex items-center justify-center gap-2"
               >
-                <MessageSquare className="w-5 h-5 fill-white" />
+                <MessageSquare className="w-4 h-4 fill-white" />
                 <span>Order {packSize}-Pack via WhatsApp (₹{finalPrice})</span>
               </button>
 
               <button
                 onClick={handleAddBundle}
-                className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white font-bold text-xs transition-all"
+                className="w-full py-2.5 rounded-xl btn-warm-secondary text-xs font-bold"
               >
                 + Add {packSize}-Pack Box to Cart Drawer
               </button>

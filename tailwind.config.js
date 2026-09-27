@@ -7,24 +7,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        jain: {
-          red: '#DC2626',      // Siddha - Energy Red
-          yellow: '#F59E0B',   // Arihant - Golden Yellow
-          orange: '#EA580C',   // Saffron Energy
-          white: '#FFFFFF',    // Acharya - Pure Sattvic
-          green: '#16A34A',    // Upadhyaya - Vitality Green
-          blue: '#1E40AF',     // Sadhu - Royal Knowledge Blue
-          blueLight: '#3B82F6',
-          navy: '#0F172A',
+        warm: {
+          50: '#FDFBF7',   // ultra-clean warm ivory
+          100: '#FAF6F0',  // soft cream canvas
+          150: '#F5EFEB',  // subtle section background
+          200: '#EFE5DA',  // soft warm border / badge
+          300: '#DEC8B5',  // distinct border
+          400: '#BA9475',  // muted brown
+          500: '#946645',  // warm caramel
+          600: '#754B2E',  // rich hazelnut brown
+          700: '#5C361D',  // deep chocolate brown
+          800: '#3D2211',  // espresso
+          900: '#261408',  // dark cocoa ink
+          950: '#170B04',  // deepest brown
         },
-        brand: {
-          primary: '#1E40AF',  // Royal Blue
-          saffron: '#EA580C',  // Saffron Orange
-          gold: '#F59E0B',     // Amber Gold
-          crimson: '#DC2626',  // Red Accent
-          emerald: '#16A34A',  // Sattvic Green
-          dark: '#0B132B',
-          light: '#F8FAFC',
+        sage: {
+          50: '#F2F7F4',
+          100: '#E1EDE6',
+          500: '#3B7A57',
+          700: '#255239',
+          900: '#153322',
         },
         whatsapp: {
           500: '#25D366',
@@ -33,11 +35,13 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
       },
-      backgroundImage: {
-        'pancha-varna': 'linear-gradient(90deg, #DC2626 0%, #F59E0B 25%, #F8FAFC 50%, #16A34A 75%, #1E40AF 100%)',
-        'hero-jain': 'radial-gradient(circle at 50% 0%, rgba(30, 64, 175, 0.08) 0%, rgba(234, 88, 12, 0.05) 50%, rgba(248, 250, 252, 1) 100%)',
+      boxShadow: {
+        'warm-sm': '0 2px 8px -2px rgba(61, 34, 17, 0.05)',
+        'warm-md': '0 8px 24px -6px rgba(61, 34, 17, 0.08)',
+        'warm-lg': '0 16px 36px -8px rgba(61, 34, 17, 0.12)',
+        'warm-xl': '0 24px 50px -12px rgba(61, 34, 17, 0.16)',
       }
     },
   },

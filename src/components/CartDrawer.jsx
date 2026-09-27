@@ -48,35 +48,35 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-warm-950/60 backdrop-blur-sm animate-fadeIn">
       <div className="absolute inset-0" onClick={onClose} />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-white border-l border-slate-200 shadow-2xl flex flex-col justify-between text-slate-900">
+        <div className="w-screen max-w-md bg-white border-l border-warm-200 shadow-warm-xl flex flex-col justify-between text-warm-900">
           
           {/* Cart Header */}
-          <div className="p-6 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+          <div className="p-6 border-b border-warm-200 flex items-center justify-between bg-warm-50">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-jain-blue flex items-center justify-center border border-blue-200">
+              <div className="w-10 h-10 rounded-xl bg-warm-100 text-warm-800 flex items-center justify-center border border-warm-300">
                 <ShoppingBag className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-black text-slate-900">WhatsApp Order Cart</h2>
-                <span className="text-xs font-bold text-slate-500">
+                <h2 className="text-lg font-black text-warm-900">WhatsApp Order Cart</h2>
+                <span className="text-xs font-bold text-warm-600">
                   {cartItems.reduce((a, b) => a + b.quantity, 0)} items • ₹80 / Bar
                 </span>
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
+              className="p-2 rounded-xl bg-warm-100 text-warm-500 hover:text-warm-900 hover:bg-warm-200 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* WhatsApp Direct Notice with Business Number */}
-          <div className="bg-emerald-50 px-6 py-2.5 border-b border-emerald-200 text-xs text-emerald-800 font-bold flex items-center gap-2">
+          <div className="bg-sage-50 px-6 py-2.5 border-b border-sage-100 text-xs text-sage-900 font-bold flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-whatsapp-600 fill-whatsapp-600 flex-shrink-0" />
             <span>Sends directly to Official WhatsApp: <strong>9325578244</strong></span>
           </div>
@@ -85,18 +85,18 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {cartItems.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12">
-                <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                <div className="w-16 h-16 rounded-full bg-warm-100 flex items-center justify-center text-warm-400">
                   <ShoppingBag className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800">Your Cart is Empty</h3>
-                <p className="text-xs text-slate-500 max-w-xs">
-                  Choose from our signature flavors (₹80/bar) or custom 3, 6, 12, 24 packs.
+                <h3 className="text-lg font-bold text-warm-900">Your Cart is Empty</h3>
+                <p className="text-xs text-warm-600 max-w-xs">
+                  Choose from single bars (₹80/bar) or custom 3, 6, 12, 24 pack boxes.
                 </p>
                 <button 
                   onClick={onClose}
-                  className="px-6 py-2.5 rounded-xl bg-jain-blue text-white font-bold text-xs shadow-md"
+                  className="px-6 py-2.5 rounded-xl btn-warm-primary text-xs font-bold"
                 >
-                  Browse Flavors
+                  Browse Packs
                 </button>
               </div>
             ) : (
@@ -106,31 +106,31 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                   {cartItems.map((item) => (
                     <div 
                       key={item.id}
-                      className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3"
+                      className="p-3.5 rounded-2xl bg-warm-50 border border-warm-200 flex items-center justify-between gap-3"
                     >
                       <div className="flex-1 space-y-0.5">
-                        <span className="text-[10px] font-black uppercase text-jain-orange block">
+                        <span className="text-[10px] font-black uppercase text-warm-600 block">
                           {item.badge || 'Single Bar'}
                         </span>
-                        <h4 className="font-extrabold text-slate-900 text-sm line-clamp-1">{item.name}</h4>
-                        <span className="text-xs text-jain-blue font-black block">
+                        <h4 className="font-bold text-warm-900 text-sm line-clamp-1">{item.name}</h4>
+                        <span className="text-xs text-warm-800 font-black block">
                           ₹{(item.price * item.quantity).toFixed(0)}
                         </span>
                       </div>
 
                       {/* Quantity & Delete */}
                       <div className="flex items-center gap-2">
-                        <div className="flex items-center border border-slate-300 bg-white rounded-lg">
+                        <div className="flex items-center border border-warm-300 bg-white rounded-lg">
                           <button 
                             onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                            className="p-1.5 text-slate-500 hover:text-slate-900"
+                            className="p-1.5 text-warm-600 hover:text-warm-900"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
-                          <span className="px-2 font-black text-slate-900 text-xs">{item.quantity}</span>
+                          <span className="px-2 font-black text-warm-900 text-xs">{item.quantity}</span>
                           <button 
                             onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                            className="p-1.5 text-slate-500 hover:text-slate-900"
+                            className="p-1.5 text-warm-600 hover:text-warm-900"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -138,7 +138,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
 
                         <button 
                           onClick={() => onRemoveItem(item.id)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors"
+                          className="p-1.5 text-warm-400 hover:text-rose-600 transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -148,21 +148,21 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                 </div>
 
                 {/* Returning Customer Privilege Toggle */}
-                <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-between">
+                <div className="p-3.5 rounded-2xl bg-warm-100 border border-warm-300 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Crown className="w-4 h-4 text-jain-orange" />
+                    <Crown className="w-4 h-4 text-warm-700" />
                     <div>
-                      <span className="text-xs font-black text-slate-900 block">Returning Customer?</span>
-                      <span className="text-[10px] text-slate-600">Get 10% repeat order loyalty discount</span>
+                      <span className="text-xs font-bold text-warm-900 block">Returning Customer?</span>
+                      <span className="text-[10px] text-warm-600">Get 10% repeat order loyalty discount</span>
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={() => setIsReturningCustomer(!isReturningCustomer)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                       isReturningCustomer 
-                        ? 'bg-jain-orange text-white' 
-                        : 'bg-white border border-slate-300 text-slate-700'
+                        ? 'bg-warm-900 text-white' 
+                        : 'bg-white border border-warm-300 text-warm-800'
                     }`}
                   >
                     {isReturningCustomer ? '✓ 10% Applied' : '+ Claim'}
@@ -170,117 +170,83 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                 </div>
 
                 {/* Contact Information for WhatsApp */}
-                <form onSubmit={handleSendWhatsAppOrder} className="pt-3 border-t border-slate-200 space-y-2.5">
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-600">
+                <form onSubmit={handleSendWhatsAppOrder} className="pt-3 border-t border-warm-200 space-y-2.5">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-warm-700">
                     Your Contact Details (Sent to 9325578244)
                   </h4>
                   
                   <div className="relative">
-                    <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <User className="w-4 h-4 text-warm-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input 
                       type="text" 
                       required
                       placeholder="Your Full Name *"
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-jain-blue font-medium"
+                      className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-warm-900 focus:outline-none focus:border-warm-600 font-medium"
                     />
                   </div>
 
                   <div className="relative">
-                    <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Phone className="w-4 h-4 text-warm-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input 
                       type="tel" 
                       required
                       placeholder="Your WhatsApp / Mobile Number *"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-jain-blue font-medium"
+                      className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-warm-900 focus:outline-none focus:border-warm-600 font-medium"
                     />
                   </div>
 
                   <div className="relative">
-                    <FileText className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                    <FileText className="w-4 h-4 text-warm-400 absolute left-3 top-3" />
                     <textarea 
-                      placeholder="Delivery address / special requirement note..."
-                      rows={2}
+                      placeholder="Delivery Address / Special Notes (optional)..."
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-jain-blue font-medium"
+                      rows={2}
+                      className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2 text-xs text-warm-900 focus:outline-none focus:border-warm-600 font-medium resize-none"
                     />
                   </div>
 
+                  {/* Order Financial Summary */}
+                  <div className="pt-3 border-t border-warm-200 space-y-1.5 text-xs">
+                    <div className="flex justify-between text-warm-600 font-medium">
+                      <span>Subtotal</span>
+                      <span>₹{subtotal}</span>
+                    </div>
+
+                    {discountAmount > 0 && (
+                      <div className="flex justify-between text-sage-700 font-bold">
+                        <span>Loyalty Discount ({effectiveDiscountPercent * 100}%)</span>
+                        <span>-₹{discountAmount}</span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-between text-warm-600 font-medium">
+                      <span>Express Courier</span>
+                      <span className="text-sage-700 font-bold">FREE</span>
+                    </div>
+
+                    <div className="pt-2 border-t border-warm-200 flex justify-between text-base font-black text-warm-900">
+                      <span>Total Amount</span>
+                      <span>₹{grandTotal}</span>
+                    </div>
+                  </div>
+
+                  {/* Send WhatsApp Order Button */}
+                  <button
+                    type="submit"
+                    className="w-full mt-3 py-3.5 btn-whatsapp-pill text-xs font-bold flex items-center justify-center gap-2 shadow-warm-md"
+                  >
+                    <MessageSquare className="w-4 h-4 fill-white" />
+                    <span>Send Order to WhatsApp: 9325578244</span>
+                  </button>
                 </form>
               </>
             )}
           </div>
-
-          {/* Cart Footer & WhatsApp Submission */}
-          {cartItems.length > 0 && (
-            <div className="p-6 border-t border-slate-200 bg-slate-50 space-y-3.5">
-              
-              {/* Promo Code Input */}
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Tag className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input 
-                    type="text" 
-                    placeholder="Coupon code (AHIMSA15)"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-jain-blue uppercase font-bold"
-                  />
-                </div>
-                <button 
-                  type="button"
-                  onClick={handleApplyPromo}
-                  className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-xs rounded-xl"
-                >
-                  Apply
-                </button>
-              </div>
-
-              {promoApplied && (
-                <div className="text-xs text-jain-green font-bold flex items-center gap-1">
-                  <Check className="w-3.5 h-3.5" /> 15% Ahimsa Discount Applied! (-₹{discountAmount})
-                </div>
-              )}
-              {promoError && (
-                <div className="text-xs text-rose-600 font-bold">{promoError}</div>
-              )}
-
-              {/* Subtotal breakdown */}
-              <div className="space-y-1 text-xs">
-                <div className="flex justify-between text-slate-600">
-                  <span>Subtotal</span>
-                  <span>₹{subtotal.toFixed(0)}</span>
-                </div>
-                {discountAmount > 0 && (
-                  <div className="flex justify-between text-jain-orange font-bold">
-                    <span>{isReturningCustomer ? 'Returning VIP Discount' : 'Coupon Discount'}</span>
-                    <span>-₹{discountAmount}</span>
-                  </div>
-                )}
-                <div className="flex justify-between text-slate-600">
-                  <span>Shipping</span>
-                  <span className="text-jain-green font-bold">FREE Express Delivery</span>
-                </div>
-                <div className="pt-2 border-t border-slate-200 flex justify-between text-base font-black text-slate-900">
-                  <span>Total Amount</span>
-                  <span className="text-jain-blue text-xl">₹{grandTotal.toFixed(0)}</span>
-                </div>
-              </div>
-
-              {/* Submit via WhatsApp CTA */}
-              <button
-                onClick={handleSendWhatsAppOrder}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-whatsapp-600 to-whatsapp-500 hover:from-whatsapp-500 hover:to-whatsapp-600 text-white font-extrabold text-sm shadow-lg shadow-whatsapp-500/25 flex items-center justify-center gap-2 transition-all"
-              >
-                <MessageSquare className="w-5 h-5 fill-white" /> Send WhatsApp Order to 9325578244
-              </button>
-
-            </div>
-          )}
 
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Menu, X, MessageSquare, ShieldCheck } from 'lucide-react';
+import { ShoppingBag, Menu, X, MessageSquare, ShieldCheck, ArrowRight } from 'lucide-react';
 import { openWhatsAppDirectChat } from '../utils/whatsapp';
 
 export default function Navbar({ cartCount, onOpenCart, onOpenNutrition }) {
@@ -17,143 +17,141 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition }) {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-slate-950/85 backdrop-blur-xl border-b border-amber-500/20 shadow-2xl py-3' 
-        : 'bg-slate-950/60 backdrop-blur-md border-b border-white/5 py-4'
+        ? 'bg-[#FAF6F0]/95 backdrop-blur-md border-b border-warm-200 shadow-warm-sm py-3' 
+        : 'bg-[#FAF6F0]/80 backdrop-blur-sm border-b border-warm-200/60 py-4'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         
-        {/* Official Jainik Gold Logo */}
+        {/* Brand Logo with Clean Artisanal Typography */}
         <a href="#" className="flex items-center gap-3 group">
-          <div className="relative">
-            <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 opacity-20 blur group-hover:opacity-40 transition-opacity" />
+          <div className="bg-warm-900 rounded-xl p-1 shadow-sm">
             <img 
               src="/jainik-logo.jpg" 
-              alt="Jainik - Built on Purity" 
-              className="h-10 sm:h-11 object-contain rounded-xl relative shadow-lg group-hover:scale-105 transition-transform"
+              alt="Jainik Energy Bar - Built on Purity" 
+              className="h-9 sm:h-10 object-contain rounded-lg group-hover:scale-105 transition-transform"
             />
           </div>
-          <div className="hidden lg:block border-l border-slate-800 pl-3">
-            <span className="text-amber-400 text-[10px] tracking-widest font-black uppercase block">
+          <div className="hidden sm:block border-l border-warm-300 pl-3">
+            <span className="text-[10px] text-warm-700 tracking-widest font-black uppercase block">
               BUILT ON PURITY
             </span>
-            <span className="text-slate-400 text-xs font-semibold block -mt-0.5">
-              Natural Energy • ₹80 / Bar
+            <span className="text-warm-800 text-xs font-semibold block -mt-0.5">
+              100% Natural • ₹80 / Bar
             </span>
           </div>
         </a>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-300">
-          <a href="#product" className="hover:text-amber-400 transition-colors">The Bar</a>
-          <a href="#tradition" className="hover:text-amber-400 transition-colors">Heritage</a>
-          <a href="#ingredients" className="hover:text-amber-400 transition-colors">10 Ingredients</a>
-          <a href="#benefits" className="hover:text-amber-400 transition-colors">10 Benefits</a>
-          <a href="#packs" className="hover:text-amber-400 transition-colors">Packs (3 / 6 / 12 / 24)</a>
+        <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-warm-800">
+          <a href="#product" className="hover:text-warm-600 transition-colors">The Bar</a>
+          <a href="#craft" className="hover:text-warm-600 transition-colors">Craftsmanship</a>
+          <a href="#ingredients" className="hover:text-warm-600 transition-colors">10 Ingredients</a>
+          <a href="#benefits" className="hover:text-warm-600 transition-colors">Benefits</a>
+          <a href="#packs" className="hover:text-warm-600 transition-colors">Box Packs</a>
           <button 
             onClick={onOpenNutrition}
-            className="hover:text-amber-400 transition-colors font-bold flex items-center gap-1.5 text-left"
+            className="hover:text-warm-600 transition-colors font-bold flex items-center gap-1.5 text-left"
           >
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>FSSAI Label</span>
+            <ShieldCheck className="w-4 h-4 text-sage-500" />
+            <span>Nutrition & FSSAI</span>
           </button>
         </nav>
 
-        {/* Right Action Buttons */}
+        {/* Action Buttons */}
         <div className="flex items-center gap-3">
           
-          {/* WhatsApp Direct */}
+          {/* Direct WhatsApp Callout */}
           <button 
             onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I would like to order Jainik Energy Bars (₹80/bar)!')}
-            className="hidden sm:flex items-center gap-2 text-xs font-black text-emerald-300 hover:text-white px-3.5 py-2.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/30 transition-all shadow-lg"
-            title="Chat on WhatsApp 9325578244"
+            className="hidden sm:flex items-center gap-2 text-xs font-extrabold text-warm-800 hover:text-warm-950 px-3.5 py-2.5 rounded-xl bg-warm-200/70 hover:bg-warm-200 border border-warm-300/80 transition-all"
+            title="Direct WhatsApp: 9325578244"
           >
-            <MessageSquare className="w-4 h-4 text-emerald-400 fill-emerald-400" />
+            <MessageSquare className="w-4 h-4 text-whatsapp-600 fill-whatsapp-600" />
             <span>9325578244</span>
           </button>
 
-          {/* Cart Trigger */}
+          {/* Cart Drawer Trigger */}
           <button 
             onClick={onOpenCart} 
-            className="relative p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-amber-400 hover:border-amber-500/40 shadow-lg transition-all group"
+            className="relative p-2.5 rounded-xl bg-white border border-warm-300 text-warm-900 hover:border-warm-500 shadow-warm-sm transition-all"
             aria-label="Shopping Cart"
           >
-            <ShoppingBag className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <ShoppingBag className="w-5 h-5" />
             {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+              <span className="absolute -top-1.5 -right-1.5 bg-warm-700 text-white font-black text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
                 {cartCount}
               </span>
             )}
           </button>
 
-          {/* Primary CTA */}
+          {/* Primary Order CTA */}
           <button 
             onClick={onOpenCart}
-            className="btn-gold-shimmer text-slate-950 font-black text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-lg transition-transform hover:scale-105 active:scale-95 flex items-center gap-1.5"
+            className="btn-warm-primary text-xs sm:text-sm py-2.5 px-4 sm:px-5"
           >
-            <span>Order Now</span>
-            <span className="opacity-80 text-xs font-bold">(₹80)</span>
+            <span>Order (₹80)</span>
           </button>
 
           {/* Mobile menu toggle */}
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300"
+            className="md:hidden p-2 rounded-xl bg-white border border-warm-300 text-warm-900"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-slate-950/95 backdrop-blur-xl border-b border-amber-500/20 px-6 py-6 space-y-4 shadow-2xl text-slate-200">
+        <div className="md:hidden bg-[#FAF6F0] border-b border-warm-300 px-6 py-5 space-y-3.5 shadow-warm-md text-warm-900">
           <a 
             href="#product" 
             onClick={() => setMobileMenuOpen(false)}
-            className="block font-bold py-1 hover:text-amber-400 text-base"
+            className="block font-bold py-1 hover:text-warm-600 text-base"
           >
             The Bar (₹80)
           </a>
           <a 
-            href="#tradition" 
+            href="#craft" 
             onClick={() => setMobileMenuOpen(false)}
-            className="block font-bold py-1 hover:text-amber-400 text-base"
+            className="block font-bold py-1 hover:text-warm-600 text-base"
           >
-            Heritage & Ancestral Power
+            Sattvic Craftsmanship
           </a>
           <a 
             href="#ingredients" 
             onClick={() => setMobileMenuOpen(false)}
-            className="block font-bold py-1 hover:text-amber-400 text-base"
+            className="block font-bold py-1 hover:text-warm-600 text-base"
           >
-            10 Pure Ingredients
+            10 Natural Ingredients
           </a>
           <a 
             href="#benefits" 
             onClick={() => setMobileMenuOpen(false)}
-            className="block font-bold py-1 hover:text-amber-400 text-base"
+            className="block font-bold py-1 hover:text-warm-600 text-base"
           >
-            10 Amazing Benefits
+            10 Health Benefits
           </a>
           <a 
             href="#packs" 
             onClick={() => setMobileMenuOpen(false)}
-            className="block font-bold py-1 hover:text-amber-400 text-base"
+            className="block font-bold py-1 hover:text-warm-600 text-base"
           >
-            Packs: 3, 6, 12, 24 Bars
+            Packs (3, 6, 12, 24 Bars)
           </a>
           <button 
             onClick={() => { setMobileMenuOpen(false); onOpenNutrition(); }}
-            className="block font-bold py-1 hover:text-amber-400 text-left text-base"
+            className="block font-bold py-1 hover:text-warm-600 text-left text-base"
           >
-            FSSAI Nutritional Profile
+            Nutrition & FSSAI Details
           </button>
-          <div className="pt-3 border-t border-slate-800">
+          <div className="pt-3 border-t border-warm-200">
             <button 
               onClick={() => { setMobileMenuOpen(false); openWhatsAppDirectChat(); }} 
-              className="w-full flex items-center justify-center gap-2 bg-emerald-950 text-emerald-300 border border-emerald-700 py-3 rounded-xl font-bold text-sm"
+              className="w-full flex items-center justify-center gap-2 btn-whatsapp-pill py-3 text-sm font-bold"
             >
-              <MessageSquare className="w-4 h-4 text-emerald-400 fill-emerald-400" /> WhatsApp Direct: 9325578244
+              <MessageSquare className="w-4 h-4 fill-white" /> WhatsApp Direct: 9325578244
             </button>
           </div>
         </div>

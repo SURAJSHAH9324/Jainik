@@ -46,25 +46,21 @@ export default function IngredientSpotlight() {
   });
 
   return (
-    <section id="ingredients" className="py-28 bg-[#070B14] text-slate-100 relative overflow-hidden">
+    <section id="ingredients" className="py-24 bg-warm-50 text-warm-900 relative border-t border-warm-200">
       
-      {/* Background ambient radial gradients */}
-      <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section 1 Header: 10 Pure Ingredients */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 text-xs font-black shadow-lg">
-            <Leaf className="w-4 h-4 text-emerald-400" />
+        {/* Section 1: 10 Pure Ingredients Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
+          <div className="badge-sattvic">
+            <Leaf className="w-3.5 h-3.5 text-sage-500" />
             <span>सर्व नैसर्गिक, पारंपरिक आणि पौष्टिक घटक</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
-            10 Authentic <span className="text-gold-gradient">Superfood Ingredients</span>
+          <h2 className="text-3xl sm:text-5xl font-black text-warm-900 tracking-tight">
+            10 Authentic <span className="text-warm-600">Superfood Ingredients</span>
           </h2>
-          <p className="text-slate-300 text-base sm:text-lg">
-            Zero chemical preservatives. Zero synthetic food colorings. Zero added white sugar. Only wholesome whole foods.
+          <p className="text-warm-700 text-base sm:text-lg">
+            Zero chemical preservatives. Zero synthetic colorings. Zero added white sugar. Only wholesome whole foods.
           </p>
 
           {/* Interactive Category Filter Pills */}
@@ -73,10 +69,10 @@ export default function IngredientSpotlight() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                   activeCategory === cat.id
-                    ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 scale-105'
-                    : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                    ? 'bg-warm-900 text-white shadow-sm scale-105'
+                    : 'bg-white border border-warm-300 text-warm-700 hover:text-warm-950 hover:border-warm-400'
                 }`}
               >
                 {cat.label}
@@ -85,33 +81,33 @@ export default function IngredientSpotlight() {
           </div>
         </div>
 
-        {/* 10 Ingredients Luxury Glass Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-28">
+        {/* 10 Ingredients Artisanal Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-24">
           {filteredIngredients.map((item, idx) => (
             <div
               key={idx}
-              className="glass-card p-5 rounded-3xl border border-white/5 hover:border-amber-500/40 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5 shadow-xl hover:shadow-amber-500/10"
+              className="card-artisanal p-5 flex flex-col justify-between hover:border-warm-400 transition-all duration-300 bg-white"
             >
               <div className="space-y-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-yellow-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-center font-black text-sm group-hover:scale-110 group-hover:border-amber-400 transition-all shadow-md">
+                <div className="w-8 h-8 rounded-xl bg-warm-100 border border-warm-200 text-warm-800 flex items-center justify-center font-extrabold text-xs shadow-xs">
                   {idx + 1}
                 </div>
 
                 <div>
-                  <h3 className="text-base font-black text-white group-hover:text-amber-300 transition-colors">
+                  <h3 className="text-base font-bold text-warm-900 leading-snug">
                     {item.name}
                   </h3>
-                  <p className="text-xs font-bold text-slate-400 mt-0.5">
+                  <p className="text-xs font-semibold text-warm-500 mt-0.5">
                     {item.english}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-slate-800/80">
-                <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block mb-1">
+              <div className="mt-4 pt-3 border-t border-warm-100">
+                <span className="text-[10px] font-black uppercase tracking-wider text-warm-600 block mb-0.5">
                   {item.role}
                 </span>
-                <p className="text-xs text-slate-300 font-medium leading-snug">
+                <p className="text-xs text-warm-700 leading-snug">
                   {item.benefit}
                 </p>
               </div>
@@ -119,50 +115,50 @@ export default function IngredientSpotlight() {
           ))}
         </div>
 
-        {/* Section 2: 10 Amazing Benefits (PURE NATIVE UI - NO POSTER) */}
-        <div id="benefits" className="pt-8 border-t border-slate-800/80">
+        {/* Section 2: 10 Amazing Benefits */}
+        <div id="benefits" className="pt-12 border-t border-warm-200">
           
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-            <span className="text-xs font-black uppercase tracking-widest text-emerald-400 bg-emerald-950/80 px-4 py-1.5 rounded-full border border-emerald-500/40 inline-block shadow-md">
+          <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
+            <span className="badge-sattvic">
               Natural Energy for a Better You!
             </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
-              10 Amazing <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500">Health Benefits</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-warm-900 tracking-tight">
+              10 Everyday <span className="text-warm-600">Health Benefits</span>
             </h2>
-            <p className="text-slate-300 text-base sm:text-lg">
-              A scientifically balanced combination of ancient superfoods formulated to enhance endurance, strength, and vitality.
+            <p className="text-warm-700 text-base sm:text-lg">
+              A balanced blend of traditional Indian dry fruits, ancient seeds, and unrefined sweeteners.
             </p>
           </div>
 
-          {/* Clean 10-Grid of Modern Interactive Cards */}
+          {/* Clean 10-Grid of Modern Benefit Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {JAINIK_PRODUCT.tenBenefits.map((b, idx) => {
               const Icon = benefitIcons[idx] || Sparkles;
               return (
                 <div 
                   key={b.num} 
-                  className="glass-card p-5 rounded-3xl border border-white/5 hover:border-emerald-500/40 transition-all duration-300 group hover:-translate-y-1.5 flex flex-col justify-between shadow-xl"
+                  className="card-artisanal p-5 flex flex-col justify-between hover:border-warm-400 transition-all duration-300 bg-white"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-black text-sm group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all shadow-sm">
-                        <Icon className="w-5 h-5" />
+                      <div className="w-9 h-9 rounded-xl bg-warm-100 text-warm-800 border border-warm-200 flex items-center justify-center font-bold text-xs">
+                        <Icon className="w-4 h-4 text-warm-700" />
                       </div>
-                      <span className="text-xs font-black text-slate-500">0{b.num}</span>
+                      <span className="text-xs font-extrabold text-warm-400">0{b.num}</span>
                     </div>
 
-                    <h4 className="font-black text-white text-base group-hover:text-emerald-300 transition-colors leading-snug">
+                    <h4 className="font-bold text-warm-900 text-base leading-snug">
                       {b.title}
                     </h4>
 
-                    <p className="text-xs text-slate-400 leading-relaxed">
+                    <p className="text-xs text-warm-600 leading-relaxed">
                       {b.desc}
                     </p>
                   </div>
 
-                  <div className="pt-4 mt-4 border-t border-slate-800/80 flex items-center gap-1.5 text-[11px] font-bold text-emerald-400/90">
-                    <span>100% Proven</span>
-                    <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <div className="pt-3 mt-3 border-t border-warm-100 flex items-center gap-1 text-[11px] font-bold text-warm-700">
+                    <span>Clean Whole Food</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-warm-400" />
                   </div>
                 </div>
               );
