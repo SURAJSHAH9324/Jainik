@@ -11,6 +11,8 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
   const [discountPercent, setDiscountPercent] = useState(0);
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [orderId, setOrderId] = useState('');
 
   if (!isOpen) return null;
 
@@ -36,6 +38,9 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
     e.preventDefault();
     if (cartItems.length === 0) return;
 
+    const newId = 'JNK-' + Math.floor(100000 + Math.random() * 900000);
+    setOrderId(newId);
+
     openWhatsAppOrder({
       customerName,
       customerPhone,
@@ -45,6 +50,8 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
       isReturningCustomer,
       discountAmount
     });
+
+    setIsSuccess(true);
   };
 
   return (
@@ -81,9 +88,54 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
             <span>Sends directly to Official WhatsApp: <strong>9325578244</strong></span>
           </div>
 
-          {/* Cart Items List */}
+          {/* Cart Items List or Success Confirmation */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
-            {cartItems.length === 0 ? (
+            {isSuccess ? (
+              <div className="h-full flex flex-col items-center justify-center text-center space-y-5 py-8 animate-fadeIn">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 border-2 border-emerald-500 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
+                  <Check className="w-8 h-8 stroke-[3]" />
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-xs font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                    Order Placed Successfully! 🎉
+                  </span>
+                  <h3 className="text-xl font-black text-warm-950 pt-2">
+                    Thank You, {customerName || 'Valued Customer'}!
+                  </h3>
+                  <p className="text-xs text-warm-600 max-w-xs mx-auto">
+                    Your complete order and requirements have been sent directly to our official WhatsApp (+91 9325578244).
+                  </p>
+                </div>
+
+                <div className="w-full bg-warm-50 p-4 rounded-2xl border border-warm-200 text-left text-xs space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-warm-500 font-bold">Order ID:</span>
+                    <span className="font-black text-warm-900">{orderId}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-warm-500 font-bold">Total Amount:</span>
+                    <span className="font-black text-warm-900 text-sm">₹{grandTotal}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-warm-500 font-bold">Dispatch Status:</span>
+                    <span className="font-bold text-emerald-700">Fresh Batch in 24h</span>
+                  </div>
+                </div>
+
+                <div className="w-full space-y-2 pt-2">
+                  <button
+                    onClick={() => {
+                      setIsSuccess(false);
+                      onClose();
+                    }}
+                    className="w-full py-3 rounded-xl btn-warm-primary text-xs font-bold"
+                  >
+                    Done / Continue Browsing
+                  </button>
+                </div>
+              </div>
+            ) : cartItems.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12">
                 <div className="w-16 h-16 rounded-full bg-warm-100 flex items-center justify-center text-warm-400">
                   <ShoppingBag className="w-8 h-8" />

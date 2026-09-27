@@ -8,6 +8,7 @@ import WhyJainik from './components/WhyJainik';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import CartDrawer from './components/CartDrawer';
+import OrderModal from './components/OrderModal';
 import Footer from './components/Footer';
 import QuickActionDock from './components/QuickActionDock';
 import NutritionModal from './components/NutritionModal';
@@ -32,6 +33,18 @@ export default function App() {
   const [nutritionOpen, setNutritionOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [orderModalItem, setOrderModalItem] = useState(null);
+
+  // Open Direct Order Modal with full address, requirement note & success screen
+  const handleOpenOrder = (productItem) => {
+    setOrderModalItem(productItem || {
+      name: 'Jainik Energy Bar (40g Single Bar)',
+      price: 80,
+      image: '/jainik-bar-hero.jpg'
+    });
+    setOrderModalOpen(true);
+  };
 
   // Cart Handlers
   const handleAddToCart = (quantity = 1) => {
@@ -57,7 +70,7 @@ export default function App() {
       }
     });
 
-    showToast(`Added ${quantity} × Jainik Energy Bar to WhatsApp Order`);
+    showToast(`Added ${quantity} × Jainik Energy Bar to Order Cart`);
     setCartOpen(true);
   };
 
@@ -75,7 +88,7 @@ export default function App() {
       }
     });
 
-    showToast(`Added ${bundleItem.name} to WhatsApp Order!`);
+    showToast(`Added ${bundleItem.name} to Order Cart!`);
     setCartOpen(true);
   };
 
@@ -133,12 +146,12 @@ export default function App() {
       {/* Mobile Sticky Bottom Conversion Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FAF6F0]/95 backdrop-blur-xl border-t border-warm-300 px-4 py-3 flex items-center justify-between shadow-warm-lg">
         <div>
-          <span className="text-[10px] text-warm-600 font-black block tracking-wider uppercase">JAINIK ENERGY BAR</span>
-          <span className="text-warm-900 font-black text-sm">₹80 <span className="text-xs text-warm-500 font-normal">/ Bar</span></span>
+          <span className="text-[10px] text-warm-700 font-black block tracking-wider uppercase">JAINIK ENERGY BAR</span>
+          <span className="text-warm-950 font-black text-sm">₹80 <span className="text-xs text-warm-600 font-normal">/ Bar</span></span>
         </div>
         <div className="flex items-center gap-2">
           <button 
-            onClick={() => handleAddToCart(1)}
+            onClick={() => handleOpenOrder({ name: 'Jainik Energy Bar (40g Single Bar)', price: 80, image: '/jainik-bar-hero.jpg' })}
             className="btn-warm-primary text-xs py-2.5 px-4"
           >
             Order on WA
@@ -146,7 +159,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* Navigation Header */}
+      {/* Navigation Header (Sticky top-0 so it NEVER overlaps Hero!) */}
       <Navbar 
         cartCount={totalCartCount} 
         onOpenCart={() => setCartOpen(true)} 
@@ -155,18 +168,20 @@ export default function App() {
 
       {/* Main Page Content */}
       <main>
-        {/* 1. Hero Section: Compact above the fold, featuring jainik-bar-hero.jpg */}
+        {/* 1. Hero Section: High contrast, readable, featuring jainik-bar-hero.jpg */}
         <Hero 
           product={JAINIK_PRODUCT}
           onAddToCart={handleAddToCart}
           onOpenNutrition={() => setNutritionOpen(true)}
           onOpenImage={handleOpenImage}
+          onOpenOrder={handleOpenOrder}
         />
 
         {/* 2. Barefruit-Style Product Collection Grid: 3, 6, 12, 24 Packs with Package.png */}
         <BundleBuilder 
           product={JAINIK_PRODUCT}
           onAddBundleToCart={handleAddBundleToCart}
+          onOpenOrder={handleOpenOrder}
         />
 
         {/* 3. Visual Brand Gallery: Interactive showcase for jainik-1.png to jainik-5.png */}
@@ -190,6 +205,13 @@ export default function App() {
       {/* Footer */}
       <Footer />
 
+      {/* Order Modal with Customer Requirements, Address & Order Successful Screen */}
+      <OrderModal 
+        isOpen={orderModalOpen}
+        onClose={() => setOrderModalOpen(false)}
+        selectedProduct={orderModalItem}
+      />
+
       {/* Nutrition Facts Modal */}
       {nutritionOpen && (
         <NutritionModal 
@@ -208,7 +230,7 @@ export default function App() {
         />
       )}
 
-      {/* WhatsApp Cart Drawer */}
+      {/* WhatsApp Cart Drawer with Order Successful Screen */}
       <CartDrawer 
         isOpen={cartOpen}
         onClose={() => setCartOpen(false)}

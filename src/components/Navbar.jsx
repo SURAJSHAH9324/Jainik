@@ -15,18 +15,18 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition }) {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
+    <header className="sticky top-0 left-0 right-0 z-50 bg-[#FAF6F0] shadow-warm-sm">
       {/* Barefruit-Style Top Announcement Bar */}
       <div className="bg-[#3D2211] text-[#FAF6F0] text-[11px] font-bold py-1.5 px-4 text-center tracking-wide flex items-center justify-center gap-2">
         <Sparkles className="w-3 h-3 text-amber-400" />
-        <span>Free Express Courier Across India on Multi-Packs • 100% Real Whole Foods • Direct WhatsApp: 9325578244</span>
+        <span>Free Express Courier Across India • 100% Real Whole Foods • Direct WhatsApp: 9325578244</span>
       </div>
 
       {/* Main Navbar Bar */}
       <div className={`transition-all duration-300 ${
         isScrolled 
-          ? 'bg-[#FAF6F0]/95 backdrop-blur-md border-b border-warm-300 shadow-warm-sm py-2.5' 
-          : 'bg-[#FAF6F0]/90 backdrop-blur-sm border-b border-warm-200/80 py-3'
+          ? 'bg-[#FAF6F0]/98 backdrop-blur-md border-b border-warm-300 py-2.5' 
+          : 'bg-[#FAF6F0] border-b border-warm-200 py-3'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           
