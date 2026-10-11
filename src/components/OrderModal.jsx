@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, CheckCircle2, MessageSquare, Truck, ShieldCheck, ShoppingBag, ArrowRight, User, Phone, MapPin, FileText, Check } from 'lucide-react';
 import { openWhatsAppOrder, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
 
-export default function OrderModal({ isOpen, onClose, selectedProduct, isReturning = false }) {
+export default function OrderModal({ isOpen, onClose, selectedProduct, isReturning = false, isFirstCustomer = false }) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -17,6 +17,7 @@ export default function OrderModal({ isOpen, onClose, selectedProduct, isReturni
 
   const unitPrice = selectedProduct.price || 70;
   const totalPrice = unitPrice * quantity;
+  const isFirstOrder = isFirstCustomer || isReturning || selectedProduct.isFirstCustomer || selectedProduct.isReturning;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,7 +50,7 @@ export default function OrderModal({ isOpen, onClose, selectedProduct, isReturni
       items: orderItems,
       total: totalPrice,
       notes: formattedNotes,
-      isReturningCustomer: isReturning,
+      isFirstCustomer: isFirstOrder,
       discountAmount: 0
     });
 
@@ -303,7 +304,7 @@ export default function OrderModal({ isOpen, onClose, selectedProduct, isReturni
                     items: [{ name: selectedProduct.name, quantity, price: unitPrice }],
                     total: totalPrice,
                     notes: formattedNotes,
-                    isReturningCustomer: isReturning,
+                    isFirstCustomer: isFirstOrder,
                     discountAmount: 0
                   });
                 }}

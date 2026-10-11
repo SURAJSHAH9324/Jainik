@@ -91,11 +91,11 @@ export const PACKS = [
   },
   { 
     size: 10, 
-    price: 680, 
+    price: 650, 
     regularPrice: 700, 
-    savings: 20, 
+    savings: 50, 
     label: 'Pack of 10', 
-    sub: 'Save ₹20 (₹68 / Bar)', 
+    sub: 'Save ₹50 (₹65 / Bar)', 
     badge: 'Weekly Box',
     image: '/Package.png'
   },
@@ -186,7 +186,7 @@ export const FAQS = [
   },
   {
     question: 'How do I place an order directly on WhatsApp?',
-    answer: 'Select your desired pack (Pack of 1 ₹70, Pack of 5 ₹350, Pack of 10 ₹680, Pack of 30 ₹2,010, or Pack of 40 ₹2,640) and click "Order on WhatsApp". Your complete order requirement will open directly on our official WhatsApp: +91 95884 17743.'
+    answer: 'Select your desired pack (Pack of 1 ₹70, Pack of 5 ₹350, Pack of 10 ₹650, Pack of 30 ₹2,010, or Pack of 40 ₹2,640) and click "Order on WhatsApp". Your complete order requirement will open directly on our official WhatsApp: +91 95884 17743.'
   },
   {
     question: 'Is Jainik Energy Bar 100% natural with no preservatives?',
@@ -197,7 +197,7 @@ export const FAQS = [
     answer: 'Jainik Foods is officially certified by FSSAI under License No. 21526066000742.'
   },
   {
-    question: 'How can returning customers claim discounts?',
-    answer: 'Returning customers can toggle the "Returning VIP Customer" option in the cart to get an extra 10% loyalty discount applied directly to their WhatsApp invoice!'
+    question: 'How can first-time customers claim the 10% discount?',
+    answer: 'First-time customers can click "+ Apply 10% First Order" on the pack cards or in the cart to get an extra 10% welcome discount applied directly to their WhatsApp invoice!'
   }
 ];

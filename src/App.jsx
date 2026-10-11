@@ -22,7 +22,7 @@ export default function App() {
     {
       id: 'jainik-pack-10',
       name: 'Jainik Energy Bar (Pack of 10)',
-      price: 680,
+      price: 650,
       quantity: 1,
       badge: 'Weekly Box',
       accentColor: '#241611'

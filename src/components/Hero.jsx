@@ -12,7 +12,7 @@ export default function Hero({ product, onAddToCart, onOpenNutrition, onOpenImag
   const packOptions = [
     { size: 1, name: 'Pack of 1', price: 70, label: 'Single Bar', image: '/jainik-bar-hero.jpg' },
     { size: 5, name: 'Pack of 5', price: 350, label: 'Pocket Pack', image: '/Package.png' },
-    { size: 10, name: 'Pack of 10', price: 680, savings: 20, label: 'Save ₹20', image: '/Package.png' },
+    { size: 10, name: 'Pack of 10', price: 650, savings: 50, label: 'Save ₹50', image: '/Package.png' },
     { size: 30, name: 'Pack of 30', price: 2010, savings: 90, popular: true, label: 'Bestseller', image: '/Package.png' },
     { size: 40, name: 'Pack of 40', price: 2640, savings: 160, label: 'Save ₹160', image: '/Package.png' },
   ];

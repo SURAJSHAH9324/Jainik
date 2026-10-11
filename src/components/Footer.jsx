@@ -18,7 +18,7 @@ export default function Footer() {
               Connect Directly with Team Jainik
             </h3>
             <p className="text-[#F3E8DD]/80 text-sm leading-relaxed">
-              Order your fresh pack boxes (1, 5, 10, 30, 40 bars), ask bulk order queries, or get returning customer discounts directly at <strong>{DISPLAY_PHONE_NUMBER}</strong> / <strong>+91 99223 22906</strong>.
+              Order your fresh pack boxes (1, 5, 10, 30, 40 bars), ask bulk order queries, or claim your 10% first customer discount directly at <strong>{DISPLAY_PHONE_NUMBER}</strong> / <strong>+91 99223 22906</strong>.
             </p>
           </div>
 
@@ -70,7 +70,7 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs text-[#F3E8DD]/70">
               <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 1 (₹70)</a></li>
               <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 5 (₹350)</a></li>
-              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 10 (₹680)</a></li>
+              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 10 (₹650)</a></li>
               <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 30 (₹2,010)</a></li>
               <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 40 (₹2,640)</a></li>
             </ul>

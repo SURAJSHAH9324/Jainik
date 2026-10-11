@@ -6,7 +6,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [notes, setNotes] = useState('');
-  const [isReturningCustomer, setIsReturningCustomer] = useState(false);
+  const [isFirstCustomer, setIsFirstCustomer] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
   const [promoApplied, setPromoApplied] = useState(false);
@@ -18,8 +18,8 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
 
   const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   
-  // Calculate discounts (Returning customer 10% or promo code 15%)
-  const effectiveDiscountPercent = Math.max(discountPercent, isReturningCustomer ? 0.10 : 0);
+  // Calculate discounts (First order customer 10% or promo code 15%)
+  const effectiveDiscountPercent = Math.max(discountPercent, isFirstCustomer ? 0.10 : 0);
   const discountAmount = Math.round(subtotal * effectiveDiscountPercent);
   const grandTotal = Math.max(0, subtotal - discountAmount);
 
@@ -47,7 +47,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
       items: cartItems,
       total: grandTotal,
       notes,
-      isReturningCustomer,
+      isFirstCustomer,
       discountAmount
     });
 
@@ -199,25 +199,25 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                   ))}
                 </div>
 
-                {/* Returning Customer Privilege Toggle */}
+                {/* First Time Customer Privilege Toggle */}
                 <div className="p-3.5 rounded-2xl bg-warm-100 border border-warm-300 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Crown className="w-4 h-4 text-warm-700" />
                     <div>
-                      <span className="text-xs font-bold text-warm-900 block">Returning Customer?</span>
-                      <span className="text-[10px] text-warm-600">Get 10% repeat order loyalty discount</span>
+                      <span className="text-xs font-bold text-warm-900 block">First Time Customer?</span>
+                      <span className="text-[10px] text-warm-600">Get 10% welcome discount on your order</span>
                     </div>
                   </div>
                   <button
                     type="button"
-                    onClick={() => setIsReturningCustomer(!isReturningCustomer)}
+                    onClick={() => setIsFirstCustomer(!isFirstCustomer)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                      isReturningCustomer 
+                      isFirstCustomer 
                         ? 'bg-warm-900 text-white' 
                         : 'bg-white border border-warm-300 text-warm-800'
                     }`}
                   >
-                    {isReturningCustomer ? '✓ 10% Applied' : '+ Claim'}
+                    {isFirstCustomer ? '✓ 10% Applied' : '+ Claim'}
                   </button>
                 </div>
 

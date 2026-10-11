@@ -3,11 +3,11 @@ import { Star, ShoppingBag, MessageSquare, Truck, Crown, Flame, Sparkles, Check 
 import { PACKS } from '../data/products';
 
 export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder }) {
-  const [isReturningCustomer, setIsReturningCustomer] = useState(false);
+  const [isFirstCustomer, setIsFirstCustomer] = useState(false);
 
   const handleOrderClick = (pack) => {
-    const returningDiscount = isReturningCustomer ? Math.round(pack.price * 0.10) : 0;
-    const finalPrice = pack.price - returningDiscount;
+    const firstOrderDiscount = isFirstCustomer ? Math.round(pack.price * 0.10) : 0;
+    const finalPrice = pack.price - firstOrderDiscount;
 
     if (onOpenOrder) {
       onOpenOrder({
@@ -15,7 +15,7 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
         price: finalPrice,
         image: pack.image,
         size: pack.size,
-        isReturning: isReturningCustomer
+        isFirstCustomer: isFirstCustomer
       });
     } else {
       handleAddToCart(pack);
@@ -23,11 +23,11 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
   };
 
   const handleAddToCart = (pack) => {
-    const returningDiscount = isReturningCustomer ? Math.round(pack.price * 0.10) : 0;
-    const finalPrice = pack.price - returningDiscount;
+    const firstOrderDiscount = isFirstCustomer ? Math.round(pack.price * 0.10) : 0;
+    const finalPrice = pack.price - firstOrderDiscount;
 
     const bundleItem = {
-      id: `pack-${pack.size}-${isReturningCustomer ? 'vip' : 'standard'}`,
+      id: `pack-${pack.size}-${isFirstCustomer ? 'first-order' : 'standard'}`,
       name: `Jainik Energy Bar (${pack.label})`,
       price: finalPrice,
       isBundle: true,
@@ -58,7 +58,7 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
           </p>
         </div>
 
-        {/* VIP Returning Customer Banner */}
+        {/* First Time Customer Welcome Discount Banner */}
         <div className="max-w-3xl mx-auto mb-10 bg-[#F3E8DD] border border-[#D8C08A] rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#241611] text-[#C9A46C] flex items-center justify-center flex-shrink-0">
@@ -66,32 +66,32 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
             </div>
             <div>
               <span className="text-xs sm:text-sm font-black text-[#241611] block">
-                Returning Customer? Get an extra 10% Loyalty Discount
+                First Time Ordering? Get an extra 10% Welcome Discount
               </span>
               <span className="text-[11px] text-[#3D2211] font-medium">
-                Automatically calculated on your order confirmation.
+                Special welcome offer on your first order. Automatically calculated.
               </span>
             </div>
           </div>
 
           <button
             type="button"
-            onClick={() => setIsReturningCustomer(!isReturningCustomer)}
+            onClick={() => setIsFirstCustomer(!isFirstCustomer)}
             className={`px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap ${
-              isReturningCustomer 
+              isFirstCustomer 
                 ? 'bg-[#241611] text-[#FFFBED] shadow-sm' 
                 : 'bg-white border border-[#D8C08A] text-[#241611] hover:bg-[#FAF6F0]'
             }`}
           >
-            {isReturningCustomer ? '✓ VIP 10% Active' : '+ Apply 10% VIP'}
+            {isFirstCustomer ? '✓ 10% First Order Applied' : '+ Apply 10% First Order'}
           </button>
         </div>
 
         {/* 5 Product Pack Grid (Pack of 1, 5, 10, 30, and 40) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {PACKS.map((pack) => {
-            const returningDiscount = isReturningCustomer ? Math.round(pack.price * 0.10) : 0;
-            const finalPrice = pack.price - returningDiscount;
+            const firstOrderDiscount = isFirstCustomer ? Math.round(pack.price * 0.10) : 0;
+            const finalPrice = pack.price - firstOrderDiscount;
             const effectivePerBar = (finalPrice / pack.size).toFixed(0);
 
             return (
@@ -165,9 +165,9 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
                       </span>
                     </div>
 
-                    {isReturningCustomer && (
+                    {isFirstCustomer && (
                       <span className="text-[9px] font-black text-[#241611] bg-[#C9A46C] px-2 py-0.5 rounded-full">
-                        -10% VIP
+                        -10% First Order
                       </span>
                     )}
                   </div>

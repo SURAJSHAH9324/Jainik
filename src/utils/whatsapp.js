@@ -12,6 +12,7 @@ export function openWhatsAppOrder({
   total, 
   notes, 
   isReturningCustomer = false, 
+  isFirstCustomer = false,
   discountAmount = 0 
 }) {
   const dateStr = new Date().toLocaleDateString('en-IN', {
@@ -30,7 +31,8 @@ export function openWhatsAppOrder({
       }).join('\n')
     : '• 1x Jainik Energy Bar (Rs. 70)';
 
-  const customerTag = isReturningCustomer ? 'Returning VIP Customer (10% Loyalty)' : 'Valued Customer';
+  const isEligibleDiscount = isFirstCustomer || isReturningCustomer;
+  const customerTag = isEligibleDiscount ? 'First Order Customer (10% Welcome Discount)' : 'Valued Customer';
   const subtotal = (total + (discountAmount || 0)).toFixed(0);
 
   const fullMessage = 
@@ -52,7 +54,7 @@ ${notes ? `• Address / Note:\n  ${notes}\n` : ''}
 ${formattedItems}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 • Subtotal    : Rs. ${subtotal}
-${discountAmount > 0 ? `• Loyalty Disc: -Rs. ${discountAmount.toFixed(0)}\n` : ''}• Shipping    : FREE (Direct Dispatch)
+${discountAmount > 0 ? `• First Order Disc: -Rs. ${discountAmount.toFixed(0)}\n` : ''}• Shipping    : FREE (Direct Dispatch)
 *FINAL TOTAL  : Rs. ${total.toFixed(0)}*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
