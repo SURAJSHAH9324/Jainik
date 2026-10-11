@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Heart, Zap, Sparkles, CheckCircle2, MessageSquare, Award } from 'lucide-react';
-import { openWhatsAppDirectChat } from '../utils/whatsapp';
+import { openWhatsAppDirectChat, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
 
 export default function WhyJainik() {
   const pillars = [
@@ -27,20 +27,20 @@ export default function WhyJainik() {
   ];
 
   return (
-    <section id="why-jainik" className="py-20 bg-white text-warm-900 relative border-b border-warm-200">
+    <section id="why-jainik" className="py-20 bg-[#FDFBF7] text-[#281A14] relative border-b border-[#D8C08A]/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
+        {/* Section Header from Reference Mockup */}
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-warm-100 border border-warm-300 text-warm-800 text-xs font-bold">
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span>शक्ती जी आहे नैसर्गिक व परंपरेची!</span>
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#F3E8DD] border border-[#D8C08A] text-[#281A14] text-xs font-black uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-[#C9A46C]" />
+            <span>OUR STORY • SUTRA OF PURITY</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-warm-900 tracking-tight">
-            Why Choose <span className="text-warm-600">Jainik?</span>
+          <h2 className="text-3xl sm:text-5xl font-serif font-black text-[#241611] tracking-tight">
+            More Than a Brand. <span className="italic font-normal text-[#C9A46C]">It's a Philosophy.</span>
           </h2>
-          <p className="text-warm-700 text-xs sm:text-sm">
-            The power of nature and tradition, handcrafted for modern active lifestyles.
+          <p className="text-[#3D2211] text-xs sm:text-sm font-medium">
+            At Jainik, we believe true wellness comes from purity — in what we eat and how it's made. Built on Ahimsa and timeless Indian heritage.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default function WhyJainik() {
             className="px-4 py-2 rounded-xl btn-whatsapp-pill text-xs font-bold flex items-center gap-1.5 whitespace-nowrap"
           >
             <MessageSquare className="w-3.5 h-3.5 fill-white" />
-            <span>Chat: 9325578244</span>
+            <span>Chat: {DISPLAY_PHONE_NUMBER}</span>
           </button>
         </div>
 

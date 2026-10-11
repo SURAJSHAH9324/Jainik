@@ -15,17 +15,17 @@ import NutritionModal from './components/NutritionModal';
 import ImageModal from './components/ImageModal';
 import { JAINIK_PRODUCT } from './data/products';
 import { Check, MessageSquare } from 'lucide-react';
-import { openWhatsAppDirectChat } from './utils/whatsapp';
+import { openWhatsAppDirectChat, DISPLAY_PHONE_NUMBER } from './utils/whatsapp';
 
 export default function App() {
   const [cart, setCart] = useState([
     {
-      id: 'jainik-pack-12',
-      name: 'Jainik Energy Bar (12-Pack Box)',
-      price: 890,
+      id: 'jainik-pack-10',
+      name: 'Jainik Energy Bar (Pack of 10)',
+      price: 680,
       quantity: 1,
-      badge: 'Most Popular',
-      accentColor: '#5C361D'
+      badge: 'Weekly Box',
+      accentColor: '#241611'
     }
   ]);
 
@@ -40,7 +40,7 @@ export default function App() {
   const handleOpenOrder = (productItem) => {
     setOrderModalItem(productItem || {
       name: 'Jainik Energy Bar (40g Single Bar)',
-      price: 80,
+      price: 70,
       image: '/jainik-bar-hero.jpg'
     });
     setOrderModalOpen(true);
@@ -62,9 +62,9 @@ export default function App() {
           {
             id: 'single-bar',
             name: 'Jainik Energy Bar (40g Single Bar)',
-            price: 80,
+            price: 70,
             quantity: quantity,
-            badge: 'Single Bar (₹80)'
+            badge: 'Single Bar (₹70)'
           }
         ];
       }
@@ -135,35 +135,36 @@ export default function App() {
 
       {/* Floating WhatsApp Quick Order Button (Desktop Left) */}
       <button 
-        onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I would like to order Jainik Energy Bars (₹80/bar)!')}
-        className="hidden md:flex fixed bottom-6 left-6 z-40 bg-white hover:bg-warm-50 text-warm-900 font-bold text-xs px-4 py-3 rounded-full shadow-warm-lg items-center gap-2.5 transition-all hover:scale-105 border border-warm-300"
-        title="Direct WhatsApp: 9325578244"
+        onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I would like to order Jainik Energy Bars (₹70/bar)!')}
+        className="hidden md:flex fixed bottom-6 left-6 z-40 bg-[#241611] hover:bg-[#1A0F0B] text-[#D8C08A] font-bold text-xs px-4 py-3 rounded-full shadow-2xl items-center gap-2.5 transition-all hover:scale-105 border border-[#D8C08A]/40"
+        title={`Direct WhatsApp: ${DISPLAY_PHONE_NUMBER}`}
       >
-        <MessageSquare className="w-4 h-4 text-[#128C7E] fill-[#128C7E]" />
-        <span>WhatsApp: 9325578244 (₹80/Bar)</span>
+        <MessageSquare className="w-4 h-4 text-[#25D366] fill-[#25D366]" />
+        <span>WhatsApp: {DISPLAY_PHONE_NUMBER} (₹70/Bar)</span>
       </button>
 
       {/* Mobile Sticky Bottom Conversion Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FAF6F0]/95 backdrop-blur-xl border-t border-warm-300 px-4 py-3 flex items-center justify-between shadow-warm-lg">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#1A0F0B]/95 backdrop-blur-xl border-t border-[#D8C08A]/30 px-4 py-3 flex items-center justify-between shadow-2xl">
         <div>
-          <span className="text-[10px] text-warm-700 font-black block tracking-wider uppercase">JAINIK ENERGY BAR</span>
-          <span className="text-warm-950 font-black text-sm">₹80 <span className="text-xs text-warm-600 font-normal">/ Bar</span></span>
+          <span className="text-[10px] text-[#C9A46C] font-black block tracking-wider uppercase">JAINIK ENERGY BAR</span>
+          <span className="text-[#FFFBED] font-black text-sm">₹70 <span className="text-xs text-[#D8C08A] font-normal">/ Bar</span></span>
         </div>
         <div className="flex items-center gap-2">
           <button 
-            onClick={() => handleOpenOrder({ name: 'Jainik Energy Bar (40g Single Bar)', price: 80, image: '/jainik-bar-hero.jpg' })}
-            className="btn-warm-primary text-xs py-2.5 px-4"
+            onClick={() => handleOpenOrder({ name: 'Jainik Energy Bar (40g Single Bar)', price: 70, image: '/jainik-bar-hero.jpg' })}
+            className="bg-[#C9A46C] text-[#1A0F0B] font-black text-xs py-2.5 px-4 rounded-xl shadow-md"
           >
             Order on WA
           </button>
         </div>
       </div>
 
-      {/* Navigation Header (Sticky top-0 so it NEVER overlaps Hero!) */}
+      {/* Navigation Header */}
       <Navbar 
         cartCount={totalCartCount} 
         onOpenCart={() => setCartOpen(true)} 
         onOpenNutrition={() => setNutritionOpen(true)}
+        onOpenOrder={handleOpenOrder}
       />
 
       {/* Main Page Content */}

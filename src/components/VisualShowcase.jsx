@@ -17,20 +17,20 @@ export default function VisualShowcase({ onOpenImage }) {
   const currentSlide = SHOWCASE_SLIDES[currentIndex];
 
   return (
-    <section id="showcase" className="py-20 bg-[#FAF6F0] text-warm-900 relative border-b border-warm-200">
+    <section id="showcase" className="py-20 bg-[#241611] text-[#FFFBED] relative border-b border-[#D8C08A]/20">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white border border-warm-300 text-warm-800 text-xs font-bold shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span>Visual Story & Craft</span>
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#2E1D17] border border-[#D8C08A]/30 text-[#D8C08A] text-xs font-black uppercase tracking-wider shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#C9A46C]" />
+            <span>VISUAL STORY & CRAFT</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-warm-900 tracking-tight">
-            Inside the <span className="text-warm-600">Jainik Standard</span>
+          <h2 className="text-3xl sm:text-5xl font-serif font-black text-[#FFFBED] tracking-tight">
+            Inside the <span className="italic font-normal text-[#C9A46C]">Jainik Standard</span>
           </h2>
-          <p className="text-warm-700 text-xs sm:text-sm">
+          <p className="text-[#F3E8DD]/80 text-xs sm:text-sm font-medium">
             Swipe through our official brand visuals and pure ingredient formulation.
           </p>
         </div>
@@ -39,7 +39,7 @@ export default function VisualShowcase({ onOpenImage }) {
         <div className="max-w-5xl mx-auto">
           
           {/* Main Visual Display Frame */}
-          <div className="relative rounded-3xl overflow-hidden bg-white border border-warm-300 shadow-warm-lg">
+          <div className="relative rounded-3xl overflow-hidden bg-[#1A0F0B] border border-[#D8C08A]/30 shadow-2xl">
             
             {/* Clickable Image Container */}
             <div 
@@ -99,7 +99,7 @@ export default function VisualShowcase({ onOpenImage }) {
             </button>
           </div>
 
-          {/* 5 Barefruit-Style Thumbnail Tabs */}
+          {/* Thumbnail Tabs */}
           <div className="grid grid-cols-5 gap-2 sm:gap-3 mt-4">
             {SHOWCASE_SLIDES.map((slide, idx) => {
               const isActive = currentIndex === idx;
@@ -109,26 +109,26 @@ export default function VisualShowcase({ onOpenImage }) {
                   onClick={() => setCurrentIndex(idx)}
                   className={`p-2 rounded-2xl border text-left transition-all ${
                     isActive
-                      ? 'border-warm-900 bg-white ring-2 ring-warm-900/10 shadow-sm'
-                      : 'border-warm-200 bg-white/60 hover:bg-white hover:border-warm-300'
+                      ? 'border-[#C9A46C] bg-[#1A0F0B] ring-2 ring-[#C9A46C]/40 shadow-sm'
+                      : 'border-[#D8C08A]/20 bg-[#241611] hover:bg-[#2E1D17]'
                   }`}
                 >
-                  <div className="aspect-[16/9] rounded-lg overflow-hidden bg-warm-100 mb-1.5">
+                  <div className="aspect-[16/9] rounded-lg overflow-hidden bg-[#2E1D17] mb-1.5">
                     <img 
                       src={slide.image} 
                       alt={slide.title} 
-                      className={`w-full h-full object-cover transition-opacity ${isActive ? 'opacity-100' : 'opacity-70'}`}
+                      className={`w-full h-full object-cover transition-opacity ${isActive ? 'opacity-100' : 'opacity-60'}`}
                     />
                   </div>
                   <div className="hidden sm:block">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-warm-500 block">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C9A46C] block">
                       Slide {idx + 1}
                     </span>
-                    <span className="text-xs font-bold text-warm-900 line-clamp-1">
+                    <span className="text-xs font-bold text-[#FFFBED] line-clamp-1">
                       {slide.title}
                     </span>
                   </div>
-                  <div className="sm:hidden text-center text-[10px] font-black text-warm-800">
+                  <div className="sm:hidden text-center text-[10px] font-black text-[#D8C08A]">
                     #{idx + 1}
                   </div>
                 </button>

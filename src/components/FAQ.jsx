@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FAQS } from '../data/products';
 import { ChevronDown, HelpCircle, MessageSquare, Sparkles } from 'lucide-react';
-import { openWhatsAppDirectChat } from '../utils/whatsapp';
+import { openWhatsAppDirectChat, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(0);
@@ -70,7 +70,7 @@ export default function FAQ() {
             className="w-full sm:w-auto px-6 py-3.5 btn-whatsapp-pill text-xs flex items-center justify-center gap-2"
           >
             <MessageSquare className="w-4 h-4 fill-white" />
-            <span>WhatsApp: 9325578244</span>
+            <span>WhatsApp: {DISPLAY_PHONE_NUMBER}</span>
           </button>
         </div>
 

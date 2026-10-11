@@ -1,7 +1,9 @@
-export const WHATSAPP_PHONE_NUMBER = '919325578244';
+export const WHATSAPP_PHONE_NUMBER = '919588417743';
+export const DISPLAY_PHONE_NUMBER = '+91 95884 17743';
 
 /**
- * Formats order data with a CSS-styled monospace receipt block and sends to WhatsApp 9325578244
+ * Formats order data with a clean, professional table-like text layout
+ * Sends to WhatsApp +91 95884 17743 without broken emojis or weird code blocks
  */
 export function openWhatsAppOrder({ 
   customerName, 
@@ -20,58 +22,53 @@ export function openWhatsAppOrder({
 
   const orderCode = 'JNK-' + Math.floor(1000 + Math.random() * 9000);
 
-  // Format line items in CSS receipt format
+  // Clean, structured line items
   const formattedItems = items && items.length > 0
     ? items.map((item, index) => {
         const itemTotal = (item.price * item.quantity).toFixed(0);
-        return `[${index + 1}] ${item.name}\n    Qty: ${item.quantity} x ₹${item.price} = ₹${itemTotal}`;
+        return `• ${item.name} | Qty: ${item.quantity} | Total: Rs. ${itemTotal}`;
       }).join('\n')
-    : '[1] 1x Jainik Energy Bar Inquiry';
+    : '• 1x Jainik Energy Bar (Rs. 70)';
 
-  const customerTag = isReturningCustomer ? '👑 RETURNING VIP CUSTOMER (10% Loyalty)' : '🌱 NEW VALUED CUSTOMER';
-
-  // CSS styled block using WhatsApp triple-backtick monospace format
-  const cssReceipt = 
-`\`\`\`css
-/* === JAINIK ORDER INVOICE === */
-Order Ref : #${orderCode}
-Date      : ${dateStr}
-Base Unit : ₹80 / Bar
-
--- ITEMS ORDERED --
-${formattedItems}
-
----------------------------------
-Total Items : ${items ? items.reduce((acc, i) => acc + i.quantity, 0) : 1} Bars
-Subtotal    : ₹${(total + (discountAmount || 0)).toFixed(0)}
-${discountAmount > 0 ? `Loyalty Disc: -₹${discountAmount.toFixed(0)}\n` : ''}Shipping    : FREE (Direct Dispatch)
-FINAL TOTAL : ₹${total.toFixed(0)}
-\`\`\``;
+  const customerTag = isReturningCustomer ? 'Returning VIP Customer (10% Loyalty)' : 'Valued Customer';
+  const subtotal = (total + (discountAmount || 0)).toFixed(0);
 
   const fullMessage = 
-`🔴🟡⚪🟢🔵 *JAINIK SATTVIC ENERGY BAR*
-*Ahimsa • 100% Pure • Zero Added Sugar*
+`*JAINIK ENERGY BAR - ORDER INVOICE*
+*Built on Purity • 100% Natural • 40g*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-👤 *Client Name:* ${customerName || 'Direct WhatsApp Client'}
-📱 *Client Phone:* ${customerPhone || 'Direct Inquiry'}
-🏷️ *Client Type:* ${customerTag}
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-${cssReceipt}
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-${notes ? `📝 *Requirement / Address:* \n"${notes}"\n\n` : ''}` +
-`🙏 *Message to Team Jainik:*
-_"Please confirm my order and share your UPI / QR code for instant payment. Looking forward to fresh energy bars!"_
+*ORDER DETAILS*
+• Order Ref   : #${orderCode}
+• Date        : ${dateStr}
+• Base Rate   : Rs. 70 / Bar
 
-📞 *Direct Support:* +91 9325578244`;
+*CUSTOMER INFORMATION*
+• Name        : ${customerName || 'Direct Website Customer'}
+• Phone       : ${customerPhone || 'Direct Inquiry'}
+• Type        : ${customerTag}
+${notes ? `• Address / Note:\n  ${notes}\n` : ''}
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+*ORDER ITEMS*
+${formattedItems}
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Subtotal    : Rs. ${subtotal}
+${discountAmount > 0 ? `• Loyalty Disc: -Rs. ${discountAmount.toFixed(0)}\n` : ''}• Shipping    : FREE (Direct Dispatch)
+*FINAL TOTAL  : Rs. ${total.toFixed(0)}*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+*Message to Team Jainik:*
+"Please confirm my order and share your UPI / QR code for instant payment. Looking forward to fresh energy bars!"
+
+*Direct Kitchen Helpline:* +91 95884 17743`;
 
   const encodedUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(fullMessage)}`;
   window.open(encodedUrl, '_blank');
 }
 
 /**
- * Direct WhatsApp chat launcher with optional prefilled message
+ * Direct WhatsApp chat launcher with clean prefilled message
  */
-export function openWhatsAppDirectChat(customText = 'Hi Jainik Team, I would like to inquire about Jainik Sattvic Energy Bars (₹80/bar)!') {
+export function openWhatsAppDirectChat(customText = 'Hi Jainik Team, I would like to inquire about Jainik Energy Bars (Rs. 70/bar)!') {
   const encodedUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(customText)}`;
   window.open(encodedUrl, '_blank');
 }

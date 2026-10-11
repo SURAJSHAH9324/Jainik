@@ -4,20 +4,20 @@ import { Leaf, Sparkles, Zap, Heart, ShieldCheck, Dumbbell } from 'lucide-react'
 
 export default function IngredientSpotlight() {
   return (
-    <section id="ingredients" className="py-20 bg-[#FAF6F0] text-warm-900 relative border-b border-warm-200">
+    <section id="ingredients" className="py-20 bg-[#F3E8DD] text-[#281A14] relative border-b border-[#D8C08A]/30">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white border border-warm-300 text-warm-800 text-xs font-bold shadow-xs">
-            <Leaf className="w-3.5 h-3.5 text-emerald-600" />
-            <span>100% Real Whole Foods</span>
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white border border-[#D8C08A] text-[#281A14] text-xs font-black uppercase tracking-wider shadow-2xs">
+            <Leaf className="w-3.5 h-3.5 text-[#5C7548]" />
+            <span>100% REAL WHOLE FOODS</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-warm-900 tracking-tight">
-            10 Authentic <span className="text-warm-600">Superfoods</span>
+          <h2 className="text-3xl sm:text-5xl font-serif font-black text-[#241611] tracking-tight">
+            10 Authentic <span className="italic font-normal text-[#C9A46C]">Superfoods</span>
           </h2>
-          <p className="text-warm-700 text-xs sm:text-sm">
+          <p className="text-[#3D2211] text-xs sm:text-sm font-medium">
             Zero chemical preservatives • Zero artificial colors • Zero added white sugar.
           </p>
         </div>

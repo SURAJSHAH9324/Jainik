@@ -7,6 +7,26 @@ export default {
   theme: {
     extend: {
       colors: {
+        cocoa: {
+          DEFAULT: '#241611',
+          dark: '#1A0F0B',
+          light: '#2E1D17',
+        },
+        cashew: {
+          DEFAULT: '#F3E8DD',
+          light: '#FBF5EE',
+          dark: '#E7D5C4',
+        },
+        gold: {
+          DEFAULT: '#C9A46C',
+          light: '#D8BA8A',
+          dark: '#A88349',
+        },
+        champagne: '#D8C08A',
+        warmwhite: '#FFFBED',
+        espresso: '#281A14',
+        leaf: '#5C7548',
+        chocolate: '#4A241B',
         warm: {
           50: '#FDFBF7',   // ultra-clean warm ivory
           100: '#FAF6F0',  // soft cream canvas
@@ -18,15 +38,15 @@ export default {
           600: '#754B2E',  // rich hazelnut brown
           700: '#5C361D',  // deep chocolate brown
           800: '#3D2211',  // espresso
-          900: '#261408',  // dark cocoa ink
+          900: '#241611',  // deep cocoa brown
           950: '#170B04',  // deepest brown
         },
         sage: {
           50: '#F2F7F4',
           100: '#E1EDE6',
-          500: '#3B7A57',
-          700: '#255239',
-          900: '#153322',
+          500: '#5C7548',
+          700: '#3D5430',
+          900: '#1F3018',
         },
         whatsapp: {
           500: '#25D366',
@@ -35,7 +55,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        serif: ['Playfair Display', 'Cormorant Garamond', 'Georgia', 'serif'],
       },
       boxShadow: {
         'warm-sm': '0 2px 8px -2px rgba(61, 34, 17, 0.05)',

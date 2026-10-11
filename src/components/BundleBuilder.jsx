@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, ShoppingBag, MessageSquare, Truck, Check, Crown, Flame, Sparkles } from 'lucide-react';
+import { Star, ShoppingBag, MessageSquare, Truck, Crown, Flame, Sparkles, Check } from 'lucide-react';
 import { PACKS } from '../data/products';
 
 export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder }) {
@@ -11,7 +11,7 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
 
     if (onOpenOrder) {
       onOpenOrder({
-        name: `Jainik Energy Bar (${pack.size}-Pack Box)`,
+        name: `Jainik Energy Bar (${pack.label})`,
         price: finalPrice,
         image: pack.image,
         size: pack.size,
@@ -28,47 +28,47 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
 
     const bundleItem = {
       id: `pack-${pack.size}-${isReturningCustomer ? 'vip' : 'standard'}`,
-      name: `Jainik Energy Bar (${pack.size}-Pack Box)`,
+      name: `Jainik Energy Bar (${pack.label})`,
       price: finalPrice,
       isBundle: true,
       packSize: pack.size,
-      badge: `${pack.size}-Pack Box`,
-      accentColor: '#5C361D'
+      badge: pack.label,
+      accentColor: '#241611'
     };
 
     onAddBundleToCart(bundleItem);
   };
 
   return (
-    <section id="packs" className="py-20 bg-white text-warm-900 relative border-b border-warm-200">
+    <section id="packs" className="py-20 bg-[#FDFBF7] text-[#281A14] relative border-b border-[#D8C08A]/30">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Barefruit-Style Collection Header */}
+        {/* Header from Reference Mockup */}
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-warm-100 border border-warm-300 text-warm-900 text-xs font-bold">
-            <Flame className="w-3.5 h-3.5 text-amber-600" />
-            <span>Direct Manufacturer Pricing • ₹80 Base Unit</span>
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#F3E8DD] border border-[#D8C08A] text-[#281A14] text-xs font-black uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-[#C9A46C]" />
+            <span>OUR PRODUCTS • ₹70 BASE UNIT</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-warm-950 tracking-tight">
-            Shop <span className="text-warm-600">Pack Boxes</span>
+          <h2 className="text-3xl sm:text-5xl font-serif font-black text-[#241611] tracking-tight">
+            Pure Energy. <span className="italic font-normal text-[#C9A46C]">In Every Bite.</span>
           </h2>
-          <p className="text-warm-700 text-xs sm:text-sm">
-            Freshly prepared in Karanja (Lad), Maharashtra. Save more with multi-pack boxes with free delivery.
+          <p className="text-[#3D2211] text-xs sm:text-sm font-medium">
+            Handcrafted in Karanja (Lad), Maharashtra. Dispatched fresh in 24 hours with free delivery across India.
           </p>
         </div>
 
         {/* VIP Returning Customer Banner */}
-        <div className="max-w-3xl mx-auto mb-10 bg-warm-50 border border-warm-300 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs">
+        <div className="max-w-3xl mx-auto mb-10 bg-[#F3E8DD] border border-[#D8C08A] rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-warm-200 text-warm-900 flex items-center justify-center flex-shrink-0">
-              <Crown className="w-5 h-5 text-warm-800" />
+            <div className="w-10 h-10 rounded-xl bg-[#241611] text-[#C9A46C] flex items-center justify-center flex-shrink-0">
+              <Crown className="w-5 h-5 text-[#C9A46C]" />
             </div>
             <div>
-              <span className="text-xs sm:text-sm font-extrabold text-warm-950 block">
+              <span className="text-xs sm:text-sm font-black text-[#241611] block">
                 Returning Customer? Get an extra 10% Loyalty Discount
               </span>
-              <span className="text-[11px] text-warm-700 font-medium">
+              <span className="text-[11px] text-[#3D2211] font-medium">
                 Automatically calculated on your order confirmation.
               </span>
             </div>
@@ -77,18 +77,18 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
           <button
             type="button"
             onClick={() => setIsReturningCustomer(!isReturningCustomer)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap ${
               isReturningCustomer 
-                ? 'bg-warm-900 text-white shadow-2xs' 
-                : 'bg-white border border-warm-300 text-warm-900 hover:bg-warm-100'
+                ? 'bg-[#241611] text-[#FFFBED] shadow-sm' 
+                : 'bg-white border border-[#D8C08A] text-[#241611] hover:bg-[#FAF6F0]'
             }`}
           >
             {isReturningCustomer ? '✓ VIP 10% Active' : '+ Apply 10% VIP'}
           </button>
         </div>
 
-        {/* Barefruit-Style 4 Product Collection Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 5 Product Pack Grid (Pack of 1, 5, 10, 30, and 40) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {PACKS.map((pack) => {
             const returningDiscount = isReturningCustomer ? Math.round(pack.price * 0.10) : 0;
             const finalPrice = pack.price - returningDiscount;
@@ -99,12 +99,12 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
                 key={pack.size}
                 className={`rounded-2xl border transition-all duration-300 flex flex-col justify-between overflow-hidden bg-white group ${
                   pack.popular
-                    ? 'border-warm-900 shadow-warm-md ring-1 ring-warm-900'
-                    : 'border-warm-200 hover:border-warm-400 hover:shadow-warm-sm'
+                    ? 'border-[#C9A46C] shadow-xl ring-2 ring-[#C9A46C]/50'
+                    : 'border-[#D8C08A]/40 hover:border-[#C9A46C] hover:shadow-lg'
                 }`}
               >
                 {/* Product Image Area */}
-                <div className="relative aspect-[4/3] bg-warm-50 p-4 flex items-center justify-center overflow-hidden">
+                <div className="relative aspect-[4/3] bg-[#F3E8DD]/50 p-4 flex items-center justify-center overflow-hidden">
                   <img
                     src={pack.image}
                     alt={pack.label}
@@ -112,61 +112,61 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
                   />
 
                   {/* Badge */}
-                  <div className="absolute top-3 left-3 flex flex-col gap-1">
+                  <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
                     {pack.popular && (
-                      <span className="bg-warm-900 text-white font-black text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                      <span className="bg-[#241611] text-[#C9A46C] font-black text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                         BESTSELLER
                       </span>
                     )}
                     {pack.savings > 0 && (
-                      <span className="bg-emerald-600 text-white font-black text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                      <span className="bg-[#5C7548] text-white font-black text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                         SAVE ₹{pack.savings}
                       </span>
                     )}
                   </div>
 
-                  <span className="absolute bottom-2 right-2 text-[10px] font-extrabold text-warm-700 bg-white/95 px-2 py-0.5 rounded-md border border-warm-200 shadow-2xs">
-                    40g × {pack.size} Bars
+                  <span className="absolute bottom-2 right-2 text-[10px] font-black text-[#281A14] bg-white/95 px-2 py-0.5 rounded-md border border-[#D8C08A]/40 shadow-xs">
+                    40g × {pack.size} {pack.size === 1 ? 'Bar' : 'Bars'}
                   </span>
                 </div>
 
                 {/* Card Content */}
-                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600">
-                      <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                    <div className="flex items-center gap-1 text-[11px] font-bold text-[#C9A46C]">
+                      <Star className="w-3 h-3 fill-[#C9A46C] text-[#C9A46C]" />
                       <span>4.9 (Official Rating)</span>
                     </div>
 
-                    <h3 className="text-lg font-black text-warm-950 leading-snug">
-                      {pack.size}-Pack Box
+                    <h3 className="text-base font-black text-[#241611] leading-snug">
+                      {pack.label}
                     </h3>
 
-                    <p className="text-xs text-warm-600">
+                    <p className="text-xs text-[#5C361D] font-medium">
                       {pack.sub}
                     </p>
                   </div>
 
                   {/* Price Section */}
-                  <div className="pt-2 border-t border-warm-100 flex items-baseline justify-between">
+                  <div className="pt-2 border-t border-[#D8C08A]/30 flex items-baseline justify-between">
                     <div>
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-2xl font-black text-warm-950">
+                        <span className="text-xl font-black text-[#241611]">
                           ₹{finalPrice}
                         </span>
                         {pack.regularPrice > pack.price && (
-                          <span className="text-xs font-semibold text-warm-400 line-through">
+                          <span className="text-xs font-semibold text-[#8B4513] line-through">
                             ₹{pack.regularPrice}
                           </span>
                         )}
                       </div>
-                      <span className="text-[11px] font-extrabold text-emerald-700 block">
+                      <span className="text-[11px] font-black text-[#5C7548] block">
                         ₹{effectivePerBar} / Bar
                       </span>
                     </div>
 
                     {isReturningCustomer && (
-                      <span className="text-[10px] font-extrabold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full">
+                      <span className="text-[9px] font-black text-[#241611] bg-[#C9A46C] px-2 py-0.5 rounded-full">
                         -10% VIP
                       </span>
                     )}
@@ -177,16 +177,16 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
                     <button
                       type="button"
                       onClick={() => handleOrderClick(pack)}
-                      className="w-full py-2.5 rounded-xl btn-whatsapp-pill text-xs font-bold flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl bg-[#241611] hover:bg-[#1A0F0B] text-[#C9A46C] text-xs font-black flex items-center justify-center gap-1.5 transition-all shadow-sm"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 fill-white" />
+                      <MessageSquare className="w-3.5 h-3.5 fill-[#C9A46C]" />
                       <span>Order on WhatsApp</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => handleAddToCart(pack)}
-                      className="w-full py-2 rounded-xl btn-warm-secondary text-xs font-bold flex items-center justify-center gap-1.5"
+                      className="w-full py-2 rounded-xl bg-[#F3E8DD] hover:bg-[#E7D5C4] text-[#241611] border border-[#D8C08A] text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
                     >
                       <ShoppingBag className="w-3.5 h-3.5" />
                       <span>+ Add to Cart</span>
@@ -200,9 +200,9 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
         </div>
 
         {/* Free Shipping Footer Bar */}
-        <div className="mt-10 text-center flex items-center justify-center gap-2 text-xs font-bold text-warm-700">
-          <Truck className="w-4 h-4 text-emerald-600" />
-          <span>All multi-pack orders include Free Express Courier Delivery Across India</span>
+        <div className="mt-10 text-center flex items-center justify-center gap-2 text-xs font-black text-[#241611]">
+          <Truck className="w-4 h-4 text-[#5C7548]" />
+          <span>All orders include Free Express Courier Delivery Across India</span>
         </div>
 
       </div>

@@ -52,7 +52,7 @@ export default function QuickActionDock({ onOpenCart, onOpenNutrition }) {
         className="card-artisanal px-4 py-3 flex items-center gap-3 text-xs font-bold text-warm-900 hover:text-warm-700 border-warm-300 shadow-warm-md hover:scale-105 active:scale-95 bg-white"
       >
         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs animate-ping" />
-        <span>Order on WhatsApp (₹80)</span>
+        <span>Order on WhatsApp (₹70)</span>
         <ChevronRight className="w-4 h-4 text-warm-500" />
       </button>
 

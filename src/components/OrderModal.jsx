@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, MessageSquare, Truck, ShieldCheck, ShoppingBag, ArrowRight, User, Phone, MapPin, FileText, Check } from 'lucide-react';
-import { openWhatsAppOrder } from '../utils/whatsapp';
+import { openWhatsAppOrder, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
 
 export default function OrderModal({ isOpen, onClose, selectedProduct, isReturning = false }) {
   const [formData, setFormData] = useState({
@@ -15,7 +15,7 @@ export default function OrderModal({ isOpen, onClose, selectedProduct, isReturni
 
   if (!isOpen || !selectedProduct) return null;
 
-  const unitPrice = selectedProduct.price || 80;
+  const unitPrice = selectedProduct.price || 70;
   const totalPrice = unitPrice * quantity;
 
   const handleSubmit = (e) => {
@@ -86,7 +86,7 @@ export default function OrderModal({ isOpen, onClose, selectedProduct, isReturni
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Direct Kitchen Dispatch • Official WhatsApp 9325578244</span>
+                <span>Direct Kitchen Dispatch • Official WhatsApp: {DISPLAY_PHONE_NUMBER}</span>
               </div>
               <h2 className="text-2xl font-black text-warm-950">
                 Place Your Order

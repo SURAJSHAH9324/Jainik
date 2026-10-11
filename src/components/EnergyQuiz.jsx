@@ -192,7 +192,7 @@ export default function EnergyQuiz({ isOpen, onClose, products, onAddToCart }) {
                 onClick={handleDirectWhatsAppOrder}
                 className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-whatsapp-600 to-whatsapp-500 hover:from-whatsapp-500 hover:to-whatsapp-600 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-md shadow-whatsapp-500/25"
               >
-                <MessageSquare className="w-4 h-4 fill-white" /> Order via WhatsApp (9325578244)
+                <MessageSquare className="w-4 h-4 fill-white" /> Order via WhatsApp (+91 95884 17743)
               </button>
             </div>
 

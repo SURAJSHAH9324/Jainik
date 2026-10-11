@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag, MessageSquare, Tag, Check, User, Phone, FileText, Crown } from 'lucide-react';
-import { openWhatsAppOrder } from '../utils/whatsapp';
+import { openWhatsAppOrder, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
 
 export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem }) {
   const [customerName, setCustomerName] = useState('');
@@ -70,7 +70,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
               <div>
                 <h2 className="text-lg font-black text-warm-900">WhatsApp Order Cart</h2>
                 <span className="text-xs font-bold text-warm-600">
-                  {cartItems.reduce((a, b) => a + b.quantity, 0)} items • ₹80 / Bar
+                  {cartItems.reduce((a, b) => a + b.quantity, 0)} items • ₹70 / Bar
                 </span>
               </div>
             </div>
@@ -85,7 +85,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
           {/* WhatsApp Direct Notice with Business Number */}
           <div className="bg-sage-50 px-6 py-2.5 border-b border-sage-100 text-xs text-sage-900 font-bold flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-whatsapp-600 fill-whatsapp-600 flex-shrink-0" />
-            <span>Sends directly to Official WhatsApp: <strong>9325578244</strong></span>
+            <span>Sends directly to Official WhatsApp: <strong>{DISPLAY_PHONE_NUMBER}</strong></span>
           </div>
 
           {/* Cart Items List or Success Confirmation */}
@@ -104,7 +104,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                     Thank You, {customerName || 'Valued Customer'}!
                   </h3>
                   <p className="text-xs text-warm-600 max-w-xs mx-auto">
-                    Your complete order and requirements have been sent directly to our official WhatsApp (+91 9325578244).
+                    Your complete order and requirements have been sent directly to our official WhatsApp ({DISPLAY_PHONE_NUMBER}).
                   </p>
                 </div>
 
@@ -224,7 +224,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                 {/* Contact Information for WhatsApp */}
                 <form onSubmit={handleSendWhatsAppOrder} className="pt-3 border-t border-warm-200 space-y-2.5">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-warm-700">
-                    Your Contact Details (Sent to 9325578244)
+                    Your Contact Details (Sent to {DISPLAY_PHONE_NUMBER})
                   </h4>
                   
                   <div className="relative">
@@ -293,7 +293,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                     className="w-full mt-3 py-3.5 btn-whatsapp-pill text-xs font-bold flex items-center justify-center gap-2 shadow-warm-md"
                   >
                     <MessageSquare className="w-4 h-4 fill-white" />
-                    <span>Send Order to WhatsApp: 9325578244</span>
+                    <span>Send Order to WhatsApp: {DISPLAY_PHONE_NUMBER}</span>
                   </button>
                 </form>
               </>
