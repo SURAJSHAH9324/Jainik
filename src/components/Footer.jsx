@@ -46,7 +46,7 @@ export default function Footer() {
               />
             </a>
             <p className="text-xs leading-relaxed max-w-sm text-[#F3E8DD]/70">
-              Jainik Foods crafts pure traditional energy bars from whole California almonds, cashews, pistachios, dates, super seeds, and dark chocolate. Built on Purity in Maharashtra.
+              Jainik Energy Bar is the official natural protein bar from Jainik Foods, Karanja (Lad), Maharashtra. Whole almonds, cashews, pistachios, seeds, oats, dates, jaggery and dark chocolate. FSSAI 21526066000742.
             </p>
             <div className="space-y-1.5 text-xs text-[#D8C08A]">
               <div className="flex items-center gap-2">

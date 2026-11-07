@@ -211,6 +211,10 @@ export const TESTIMONIALS = [
 
 export const FAQS = [
   {
+    question: 'Where can I buy a Jainik protein energy bar?',
+    answer: 'This is the official Jainik Foods website. Search Jainik energy bar or Jainik protein bar and open jainik.vercel.app. Packs of 5, 10, 30, 50, 70 and 100 bars can be ordered here. The 40g bar has 18.62g plant protein per 100g.'
+  },
+  {
     question: 'What are the core ingredients in Jainik Energy Bar?',
     answer: 'Jainik Energy Bar is made with 10 traditional natural ingredients: Almonds (बदाम), Cashews (काजू), Pistachios (पिस्ता), Pumpkin Seeds (भोपळ्याच्या बिया), Oats (ओट्स), Roasted Chana (फुटाणे), Watermelon Seeds (टरबुजाच्या बिया), Dates (खजूर), Jaggery (गूळ), and Dark Chocolate (चॉकलेट).'
   },

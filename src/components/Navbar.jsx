@@ -61,7 +61,7 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition, onOpenO
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-5 text-xs font-bold text-[#FFFBED]/90">
-            <HomeHash hash="product" className="hover:text-[#C9A46C] transition-colors">The Bar</HomeHash>
+            <HomeHash hash="product" className="hover:text-[#C9A46C] transition-colors">Energy Bar</HomeHash>
             <HomeHash hash="packs" className="hover:text-[#C9A46C] transition-colors">Packs</HomeHash>
             <HomeHash hash="brand-values" className="hover:text-[#C9A46C] transition-colors">Brand Values</HomeHash>
             <HomeHash hash="showcase" className="hover:text-[#C9A46C] transition-colors">Visuals</HomeHash>
@@ -129,7 +129,7 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition, onOpenO
         {mobileMenuOpen && (
           <div className="lg:hidden bg-[#1A0F0B] border-t border-[#D8C08A]/20 px-4 py-4 space-y-3">
             <div className="flex flex-col space-y-2 text-sm font-bold text-[#FFFBED]">
-              <HomeHash hash="product" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">The Bar</HomeHash>
+              <HomeHash hash="product" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Energy Bar</HomeHash>
               <HomeHash hash="packs" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Packs</HomeHash>
               <HomeHash hash="brand-values" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Brand Values</HomeHash>
               <HomeHash hash="showcase" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Visuals</HomeHash>

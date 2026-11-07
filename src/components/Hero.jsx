@@ -86,11 +86,11 @@ export default function Hero({ onAddToCart, onOpenNutrition, onOpenImage, onOpen
               {/* Serif Headline (Playfair / Cormorant Style from Mockup) */}
               <div className="space-y-2">
                 <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-black tracking-tight text-[#FFFBED] leading-[1.08]">
-                  Jainik <br />
+                  Jainik Energy Bar <br />
                   <span className="italic font-normal text-[#D8C08A]">Built on Purity.</span>
                 </h1>
                 <p className="text-sm sm:text-base font-medium text-[#F3E8DD]/90 leading-relaxed max-w-xl">
-                  Wholesome energy bars made with nature's finest ingredients. Handcrafted with California almonds, whole cashews, pistachios, dates, super seeds & dark chocolate. No added preservatives. Just pure goodness.
+                  A natural protein energy bar from Jainik Foods. Handcrafted with California almonds, whole cashews, pistachios, dates, super seeds and dark chocolate. 18.62g plant protein per 100g. No preservatives.
                 </p>
               </div>
 
@@ -234,7 +234,7 @@ export default function Hero({ onAddToCart, onOpenNutrition, onOpenImage, onOpen
                   >
                     <img 
                       src={activeMedia} 
-                      alt="Jainik Energy Bar Texture" 
+                      alt="Jainik protein energy bar broken open to show almonds, seeds and chocolate" 
                       className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105"
                     />
 
