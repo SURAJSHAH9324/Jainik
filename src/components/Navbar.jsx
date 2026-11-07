@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Menu, X, MessageSquare, ShieldCheck, Sparkles, Phone } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ShoppingBag, Menu, X, MessageSquare, ShieldCheck, Sparkles } from 'lucide-react';
 import { openWhatsAppDirectChat, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
+
+function HomeHash({ hash, className, children, onClick }) {
+  const { pathname } = useLocation();
+  const href = pathname === '/' ? `#${hash}` : `/#${hash}`;
+  return (
+    <a href={href} className={className} onClick={onClick}>
+      {children}
+    </a>
+  );
+}
 
 export default function Navbar({ cartCount, onOpenCart, onOpenNutrition, onOpenOrder }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,7 +31,7 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition, onOpenO
       {/* Top Announcement Bar (Mockup Style) */}
       <div className="bg-[#1A0F0B] text-[#D8C08A] text-[11px] font-bold py-1.5 px-4 text-center tracking-wide border-b border-[#D8C08A]/15 flex items-center justify-center gap-2">
         <Sparkles className="w-3 h-3 text-[#C9A46C]" />
-        <span>Free Express Courier Across India • 100% Sattvic Superfoods • Direct Helpline: {DISPLAY_PHONE_NUMBER}</span>
+        <span>Delivery extra • Express delivery costs more • Helpline: {DISPLAY_PHONE_NUMBER}</span>
       </div>
 
       {/* Main Navbar Bar */}
@@ -43,18 +54,21 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition, onOpenO
                 BUILT ON PURITY
               </span>
               <span className="text-[#FFFBED]/80 text-xs font-medium block -mt-0.5">
-                100% Natural • ₹70 / Bar
+                100% Natural • Packs from 5 bars
               </span>
             </div>
           </a>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-7 text-xs font-bold text-[#FFFBED]/90">
-            <a href="#product" className="hover:text-[#C9A46C] transition-colors">The Bar</a>
-            <a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack Boxes (1, 5, 10, 30, 40)</a>
-            <a href="#showcase" className="hover:text-[#C9A46C] transition-colors">Brand Visuals</a>
-            <a href="#ingredients" className="hover:text-[#C9A46C] transition-colors">10 Ingredients</a>
-            <a href="#why-jainik" className="hover:text-[#C9A46C] transition-colors">Why Jainik</a>
+          <nav className="hidden lg:flex items-center gap-5 text-xs font-bold text-[#FFFBED]/90">
+            <HomeHash hash="product" className="hover:text-[#C9A46C] transition-colors">The Bar</HomeHash>
+            <HomeHash hash="packs" className="hover:text-[#C9A46C] transition-colors">Packs</HomeHash>
+            <HomeHash hash="brand-values" className="hover:text-[#C9A46C] transition-colors">Brand Values</HomeHash>
+            <HomeHash hash="showcase" className="hover:text-[#C9A46C] transition-colors">Visuals</HomeHash>
+            <HomeHash hash="journal" className="hover:text-[#C9A46C] transition-colors">Notes</HomeHash>
+            <HomeHash hash="reviews" className="hover:text-[#C9A46C] transition-colors">Reviews</HomeHash>
+            <HomeHash hash="orders" className="hover:text-[#C9A46C] transition-colors">Orders</HomeHash>
+            <Link to="/upcoming" className="hover:text-[#C9A46C] transition-colors">Upcoming</Link>
             <button 
               onClick={onOpenNutrition}
               className="hover:text-[#C9A46C] transition-colors font-bold flex items-center gap-1.5 text-left"
@@ -69,7 +83,7 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition, onOpenO
             
             {/* Direct WhatsApp Callout with Updated Number */}
             <button 
-              onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I would like to order Jainik Energy Bars (₹70/bar)!')}
+              onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I need a payment or order update.')}
               className="hidden lg:flex items-center gap-2 text-xs font-bold text-[#FFFBED] hover:text-[#241611] hover:bg-[#C9A46C] px-3.5 py-2 rounded-xl bg-[#2E1D17] border border-[#D8C08A]/30 transition-all"
               title={`Direct WhatsApp: ${DISPLAY_PHONE_NUMBER}`}
             >
@@ -92,17 +106,17 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition, onOpenO
             </button>
 
             {/* Primary Order CTA in Soft Premium Gold */}
-            <button 
-              onClick={() => onOpenOrder ? onOpenOrder({ name: 'Jainik Energy Bar (40g Single Bar)', price: 70, image: '/jainik-bar-hero.jpg' }) : onOpenCart()}
+            <HomeHash
+              hash="packs"
               className="bg-[#C9A46C] hover:bg-[#D8BA8A] text-[#241611] font-extrabold text-xs py-2 px-3.5 sm:px-4 rounded-xl transition-all shadow-md hover:scale-[1.02]"
             >
-              <span>Order (₹70)</span>
-            </button>
+              Order
+            </HomeHash>
 
             {/* Mobile menu toggle */}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl bg-[#2E1D17] border border-[#D8C08A]/30 text-[#FFFBED]"
+              className="lg:hidden p-2 rounded-xl bg-[#2E1D17] border border-[#D8C08A]/30 text-[#FFFBED]"
               aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -113,43 +127,16 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition, onOpenO
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-[#1A0F0B] border-t border-[#D8C08A]/20 px-4 py-4 space-y-3">
+          <div className="lg:hidden bg-[#1A0F0B] border-t border-[#D8C08A]/20 px-4 py-4 space-y-3">
             <div className="flex flex-col space-y-2 text-sm font-bold text-[#FFFBED]">
-              <a 
-                href="#product" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]"
-              >
-                The Bar (₹70)
-              </a>
-              <a 
-                href="#packs" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]"
-              >
-                Pack Boxes (1, 5, 10, 30, 40)
-              </a>
-              <a 
-                href="#showcase" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]"
-              >
-                Brand Visuals
-              </a>
-              <a 
-                href="#ingredients" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]"
-              >
-                10 Superfoods
-              </a>
-              <a 
-                href="#why-jainik" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]"
-              >
-                Why Jainik
-              </a>
+              <HomeHash hash="product" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">The Bar</HomeHash>
+              <HomeHash hash="packs" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Packs</HomeHash>
+              <HomeHash hash="brand-values" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Brand Values</HomeHash>
+              <HomeHash hash="showcase" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Visuals</HomeHash>
+              <HomeHash hash="journal" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Kitchen notes</HomeHash>
+              <HomeHash hash="reviews" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Reviews</HomeHash>
+              <HomeHash hash="orders" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Order history</HomeHash>
+              <Link to="/upcoming" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-[#2E1D17]">Upcoming products</Link>
               <button 
                 onClick={() => {
                   setMobileMenuOpen(false);
@@ -165,7 +152,7 @@ export default function Navbar({ cartCount, onOpenCart, onOpenNutrition, onOpenO
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  openWhatsAppDirectChat('Hi Jainik Team, I would like to order Jainik Energy Bars (₹70/bar)!');
+                  openWhatsAppDirectChat('Hi Jainik Team, I need a payment or order update.');
                 }}
                 className="w-full py-2.5 rounded-xl bg-[#25D366] text-[#1A0F0B] text-xs font-black flex items-center justify-center gap-2 shadow-sm"
               >

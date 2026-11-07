@@ -9,7 +9,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        {/* 🔒 Admin route — protected by 10-digit passkey popup */}
+        {/* Admin sign-in at /admin */}
         <Route path="/admin" element={<AdminDashboard />} />
         {/* 🛍️ Main storefront */}
         <Route path="/*" element={<App />} />

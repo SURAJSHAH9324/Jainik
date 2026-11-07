@@ -13,6 +13,10 @@
   body {
     @apply bg-warm-100 text-warm-900 font-sans antialiased overflow-x-hidden selection:bg-warm-300 selection:text-warm-900;
   }
+
+  section[id] {
+    scroll-margin-top: 8rem;
+  }
 }
 
 /* ==========================================================================

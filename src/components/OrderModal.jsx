@@ -1,159 +1,172 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, MessageSquare, Truck, ShieldCheck, ShoppingBag, ArrowRight, User, Phone, MapPin, FileText, Check } from 'lucide-react';
-import { openWhatsAppOrder, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
-import { saveOrderToBackend } from '../utils/api';
+import { X, CheckCircle2, MessageSquare, Truck, User, Phone, MapPin, FileText, Check } from 'lucide-react';
+import { openWhatsAppOrder, openWhatsAppOrderUpdate, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
+import { checkPhoneOrdered, saveOrderToBackend } from '../utils/api';
+import { buildOrderNotes, resolveCoupon, summarizeCart, toChargedItems } from '../utils/pricing';
+import { saveLocalOrder } from '../utils/orderStore';
+import CheckoutOptions from './CheckoutOptions';
 
-export default function OrderModal({ isOpen, onClose, selectedProduct, isReturning = false, isFirstCustomer = false }) {
+export default function OrderModal({ isOpen, onClose, selectedProduct }) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     address: '',
-    requirements: ''
+    requirements: '',
   });
   const [quantity, setQuantity] = useState(1);
+  const [paymentMethod, setPaymentMethod] = useState('prepaid');
+  const [deliveryMode, setDeliveryMode] = useState('standard');
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponStatus, setCouponStatus] = useState({ ok: false, text: '' });
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   if (!isOpen || !selectedProduct) return null;
 
-  const unitPrice = selectedProduct.price || 70;
-  const totalPrice = unitPrice * quantity;
-  const isFirstOrder = isFirstCustomer || isReturning || selectedProduct.isFirstCustomer || selectedProduct.isReturning;
+  const draftItems = [{
+    name: selectedProduct.name || 'Jainik Energy Bar',
+    quantity,
+    price: selectedProduct.regularPrice ?? selectedProduct.price,
+    regularPrice: selectedProduct.regularPrice ?? selectedProduct.price,
+    specialPrice: selectedProduct.specialPrice ?? null,
+  }];
+  const summary = summarizeCart(draftItems, {
+    paymentMethod,
+    deliveryMode,
+    couponPercent: appliedCoupon?.percent || 0,
+  });
+
+  const handleApplyCoupon = async () => {
+    const result = await resolveCoupon(couponCode, formData.phone, checkPhoneOrdered);
+    setCouponStatus({ ok: result.ok, text: result.message });
+    setAppliedCoupon(result.ok ? result : null);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.phone.trim() || !formData.address.trim()) {
-      alert('Please fill in your name, phone number, and delivery address.');
+      setError('Please fill in your name, phone number, and delivery address.');
       return;
     }
 
-    const orderItems = [
-      {
-        name: selectedProduct.name || 'Jainik Energy Bar (40g Bar)',
-        quantity,
-        price: unitPrice,
-      },
-    ];
-
-    const formattedNotes = `Delivery Address: ${formData.address.trim()}${
-      formData.requirements.trim() ? `\nSpecial Requirement / Note: ${formData.requirements.trim()}` : ''
-    }`;
+    setSubmitting(true);
+    setError('');
+    const charged = toChargedItems(draftItems, paymentMethod);
+    const notes = buildOrderNotes({
+      address: formData.address.trim(),
+      requirements: formData.requirements,
+      paymentMethod,
+      deliveryMode,
+      couponCode: appliedCoupon?.code,
+      specialSavings: summary.specialSavings,
+    });
 
     const saved = await saveOrderToBackend({
       customerName: formData.name.trim(),
       phone: formData.phone.trim(),
       address: formData.address.trim(),
-      items: orderItems,
-      totalAmount: totalPrice,
-      discountApplied: 0,
-      isFirstCustomer: isFirstOrder,
-      notes: formattedNotes,
+      items: charged,
+      totalAmount: summary.total,
+      discountApplied: summary.specialSavings + summary.couponDiscount,
+      isFirstCustomer: appliedCoupon?.code === 'FIRST10',
+      notes,
     });
 
-    const ref =
-      saved.success && saved.data?.order_ref
-        ? saved.data.order_ref
-        : `JNK-${Math.floor(1000 + Math.random() * 9000)}`;
-    setOrderId(ref);
+    setSubmitting(false);
+    if (!saved.success) {
+      setError(saved.error || 'Order was not saved. The success screen stays closed until the server accepts the order.');
+      return;
+    }
+
+    const orderRef = saved.data.order_ref;
+    saveLocalOrder({
+      orderRef,
+      customerName: formData.name.trim(),
+      phone: formData.phone.trim(),
+      address: formData.address.trim(),
+      items: charged,
+      total: summary.total,
+      paymentMethod,
+      deliveryMode,
+      createdAt: new Date().toISOString(),
+    });
 
     openWhatsAppOrder({
       customerName: formData.name.trim(),
       customerPhone: formData.phone.trim(),
-      items: orderItems,
-      total: totalPrice,
-      notes: formattedNotes,
-      isFirstCustomer: isFirstOrder,
-      discountAmount: 0,
+      items: charged,
+      total: summary.total,
+      notes,
+      discountAmount: summary.specialSavings + summary.couponDiscount,
+      orderRef,
+      paymentMethod,
+      deliveryFee: summary.deliveryFee,
     });
 
+    setOrderId(orderRef);
     setIsSuccess(true);
   };
 
   const handleResetAndClose = () => {
     setIsSuccess(false);
+    setError('');
     setFormData({ name: '', phone: '', address: '', requirements: '' });
     setQuantity(1);
+    setAppliedCoupon(null);
+    setCouponStatus({ ok: false, text: '' });
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-warm-950/70 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-      
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-warm-950/70 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="relative w-full max-w-lg bg-white rounded-3xl border border-warm-300 shadow-warm-xl overflow-hidden text-warm-900 my-8">
-        
-        {/* Modal Close Button */}
         <button
           onClick={handleResetAndClose}
-          className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-warm-100 hover:bg-warm-200 text-warm-600 hover:text-warm-950 transition-colors"
-          aria-label="Close Modal"
+          className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-warm-100 hover:bg-warm-200 text-warm-600"
+          aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
 
         {!isSuccess ? (
-          /* STEP 1: ORDER INPUT FORM */
           <div className="p-6 sm:p-8 space-y-5">
-            
-            {/* Header */}
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Direct Kitchen Dispatch • Official WhatsApp: {DISPLAY_PHONE_NUMBER}</span>
+                <span>Saved only after the order API succeeds • {DISPLAY_PHONE_NUMBER}</span>
               </div>
-              <h2 className="text-2xl font-black text-warm-950">
-                Place Your Order
-              </h2>
+              <h2 className="text-2xl font-black text-warm-950">Place Your Order</h2>
               <p className="text-xs text-warm-600">
-                Enter your details below. Your order will be sent to our WhatsApp and confirmed instantly!
+                Payment and delivery updates are shared on WhatsApp after the order is saved.
               </p>
             </div>
 
-            {/* Selected Product Summary Card */}
             <div className="p-4 rounded-2xl bg-warm-50 border border-warm-200 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <img 
-                  src={selectedProduct.image || '/jainik-bar-hero.jpg'} 
-                  alt={selectedProduct.name} 
+                <img
+                  src={selectedProduct.image || '/Package.png'}
+                  alt={selectedProduct.name}
                   className="w-14 h-14 object-cover rounded-xl border border-warm-300"
                 />
                 <div>
-                  <h3 className="text-sm font-black text-warm-900">
-                    {selectedProduct.name}
-                  </h3>
-                  <span className="text-xs font-bold text-warm-600 block">
-                    ₹{unitPrice} each
-                  </span>
+                  <h3 className="text-sm font-black text-warm-900">{selectedProduct.name}</h3>
+                  <span className="text-xs font-bold text-warm-600 block">Pack price depends on payment</span>
                 </div>
               </div>
-
-              {/* Quantity Stepper */}
               <div className="flex items-center bg-white border border-warm-300 rounded-xl overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-2.5 py-1 text-warm-700 hover:bg-warm-100 font-bold text-sm"
-                >
-                  -
-                </button>
-                <span className="px-3 font-black text-sm text-warm-950">{quantity}</span>
-                <button
-                  type="button"
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="px-2.5 py-1 text-warm-700 hover:bg-warm-100 font-bold text-sm"
-                >
-                  +
-                </button>
+                <button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-2.5 py-1 font-bold">-</button>
+                <span className="px-3 font-black text-sm">{quantity}</span>
+                <button type="button" onClick={() => setQuantity(quantity + 1)} className="px-2.5 py-1 font-bold">+</button>
               </div>
             </div>
 
-            {/* Form Fields */}
             <form onSubmit={handleSubmit} className="space-y-3.5">
-              
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-warm-800 mb-1">
-                  Your Full Name *
-                </label>
-                <div className="relative">
+              <label className="block text-xs font-black uppercase tracking-wider text-warm-800">
+                Your Full Name *
+                <span className="relative block mt-1 font-normal normal-case tracking-normal">
                   <User className="w-4 h-4 text-warm-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
@@ -161,182 +174,127 @@ export default function OrderModal({ isOpen, onClose, selectedProduct, isReturni
                     placeholder="Enter your name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-warm-50/70 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-warm-900 focus:outline-none focus:border-warm-900 font-medium"
+                    className="w-full bg-warm-50/70 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs"
                   />
-                </div>
-              </div>
+                </span>
+              </label>
 
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-warm-800 mb-1">
-                  WhatsApp / Phone Number *
-                </label>
-                <div className="relative">
+              <label className="block text-xs font-black uppercase tracking-wider text-warm-800">
+                WhatsApp / Phone Number *
+                <span className="relative block mt-1 font-normal normal-case tracking-normal">
                   <Phone className="w-4 h-4 text-warm-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="tel"
                     required
-                    placeholder="e.g. 9876543210"
+                    placeholder="10-digit mobile number"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-warm-50/70 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-warm-900 focus:outline-none focus:border-warm-900 font-medium"
+                    className="w-full bg-warm-50/70 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs"
                   />
-                </div>
-              </div>
+                </span>
+              </label>
 
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-warm-800 mb-1">
-                  Delivery Address & Pincode *
-                </label>
-                <div className="relative">
+              <label className="block text-xs font-black uppercase tracking-wider text-warm-800">
+                Delivery Address & Pincode *
+                <span className="relative block mt-1 font-normal normal-case tracking-normal">
                   <MapPin className="w-4 h-4 text-warm-400 absolute left-3 top-3" />
                   <textarea
                     required
                     rows={2}
-                    placeholder="House/Flat No., Street, City, State & PIN Code"
+                    placeholder="House, street, city, state, PIN"
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full bg-warm-50/70 border border-warm-300 rounded-xl pl-9 pr-3 py-2 text-xs text-warm-900 focus:outline-none focus:border-warm-900 font-medium resize-none"
+                    className="w-full bg-warm-50/70 border border-warm-300 rounded-xl pl-9 pr-3 py-2 text-xs resize-none"
                   />
-                </div>
-              </div>
+                </span>
+              </label>
 
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-warm-800 mb-1">
-                  Special Requirements / Message (Optional)
-                </label>
-                <div className="relative">
+              <label className="block text-xs font-black uppercase tracking-wider text-warm-800">
+                Note (optional)
+                <span className="relative block mt-1 font-normal normal-case tracking-normal">
                   <FileText className="w-4 h-4 text-warm-400 absolute left-3 top-3" />
                   <textarea
                     rows={2}
-                    placeholder="Any specific delivery instructions, gift message, or questions..."
+                    placeholder="Landmark or delivery note"
                     value={formData.requirements}
                     onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
-                    className="w-full bg-warm-50/70 border border-warm-300 rounded-xl pl-9 pr-3 py-2 text-xs text-warm-900 focus:outline-none focus:border-warm-900 font-medium resize-none"
+                    className="w-full bg-warm-50/70 border border-warm-300 rounded-xl pl-9 pr-3 py-2 text-xs resize-none"
                   />
-                </div>
-              </div>
+                </span>
+              </label>
 
-              {/* Order Pricing Total Bar */}
-              <div className="p-3.5 rounded-2xl bg-warm-100 border border-warm-300 flex items-center justify-between text-xs font-bold">
-                <div>
-                  <span className="text-warm-600 block text-[11px]">Total Payable</span>
-                  <span className="text-xl font-black text-warm-950">₹{totalPrice}</span>
-                </div>
-                <div className="text-right">
-                  <span className="text-emerald-700 font-black block">FREE Express Delivery</span>
-                  <span className="text-[10px] text-warm-500">All India Coverage</span>
-                </div>
-              </div>
+              <CheckoutOptions
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
+                deliveryMode={deliveryMode}
+                setDeliveryMode={setDeliveryMode}
+                couponCode={couponCode}
+                setCouponCode={setCouponCode}
+                onApplyCoupon={handleApplyCoupon}
+                couponStatus={couponStatus}
+                summary={summary}
+              />
 
-              {/* Submit CTA */}
+              {error && <p className="text-xs text-rose-700 font-medium">{error}</p>}
+
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl btn-whatsapp-pill text-sm font-bold flex items-center justify-center gap-2 shadow-warm-md hover:scale-[1.01] transition-all"
+                disabled={submitting}
+                className="w-full py-3.5 rounded-xl btn-whatsapp-pill text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 <MessageSquare className="w-4 h-4 fill-white" />
-                <span>Confirm & Send Order via WhatsApp (₹{totalPrice})</span>
+                <span>{submitting ? 'Saving order...' : `Confirm order ₹${summary.total}`}</span>
               </button>
-
               <p className="text-[11px] text-center text-warm-500">
-                🔒 Your order will open in WhatsApp to confirm payment via UPI/QR code with our team.
+                The green success message appears only when the order API accepts this order.
               </p>
             </form>
-
           </div>
         ) : (
-          /* STEP 2: ORDER SUCCESSFUL CONFIRMATION VIEW */
-          <div className="p-6 sm:p-8 text-center space-y-6 animate-fadeIn">
-            
-            {/* Green Success Badge */}
-            <div className="w-16 h-16 rounded-full bg-emerald-100 border-2 border-emerald-500 text-emerald-600 flex items-center justify-center mx-auto shadow-warm-sm">
+          <div className="p-6 sm:p-8 text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-emerald-100 border-2 border-emerald-500 text-emerald-600 flex items-center justify-center mx-auto">
               <Check className="w-8 h-8 stroke-[3]" />
             </div>
-
             <div className="space-y-1.5">
               <span className="text-xs font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                Order Placed Successfully! 🎉
+                Order saved
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-warm-950 pt-2">
-                Thank You, {formData.name || 'Valued Customer'}!
-              </h2>
-              <p className="text-xs sm:text-sm text-warm-700 max-w-sm mx-auto">
-                We have received your order details and sent your confirmation directly to WhatsApp!
+              <h2 className="text-2xl font-black text-warm-950 pt-2">Thank you, {formData.name}</h2>
+              <p className="text-xs text-warm-700 max-w-sm mx-auto">
+                Order {orderId} is on the server. For payment and further updates, message us on WhatsApp.
               </p>
             </div>
-
-            {/* Order Confirmation Card */}
-            <div className="p-4 rounded-2xl bg-warm-50 border border-warm-300 text-left space-y-2 text-xs">
-              <div className="flex justify-between items-center pb-2 border-b border-warm-200">
-                <span className="font-bold text-warm-600">Order Reference:</span>
-                <span className="font-black text-warm-900 bg-white px-2 py-0.5 rounded border border-warm-300">{orderId}</span>
+            <div className="p-4 rounded-2xl bg-warm-50 border border-warm-300 text-left text-xs space-y-2">
+              <div className="flex justify-between">
+                <span>Order reference</span>
+                <span className="font-black">{orderId}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-warm-600">Items Ordered:</span>
-                <span className="font-bold text-warm-900">{quantity} × {selectedProduct.name}</span>
+              <div className="flex justify-between">
+                <span>Total</span>
+                <span className="font-black">₹{summary.total}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-warm-600">Total Amount:</span>
-                <span className="font-black text-warm-900 text-sm">₹{totalPrice}</span>
-              </div>
-              <div className="flex justify-between items-start pt-1">
-                <span className="text-warm-600 flex-shrink-0">Deliver To:</span>
-                <span className="font-medium text-warm-900 text-right line-clamp-2 pl-4">{formData.address}</span>
-              </div>
-              {formData.requirements && (
-                <div className="flex justify-between items-start pt-1">
-                  <span className="text-warm-600 flex-shrink-0">Note / Requirement:</span>
-                  <span className="font-medium text-warm-800 text-right line-clamp-2 pl-4 italic">"{formData.requirements}"</span>
-                </div>
-              )}
-            </div>
-
-            {/* Kitchen Fresh Dispatch Notice */}
-            <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs text-left flex items-start gap-2.5">
-              <Truck className="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
-              <div>
-                <span className="font-bold block">Dispatched Within 24 Hours</span>
-                <span className="text-[11px] text-amber-800">
-                  Our certified kitchen in Karanja (Lad), Maharashtra is preparing your fresh Jainik Energy Bars.
-                </span>
+              <div className="flex justify-between">
+                <span>Payment</span>
+                <span className="font-bold">{paymentMethod === 'cod' ? 'Cash on delivery' : 'Prepaid / UPI'}</span>
               </div>
             </div>
-
-            {/* Action Buttons */}
-            <div className="space-y-2 pt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  const formattedNotes = `Delivery Address: ${formData.address.trim()}${
-                    formData.requirements.trim() ? `\nSpecial Requirement / Note: ${formData.requirements.trim()}` : ''
-                  }`;
-                  openWhatsAppOrder({
-                    customerName: formData.name.trim(),
-                    customerPhone: formData.phone.trim(),
-                    items: [{ name: selectedProduct.name, quantity, price: unitPrice }],
-                    total: totalPrice,
-                    notes: formattedNotes,
-                    isFirstCustomer: isFirstOrder,
-                    discountAmount: 0
-                  });
-                }}
-                className="w-full py-3 rounded-xl btn-whatsapp-pill text-xs font-bold flex items-center justify-center gap-2"
-              >
-                <MessageSquare className="w-4 h-4 fill-white" />
-                <span>Chat with Kitchen Team on WhatsApp</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleResetAndClose}
-                className="w-full py-2.5 rounded-xl btn-warm-secondary text-xs font-bold"
-              >
-                Done / Continue Browsing
-              </button>
+            <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs text-left flex items-start gap-2.5">
+              <Truck className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <span>We will send payment confirmation and dispatch updates on WhatsApp {DISPLAY_PHONE_NUMBER}.</span>
             </div>
-
+            <button
+              type="button"
+              onClick={() => openWhatsAppOrderUpdate(orderId)}
+              className="w-full py-3 rounded-xl btn-whatsapp-pill text-xs font-bold flex items-center justify-center gap-2"
+            >
+              <MessageSquare className="w-4 h-4 fill-white" />
+              Payment or order update on WhatsApp
+            </button>
+            <button type="button" onClick={handleResetAndClose} className="w-full py-2.5 rounded-xl btn-warm-secondary text-xs font-bold">
+              Done
+            </button>
           </div>
         )}
-
       </div>
     </div>
   );

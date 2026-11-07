@@ -1,5 +1,6 @@
 import React from 'react';
-import { ShieldCheck, Heart, Zap, Sparkles, CheckCircle2, MessageSquare, Award } from 'lucide-react';
+import { Heart, Zap, Sparkles, MessageSquare, Award, ShieldCheck, ScrollText } from 'lucide-react';
+import { CERTIFICATES } from '../data/products';
 import { openWhatsAppDirectChat, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
 
 export default function WhyJainik() {
@@ -27,7 +28,7 @@ export default function WhyJainik() {
   ];
 
   return (
-    <section id="why-jainik" className="py-20 bg-[#FDFBF7] text-[#281A14] relative border-b border-[#D8C08A]/30">
+    <section id="brand-values" className="py-20 bg-[#FDFBF7] text-[#281A14] relative border-b border-[#D8C08A]/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header from Reference Mockup */}
@@ -65,6 +66,33 @@ export default function WhyJainik() {
               </div>
             );
           })}
+        </div>
+
+        <div className="mt-12">
+          <div className="text-center mb-6">
+            <h3 className="text-2xl sm:text-3xl font-serif font-black text-[#241611]">
+              Licences & certificates
+            </h3>
+            <p className="text-xs sm:text-sm text-[#3D2211] mt-1">
+              FSSAI licence, shelf-life certification, and the other standards we hold.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {CERTIFICATES.map((item) => (
+              <article key={item.title} className="p-5 rounded-2xl bg-white border border-[#D8C08A]/50 space-y-2">
+                <div className="w-10 h-10 rounded-xl bg-[#F3E8DD] flex items-center justify-center">
+                  {item.title.includes('FSSAI') ? (
+                    <ShieldCheck className="w-5 h-5 text-[#5C7548]" />
+                  ) : (
+                    <ScrollText className="w-5 h-5 text-[#241611]" />
+                  )}
+                </div>
+                <h4 className="text-base font-black text-[#241611]">{item.title}</h4>
+                <p className="text-xs font-black text-[#C9A46C]">{item.ref}</p>
+                <p className="text-xs text-[#5C361D] leading-relaxed">{item.detail}</p>
+              </article>
+            ))}
+          </div>
         </div>
 
         {/* Direct WhatsApp Assistance Strip */}

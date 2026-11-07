@@ -1,219 +1,184 @@
-import React, { useState, useCallback } from 'react';
-import { X, Trash2, Plus, Minus, ShoppingBag, MessageSquare, Tag, Check, User, Phone, FileText, Crown } from 'lucide-react';
-import { openWhatsAppOrder, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
-import { saveOrderToBackend, checkPhoneOrdered } from '../utils/api';
+import React, { useEffect, useState } from 'react';
+import { X, Trash2, Plus, Minus, ShoppingBag, MessageSquare, Check, User, Phone, FileText, MapPin } from 'lucide-react';
+import { openWhatsAppOrder, openWhatsAppOrderUpdate, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
+import { checkPhoneOrdered, saveOrderToBackend } from '../utils/api';
+import { buildOrderNotes, resolveCoupon, summarizeCart, toChargedItems } from '../utils/pricing';
+import { saveLocalOrder } from '../utils/orderStore';
+import CheckoutOptions from './CheckoutOptions';
 
 export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem }) {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+  const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
-  const [isFirstCustomer, setIsFirstCustomer] = useState(false);
-  const [promoCode, setPromoCode] = useState('');
-  const [discountPercent, setDiscountPercent] = useState(0);
-  const [promoApplied, setPromoApplied] = useState(false);
-  const [promoError, setPromoError] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('prepaid');
+  const [deliveryMode, setDeliveryMode] = useState('standard');
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponStatus, setCouponStatus] = useState({ ok: false, text: '' });
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!isOpen) {
+      setIsSuccess(false);
+      setError('');
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  
-  // Calculate discounts (First order customer 10% or promo code 15%)
-  const effectiveDiscountPercent = Math.max(discountPercent, isFirstCustomer ? 0.10 : 0);
-  const discountAmount = Math.round(subtotal * effectiveDiscountPercent);
-  const grandTotal = Math.max(0, subtotal - discountAmount);
+  const summary = summarizeCart(cartItems, {
+    paymentMethod,
+    deliveryMode,
+    couponPercent: appliedCoupon?.percent || 0,
+  });
 
-  const handleApplyPromo = () => {
-    const code = promoCode.trim().toUpperCase();
-    if (code === 'ENERGY15' || code === 'JAINIK15' || code === 'AHIMSA15') {
-      setDiscountPercent(0.15);
-      setPromoApplied(true);
-      setPromoError('');
-    } else {
-      setPromoError('Invalid coupon code. Try AHIMSA15 for 15% OFF!');
-    }
+  const handleApplyCoupon = async () => {
+    const result = await resolveCoupon(couponCode, customerPhone, checkPhoneOrdered);
+    setCouponStatus({ ok: result.ok, text: result.message });
+    setAppliedCoupon(result.ok ? result : null);
   };
 
-  const syncFirstCustomerFromPhone = useCallback(async (phone) => {
-    const clean = phone.replace(/\D/g, '');
-    if (clean.length < 10) return;
-    const info = await checkPhoneOrdered(phone);
-    setIsFirstCustomer(Boolean(info.eligible_for_first_order_discount));
-  }, []);
-
-  const handleSendWhatsAppOrder = async (e) => {
+  const handleSendOrder = async (e) => {
     e.preventDefault();
     if (cartItems.length === 0) return;
+
+    setSubmitting(true);
+    setError('');
+    const charged = toChargedItems(cartItems, paymentMethod);
+    const orderNotes = buildOrderNotes({
+      address: address.trim(),
+      requirements: notes,
+      paymentMethod,
+      deliveryMode,
+      couponCode: appliedCoupon?.code,
+      specialSavings: summary.specialSavings,
+    });
 
     const saved = await saveOrderToBackend({
       customerName,
       phone: customerPhone,
-      address: notes.trim() || 'Address to be confirmed on WhatsApp',
-      items: cartItems,
-      totalAmount: grandTotal,
-      discountApplied: discountAmount,
-      isFirstCustomer,
-      notes,
+      address: address.trim(),
+      items: charged,
+      totalAmount: summary.total,
+      discountApplied: summary.specialSavings + summary.couponDiscount,
+      isFirstCustomer: appliedCoupon?.code === 'FIRST10',
+      notes: orderNotes,
     });
 
-    const ref =
-      saved.success && saved.data?.order_ref
-        ? saved.data.order_ref
-        : `JNK-${Math.floor(1000 + Math.random() * 9000)}`;
-    setOrderId(ref);
+    setSubmitting(false);
+    if (!saved.success) {
+      setError(saved.error || 'Order was not saved.');
+      return;
+    }
+
+    const orderRef = saved.data.order_ref;
+    saveLocalOrder({
+      orderRef,
+      customerName,
+      phone: customerPhone,
+      address: address.trim(),
+      items: charged,
+      total: summary.total,
+      paymentMethod,
+      deliveryMode,
+      createdAt: new Date().toISOString(),
+    });
 
     openWhatsAppOrder({
       customerName,
       customerPhone,
-      items: cartItems,
-      total: grandTotal,
-      notes,
-      isFirstCustomer,
-      discountAmount,
+      items: charged,
+      total: summary.total,
+      notes: orderNotes,
+      discountAmount: summary.specialSavings + summary.couponDiscount,
+      orderRef,
+      paymentMethod,
+      deliveryFee: summary.deliveryFee,
     });
 
+    setOrderId(orderRef);
     setIsSuccess(true);
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-warm-950/60 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-warm-950/60 backdrop-blur-sm">
       <div className="absolute inset-0" onClick={onClose} />
-
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-white border-l border-warm-200 shadow-warm-xl flex flex-col justify-between text-warm-900">
-          
-          {/* Cart Header */}
+        <div className="w-screen max-w-md bg-white border-l border-warm-200 shadow-warm-xl flex flex-col text-warm-900">
           <div className="p-6 border-b border-warm-200 flex items-center justify-between bg-warm-50">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-warm-100 text-warm-800 flex items-center justify-center border border-warm-300">
+              <div className="w-10 h-10 rounded-xl bg-warm-100 border border-warm-300 flex items-center justify-center">
                 <ShoppingBag className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-black text-warm-900">WhatsApp Order Cart</h2>
+                <h2 className="text-lg font-black">Order cart</h2>
                 <span className="text-xs font-bold text-warm-600">
-                  {cartItems.reduce((a, b) => a + b.quantity, 0)} items • ₹70 / Bar
+                  {cartItems.reduce((sum, item) => sum + item.quantity, 0)} packs
                 </span>
               </div>
             </div>
-            <button 
-              onClick={onClose}
-              className="p-2 rounded-xl bg-warm-100 text-warm-500 hover:text-warm-900 hover:bg-warm-200 transition-colors"
-            >
+            <button onClick={onClose} className="p-2 rounded-xl bg-warm-100 text-warm-500" aria-label="Close cart">
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* WhatsApp Direct Notice with Business Number */}
           <div className="bg-sage-50 px-6 py-2.5 border-b border-sage-100 text-xs text-sage-900 font-bold flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-whatsapp-600 fill-whatsapp-600 flex-shrink-0" />
-            <span>Sends directly to Official WhatsApp: <strong>{DISPLAY_PHONE_NUMBER}</strong></span>
+            <MessageSquare className="w-4 h-4 text-whatsapp-600 fill-whatsapp-600" />
+            <span>Updates on WhatsApp {DISPLAY_PHONE_NUMBER}</span>
           </div>
 
-          {/* Cart Items List or Success Confirmation */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {isSuccess ? (
-              <div className="h-full flex flex-col items-center justify-center text-center space-y-5 py-8 animate-fadeIn">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 border-2 border-emerald-500 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
+              <div className="text-center space-y-5 py-8">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 border-2 border-emerald-500 text-emerald-600 flex items-center justify-center mx-auto">
                   <Check className="w-8 h-8 stroke-[3]" />
                 </div>
-
-                <div className="space-y-1">
-                  <span className="text-xs font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                    Order Placed Successfully! 🎉
-                  </span>
-                  <h3 className="text-xl font-black text-warm-950 pt-2">
-                    Thank You, {customerName || 'Valued Customer'}!
-                  </h3>
-                  <p className="text-xs text-warm-600 max-w-xs mx-auto">
-                    Your complete order and requirements have been sent directly to our official WhatsApp ({DISPLAY_PHONE_NUMBER}).
-                  </p>
-                </div>
-
-                <div className="w-full bg-warm-50 p-4 rounded-2xl border border-warm-200 text-left text-xs space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-warm-500 font-bold">Order ID:</span>
-                    <span className="font-black text-warm-900">{orderId}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-warm-500 font-bold">Total Amount:</span>
-                    <span className="font-black text-warm-900 text-sm">₹{grandTotal}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-warm-500 font-bold">Dispatch Status:</span>
-                    <span className="font-bold text-emerald-700">Fresh Batch in 24h</span>
-                  </div>
-                </div>
-
-                <div className="w-full space-y-2 pt-2">
-                  <button
-                    onClick={() => {
-                      setIsSuccess(false);
-                      onClose();
-                    }}
-                    className="w-full py-3 rounded-xl btn-warm-primary text-xs font-bold"
-                  >
-                    Done / Continue Browsing
-                  </button>
-                </div>
+                <h3 className="text-xl font-black">Order {orderId} saved</h3>
+                <p className="text-xs text-warm-600">
+                  This confirmation is shown because the order API accepted it. Ask on WhatsApp for payment and status updates.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => openWhatsAppOrderUpdate(orderId)}
+                  className="w-full py-3 rounded-xl btn-whatsapp-pill text-xs font-bold"
+                >
+                  Payment or order update on WhatsApp
+                </button>
+                <button type="button" onClick={onClose} className="w-full py-3 rounded-xl btn-warm-primary text-xs font-bold">
+                  Done
+                </button>
               </div>
             ) : cartItems.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12">
-                <div className="w-16 h-16 rounded-full bg-warm-100 flex items-center justify-center text-warm-400">
-                  <ShoppingBag className="w-8 h-8" />
-                </div>
-                <h3 className="text-lg font-bold text-warm-900">Your Cart is Empty</h3>
-                <p className="text-xs text-warm-600 max-w-xs">
-                  Choose from single bars (₹80/bar) or custom 3, 6, 12, 24 pack boxes.
-                </p>
-                <button 
-                  onClick={onClose}
-                  className="px-6 py-2.5 rounded-xl btn-warm-primary text-xs font-bold"
-                >
-                  Browse Packs
-                </button>
+              <div className="text-center space-y-4 py-12">
+                <ShoppingBag className="w-8 h-8 mx-auto text-warm-400" />
+                <h3 className="text-lg font-bold">Your cart is empty</h3>
+                <p className="text-xs text-warm-600">Choose a pack of 5, 10, 30, 50, 70, or 100 bars.</p>
+                <button onClick={onClose} className="px-6 py-2.5 rounded-xl btn-warm-primary text-xs font-bold">Browse packs</button>
               </div>
             ) : (
               <>
-                {/* Items List */}
                 <div className="space-y-3">
                   {cartItems.map((item) => (
-                    <div 
-                      key={item.id}
-                      className="p-3.5 rounded-2xl bg-warm-50 border border-warm-200 flex items-center justify-between gap-3"
-                    >
-                      <div className="flex-1 space-y-0.5">
-                        <span className="text-[10px] font-black uppercase text-warm-600 block">
-                          {item.badge || 'Single Bar'}
-                        </span>
-                        <h4 className="font-bold text-warm-900 text-sm line-clamp-1">{item.name}</h4>
-                        <span className="text-xs text-warm-800 font-black block">
-                          ₹{(item.price * item.quantity).toFixed(0)}
+                    <div key={item.id} className="p-3.5 rounded-2xl bg-warm-50 border border-warm-200 flex items-center justify-between gap-3">
+                      <div>
+                        <span className="text-[10px] font-black uppercase text-warm-600">{item.badge || 'Pack'}</span>
+                        <h4 className="font-bold text-sm">{item.name}</h4>
+                        <span className="text-xs font-black">
+                          Prepaid ₹{item.specialPrice || item.regularPrice || item.price}
+                          {item.specialPrice ? ` • COD ₹${item.regularPrice || item.price}` : ''}
                         </span>
                       </div>
-
-                      {/* Quantity & Delete */}
                       <div className="flex items-center gap-2">
                         <div className="flex items-center border border-warm-300 bg-white rounded-lg">
-                          <button 
-                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                            className="p-1.5 text-warm-600 hover:text-warm-900"
-                          >
-                            <Minus className="w-3.5 h-3.5" />
-                          </button>
-                          <span className="px-2 font-black text-warm-900 text-xs">{item.quantity}</span>
-                          <button 
-                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                            className="p-1.5 text-warm-600 hover:text-warm-900"
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                          </button>
+                          <button type="button" onClick={() => onUpdateQuantity(item.id, item.quantity - 1)} className="p-1.5"><Minus className="w-3.5 h-3.5" /></button>
+                          <span className="px-2 text-xs font-black">{item.quantity}</span>
+                          <button type="button" onClick={() => onUpdateQuantity(item.id, item.quantity + 1)} className="p-1.5"><Plus className="w-3.5 h-3.5" /></button>
                         </div>
-
-                        <button 
-                          onClick={() => onRemoveItem(item.id)}
-                          className="p-1.5 text-warm-400 hover:text-rose-600 transition-colors"
-                        >
+                        <button type="button" onClick={() => onRemoveItem(item.id)} className="p-1.5 text-warm-400 hover:text-rose-600">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -221,108 +186,49 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                   ))}
                 </div>
 
-                {/* First Time Customer Privilege Toggle */}
-                <div className="p-3.5 rounded-2xl bg-warm-100 border border-warm-300 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Crown className="w-4 h-4 text-warm-700" />
-                    <div>
-                      <span className="text-xs font-bold text-warm-900 block">First Time Customer?</span>
-                      <span className="text-[10px] text-warm-600">Get 10% welcome discount on your order</span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setIsFirstCustomer(!isFirstCustomer)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                      isFirstCustomer 
-                        ? 'bg-warm-900 text-white' 
-                        : 'bg-white border border-warm-300 text-warm-800'
-                    }`}
-                  >
-                    {isFirstCustomer ? '✓ 10% Applied' : '+ Claim'}
-                  </button>
-                </div>
-
-                {/* Contact Information for WhatsApp */}
-                <form onSubmit={handleSendWhatsAppOrder} className="pt-3 border-t border-warm-200 space-y-2.5">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-warm-700">
-                    Your Contact Details (Sent to {DISPLAY_PHONE_NUMBER})
-                  </h4>
-                  
+                <form onSubmit={handleSendOrder} className="space-y-2.5">
                   <div className="relative">
                     <User className="w-4 h-4 text-warm-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="text" 
-                      required
-                      placeholder="Your Full Name *"
-                      value={customerName}
-                      onChange={(e) => setCustomerName(e.target.value)}
-                      className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-warm-900 focus:outline-none focus:border-warm-600 font-medium"
-                    />
+                    <input required placeholder="Full name *" value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs" />
                   </div>
-
                   <div className="relative">
                     <Phone className="w-4 h-4 text-warm-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="tel" 
-                      required
-                      placeholder="Your WhatsApp / Mobile Number *"
-                      value={customerPhone}
-                      onChange={(e) => setCustomerPhone(e.target.value)}
-                      onBlur={() => syncFirstCustomerFromPhone(customerPhone)}
-                      className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-warm-900 focus:outline-none focus:border-warm-600 font-medium"
-                    />
+                    <input required type="tel" placeholder="WhatsApp number *" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs" />
                   </div>
-
+                  <div className="relative">
+                    <MapPin className="w-4 h-4 text-warm-400 absolute left-3 top-3" />
+                    <textarea required rows={2} placeholder="Delivery address and PIN *" value={address} onChange={(e) => setAddress(e.target.value)} className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2 text-xs resize-none" />
+                  </div>
                   <div className="relative">
                     <FileText className="w-4 h-4 text-warm-400 absolute left-3 top-3" />
-                    <textarea 
-                      placeholder="Delivery Address / Special Notes (optional)..."
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      rows={2}
-                      className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2 text-xs text-warm-900 focus:outline-none focus:border-warm-600 font-medium resize-none"
-                    />
+                    <textarea rows={2} placeholder="Note (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2 text-xs resize-none" />
                   </div>
 
-                  {/* Order Financial Summary */}
-                  <div className="pt-3 border-t border-warm-200 space-y-1.5 text-xs">
-                    <div className="flex justify-between text-warm-600 font-medium">
-                      <span>Subtotal</span>
-                      <span>₹{subtotal}</span>
-                    </div>
+                  <CheckoutOptions
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                    deliveryMode={deliveryMode}
+                    setDeliveryMode={setDeliveryMode}
+                    couponCode={couponCode}
+                    setCouponCode={setCouponCode}
+                    onApplyCoupon={handleApplyCoupon}
+                    couponStatus={couponStatus}
+                    summary={summary}
+                  />
 
-                    {discountAmount > 0 && (
-                      <div className="flex justify-between text-sage-700 font-bold">
-                        <span>Loyalty Discount ({effectiveDiscountPercent * 100}%)</span>
-                        <span>-₹{discountAmount}</span>
-                      </div>
-                    )}
+                  {error && <p className="text-xs text-rose-700 font-medium">{error}</p>}
 
-                    <div className="flex justify-between text-warm-600 font-medium">
-                      <span>Express Courier</span>
-                      <span className="text-sage-700 font-bold">FREE</span>
-                    </div>
-
-                    <div className="pt-2 border-t border-warm-200 flex justify-between text-base font-black text-warm-900">
-                      <span>Total Amount</span>
-                      <span>₹{grandTotal}</span>
-                    </div>
-                  </div>
-
-                  {/* Send WhatsApp Order Button */}
-                  <button
-                    type="submit"
-                    className="w-full mt-3 py-3.5 btn-whatsapp-pill text-xs font-bold flex items-center justify-center gap-2 shadow-warm-md"
-                  >
+                  <button type="submit" disabled={submitting} className="w-full py-3.5 btn-whatsapp-pill text-xs font-bold flex items-center justify-center gap-2 disabled:opacity-60">
                     <MessageSquare className="w-4 h-4 fill-white" />
-                    <span>Send Order to WhatsApp: {DISPLAY_PHONE_NUMBER}</span>
+                    <span>{submitting ? 'Saving order...' : `Place order ₹${summary.total}`}</span>
                   </button>
+                  <p className="text-[11px] text-center text-warm-500">
+                    Success is shown only when the order API accepts the order.
+                  </p>
                 </form>
               </>
             )}
           </div>
-
         </div>
       </div>
     </div>

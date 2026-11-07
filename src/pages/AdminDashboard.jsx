@@ -2,11 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   ShoppingBag, Users, Star, MessageSquare, TrendingUp, Package,
   CheckCircle2, Truck, Clock, XCircle, Eye, RefreshCw,
-  ChevronDown, Award, Zap, LogOut, Check, X, Bell
+  LogOut, Check, X, Bell, FileText
 } from 'lucide-react';
 
-import { adminApiCall } from '../utils/api';
-import AdminVaultUnlock from '../components/admin/AdminVaultUnlock';
+import { adminApiCall, setAdminToken } from '../utils/api';
+import AdminLogin from '../components/admin/AdminLogin';
+import BlogManager from '../components/admin/BlogManager';
 
 // ─── STATUS CONFIG ──────────────────────────────────────────────────────────
 const STATUS_CONFIG = {
@@ -46,7 +47,7 @@ function StatCard({ icon: Icon, label, value, sub, iconColor = 'text-[#C9A46C]',
 // ══════════════════════════════════════════════════════════════════
 //  ORDER ROW (Swiggy Style)
 // ══════════════════════════════════════════════════════════════════
-function OrderRow({ order, passkey, onRefresh }) {
+function OrderRow({ order, token, onRefresh }) {
   const [updating, setUpdating] = useState(false);
   const statusCfg = STATUS_CONFIG[order.status] || STATUS_CONFIG.PENDING;
   const custCfg = CUSTOMER_TYPE_CONFIG[order.customer_type] || CUSTOMER_TYPE_CONFIG.FIRST_TIME;
@@ -63,7 +64,7 @@ function OrderRow({ order, passkey, onRefresh }) {
   const handleStatusChange = async (newStatus) => {
     setUpdating(true);
     try {
-      await adminApiCall(`/api/admin/orders/${order.id}/status`, 'PATCH', passkey, { status: newStatus });
+      await adminApiCall(`/api/admin/orders/${order.id}/status`, 'PATCH', token, { status: newStatus });
       onRefresh();
     } catch (e) {
       alert(e.message);
@@ -157,7 +158,7 @@ function OrderRow({ order, passkey, onRefresh }) {
 //  MAIN ADMIN DASHBOARD
 // ══════════════════════════════════════════════════════════════════
 export default function AdminDashboard() {
-  const [passkey, setPasskey] = useState(null);
+  const [token, setToken] = useState(() => sessionStorage.getItem('jainik_admin_token'));
   const [activeTab, setActiveTab] = useState('orders');
   const [data, setData] = useState({
     dashboard: null,
@@ -170,65 +171,68 @@ export default function AdminDashboard() {
   const [orderFilter, setOrderFilter] = useState('');
 
   const fetchAll = useCallback(async (key) => {
-    if (!passkey) return;
+    if (!token) return;
     setLoading(true);
     try {
       if (key === 'dashboard' || key === 'all') {
-        const dash = await adminApiCall('/api/admin/dashboard', 'GET', passkey);
+        const dash = await adminApiCall('/api/admin/dashboard', 'GET', token);
         setData(d => ({ ...d, dashboard: dash }));
       }
       if (key === 'orders' || key === 'all') {
         const statusParam = orderFilter ? `?status=${orderFilter}` : '';
-        const orders = await adminApiCall(`/api/admin/orders${statusParam}`, 'GET', passkey);
+        const orders = await adminApiCall(`/api/admin/orders${statusParam}`, 'GET', token);
         setData(d => ({ ...d, orders }));
       }
       if (key === 'customers' || key === 'all') {
-        const customers = await adminApiCall('/api/admin/customers', 'GET', passkey);
+        const customers = await adminApiCall('/api/admin/customers', 'GET', token);
         setData(d => ({ ...d, customers }));
       }
       if (key === 'reviews' || key === 'all') {
-        const reviews = await adminApiCall('/api/admin/reviews', 'GET', passkey);
+        const reviews = await adminApiCall('/api/admin/reviews', 'GET', token);
         setData(d => ({ ...d, reviews }));
       }
       if (key === 'messages' || key === 'all') {
-        const messages = await adminApiCall('/api/admin/messages', 'GET', passkey);
+        const messages = await adminApiCall('/api/admin/messages', 'GET', token);
         setData(d => ({ ...d, messages }));
       }
     } catch (e) {
-      console.error(e);
+      if (String(e.message || '').toLowerCase().includes('log in')) {
+        setAdminToken('');
+        setToken('');
+      }
     } finally {
       setLoading(false);
     }
-  }, [passkey, orderFilter]);
+  }, [token, orderFilter]);
 
   useEffect(() => {
-    if (passkey) fetchAll('all');
-  }, [passkey, fetchAll]);
+    if (token) fetchAll('all');
+  }, [token, fetchAll]);
 
   useEffect(() => {
-    if (passkey && activeTab === 'orders') fetchAll('orders');
+    if (token && activeTab === 'orders') fetchAll('orders');
   }, [orderFilter]);
 
   const handleApproveReview = async (id) => {
-    await adminApiCall(`/api/admin/reviews/${id}/approve`, 'PATCH', passkey);
+    await adminApiCall(`/api/admin/reviews/${id}/approve`, 'PATCH', token);
     fetchAll('reviews');
     fetchAll('dashboard');
   };
 
   const handleDeleteReview = async (id) => {
     if (!window.confirm('Delete this review?')) return;
-    await adminApiCall(`/api/admin/reviews/${id}`, 'DELETE', passkey);
+    await adminApiCall(`/api/admin/reviews/${id}`, 'DELETE', token);
     fetchAll('reviews');
   };
 
   const handleMarkRead = async (id) => {
-    await adminApiCall(`/api/admin/messages/${id}/read`, 'PATCH', passkey);
+    await adminApiCall(`/api/admin/messages/${id}/read`, 'PATCH', token);
     fetchAll('messages');
     fetchAll('dashboard');
   };
 
-  if (!passkey) {
-    return <AdminVaultUnlock onUnlock={setPasskey} />;
+  if (!token) {
+    return <AdminLogin onUnlock={setToken} />;
   }
 
   const dash = data.dashboard;
@@ -237,6 +241,7 @@ export default function AdminDashboard() {
     { id: 'orders',    label: 'Orders',    icon: ShoppingBag,   badge: dash?.overview?.pending_orders },
     { id: 'customers', label: 'Customers', icon: Users,         badge: null },
     { id: 'reviews',   label: 'Reviews',   icon: Star,          badge: dash?.alerts?.pending_reviews_to_approve },
+    { id: 'journal',   label: 'Notes',     icon: FileText,      badge: null },
     { id: 'messages',  label: 'Messages',  icon: MessageSquare, badge: dash?.alerts?.unread_messages },
   ];
 
@@ -263,7 +268,10 @@ export default function AdminDashboard() {
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button
-            onClick={() => setPasskey(null)}
+            onClick={() => {
+              setAdminToken('');
+              setToken('');
+            }}
             className="p-2 rounded-lg bg-red-900/30 text-red-400 hover:bg-red-900/50 transition-colors"
             title="Logout"
           >
@@ -344,7 +352,7 @@ export default function AdminDashboard() {
             )}
 
             {data.orders.map(order => (
-              <OrderRow key={order.id} order={order} passkey={passkey} onRefresh={() => { fetchAll('orders'); fetchAll('dashboard'); }} />
+              <OrderRow key={order.id} order={order} token={token} onRefresh={() => { fetchAll('orders'); fetchAll('dashboard'); }} />
             ))}
           </>
         )}
@@ -440,6 +448,8 @@ export default function AdminDashboard() {
             )}
           </>
         )}
+
+        {activeTab === 'journal' && <BlogManager token={token} />}
 
         {/* MESSAGES TAB */}
         {activeTab === 'messages' && (

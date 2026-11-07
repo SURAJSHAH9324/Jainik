@@ -67,59 +67,89 @@ export const JAINIK_PRODUCT = {
 
 export const INGREDIENTS = JAINIK_PRODUCT.ingredients;
 
-// User requested exact pack sizes: Pack of 1, 5, 10, 30, and 40 (Base price: ₹70 / bar)
+// Delivery is extra on every pack. Express is a higher fee, not free.
+export const DELIVERY_FEES = {
+  standard: 49,
+  express: 99,
+};
+
+export const COUPONS = {
+  FIRST10: {
+    code: 'FIRST10',
+    percent: 0.1,
+    firstOrderOnly: true,
+    label: '10% off your first purchase',
+  },
+  AHIMSA15: {
+    code: 'AHIMSA15',
+    percent: 0.15,
+    firstOrderOnly: false,
+    label: '15% off from the ingredient match',
+  },
+};
+
+function makePack(size, regularPrice, specialPrice, extra = {}) {
+  const hasSpecial = typeof specialPrice === 'number' && specialPrice < regularPrice;
+  return {
+    size,
+    regularPrice,
+    specialPrice: hasSpecial ? specialPrice : null,
+    price: hasSpecial ? specialPrice : regularPrice,
+    savings: hasSpecial ? regularPrice - specialPrice : 0,
+    label: `Pack of ${size}`,
+    sub: hasSpecial
+      ? `Prepaid special ₹${specialPrice} • COD ₹${regularPrice}`
+      : `₹${regularPrice} + delivery`,
+    badge: extra.badge || `${size} Bars`,
+    popular: Boolean(extra.popular),
+    image: '/Package.png',
+  };
+}
+
+// Special offer prices apply on prepaid orders only. COD pays regularPrice.
 export const PACKS = [
-  { 
-    size: 1, 
-    price: 70, 
-    regularPrice: 70, 
-    savings: 0, 
-    label: 'Pack of 1', 
-    sub: 'Pocket Trial (₹70 / Bar)', 
-    badge: 'Single Bar',
-    image: '/jainik-bar-hero.jpg'
+  makePack(5, 350, null, { badge: 'Starter' }),
+  makePack(10, 670, null, { badge: 'Weekly' }),
+  makePack(30, 2000, 1950, { badge: 'Bestseller', popular: true }),
+  makePack(50, 3150, 3000, { badge: 'Family Box' }),
+  makePack(70, 4060, 4000, { badge: 'Stock-up' }),
+  makePack(100, 5700, 5500, { badge: 'Best Value' }),
+];
+
+export const CERTIFICATES = [
+  {
+    title: 'FSSAI Licence',
+    ref: '21526066000742',
+    detail: 'JAINIK FOODS, Chunapura, Karanja (Lad), Dist. Washim, Maharashtra.',
   },
-  { 
-    size: 5, 
-    price: 350, 
-    regularPrice: 350, 
-    savings: 0, 
-    label: 'Pack of 5', 
-    sub: 'Weekday Energy (₹70 / Bar)', 
-    badge: 'Pocket Pack',
-    image: '/Package.png'
+  {
+    title: 'Shelf-life certification',
+    ref: 'Best-before on each wrapper',
+    detail: 'Every bar carries the certified best-before date from our shelf-life check. Keep the pack cool and dry.',
   },
-  { 
-    size: 10, 
-    price: 650, 
-    regularPrice: 700, 
-    savings: 50, 
-    label: 'Pack of 10', 
-    sub: 'Save ₹50 (₹65 / Bar)', 
-    badge: 'Weekly Box',
-    image: '/Package.png'
+  {
+    title: 'Vegetarian kitchen standard',
+    ref: '100% vegetarian',
+    detail: 'No eggs, no gelatine, no preservatives, no artificial colours, and no refined white sugar.',
   },
-  { 
-    size: 30, 
-    price: 2010, 
-    regularPrice: 2100, 
-    savings: 90, 
-    label: 'Pack of 30', 
-    sub: 'Save ₹90 (₹67 / Bar)', 
-    badge: '🔥 Bestseller', 
-    popular: true,
-    image: '/Package.png'
+];
+
+export const UPCOMING_PRODUCTS = [
+  {
+    id: 'peanut-jaggery',
+    name: 'Peanut & Jaggery Bar',
+    note: 'Roasted peanuts, jaggery, and cardamom. A sample helps us set the sweetness.',
   },
-  { 
-    size: 40, 
-    price: 2640, 
-    regularPrice: 2800, 
-    savings: 160, 
-    label: 'Pack of 40', 
-    sub: 'Save ₹160 (₹66 / Bar)', 
-    badge: '👑 Best Value',
-    image: '/Package.png'
-  }
+  {
+    id: 'cocoa-crunch',
+    name: 'Cocoa Crunch Bar',
+    note: 'Dark cocoa with seeds and dates. A sample helps us balance bitterness and crunch.',
+  },
+  {
+    id: 'seed-power',
+    name: 'Seed Power Bar',
+    note: 'Pumpkin, watermelon, and sunflower seeds. A sample helps us test texture and shelf life.',
+  },
 ];
 
 export const SHOWCASE_SLIDES = [
@@ -186,7 +216,7 @@ export const FAQS = [
   },
   {
     question: 'How do I place an order directly on WhatsApp?',
-    answer: 'Select your desired pack (Pack of 1 ₹70, Pack of 5 ₹350, Pack of 10 ₹650, Pack of 30 ₹2,010, or Pack of 40 ₹2,640) and click "Order on WhatsApp". Your complete order requirement will open directly on our official WhatsApp: +91 95884 17743.'
+    answer: 'Choose a pack (5, 10, 30, 50, 70, or 100 bars) and place the order on the site. The order is saved only when the order API succeeds. Payment and delivery updates are shared on WhatsApp +91 95884 17743. Delivery is extra. Express delivery costs more than standard delivery.'
   },
   {
     question: 'Is Jainik Energy Bar 100% natural with no preservatives?',
@@ -198,6 +228,14 @@ export const FAQS = [
   },
   {
     question: 'How can first-time customers claim the 10% discount?',
-    answer: 'First-time customers can click "+ Apply 10% First Order" on the pack cards or in the cart to get an extra 10% welcome discount applied directly to their WhatsApp invoice!'
+    answer: 'Use coupon FIRST10 at checkout. It works only when this phone number has never ordered before. The website checks that on the order server before the coupon is applied.'
+  },
+  {
+    question: 'Does the special offer apply on cash on delivery?',
+    answer: 'No. Pack special prices (30, 50, 70, and 100 bars) apply on prepaid orders only. Cash on delivery is charged at the regular pack price, plus delivery.'
+  },
+  {
+    question: 'How much is delivery?',
+    answer: 'Standard delivery is ₹49. Express delivery is ₹99. Both are added on top of the pack price.'
   }
 ];

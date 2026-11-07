@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
-import { Star, MessageSquare, CheckCircle2, ShieldCheck, ShoppingBag, Eye, Check, Sparkles, Truck, Leaf, Heart, Zap, Award } from 'lucide-react';
-import { DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
+import { Star, MessageSquare, ShieldCheck, ShoppingBag, Eye, Check, Sparkles, Truck, Leaf, Heart, Zap } from 'lucide-react';
+import { PACKS } from '../data/products';
 
-export default function Hero({ product, onAddToCart, onOpenNutrition, onOpenImage, onOpenOrder }) {
-  const [selectedPack, setSelectedPack] = useState({ size: 1, name: 'Pack of 1 (40g)', price: 70, badge: 'Single Bar' });
+const packOptions = PACKS.map((pack) => ({
+  ...pack,
+  name: pack.label,
+  price: pack.specialPrice || pack.regularPrice,
+}));
+
+export default function Hero({ onAddToCart, onOpenNutrition, onOpenImage, onOpenOrder, onAddBundleToCart }) {
+  const [selectedPack, setSelectedPack] = useState(packOptions[0]);
   const [quantity, setQuantity] = useState(1);
   const [activeMedia, setActiveMedia] = useState('/jainik-bar-hero.jpg');
   const [justAdded, setJustAdded] = useState(false);
-
-  // Exact pack options requested by user: 1, 5, 10, 30, and 40 (Base price: ₹70)
-  const packOptions = [
-    { size: 1, name: 'Pack of 1', price: 70, label: 'Single Bar', image: '/jainik-bar-hero.jpg' },
-    { size: 5, name: 'Pack of 5', price: 350, label: 'Pocket Pack', image: '/Package.png' },
-    { size: 10, name: 'Pack of 10', price: 650, savings: 50, label: 'Save ₹50', image: '/Package.png' },
-    { size: 30, name: 'Pack of 30', price: 2010, savings: 90, popular: true, label: 'Bestseller', image: '/Package.png' },
-    { size: 40, name: 'Pack of 40', price: 2640, savings: 160, label: 'Save ₹160', image: '/Package.png' },
-  ];
 
   const handlePackSelect = (pack) => {
     setSelectedPack(pack);
@@ -27,23 +24,35 @@ export default function Hero({ product, onAddToCart, onOpenNutrition, onOpenImag
 
   const totalPrice = selectedPack.price * quantity;
 
+  const currentPackItem = () => ({
+    id: `pack-${selectedPack.size}`,
+    name: `Jainik Energy Bar (${selectedPack.name})`,
+    price: selectedPack.regularPrice,
+    regularPrice: selectedPack.regularPrice,
+    specialPrice: selectedPack.specialPrice,
+    image: activeMedia,
+    size: selectedPack.size,
+    quantity,
+    badge: selectedPack.badge,
+  });
+
   const handleOrderClick = () => {
-    if (onOpenOrder) {
-      onOpenOrder({
-        name: `Jainik Energy Bar (${selectedPack.name})`,
-        price: selectedPack.price,
-        image: activeMedia,
-        size: selectedPack.size
-      });
-    } else {
-      onAddToCart(selectedPack.size * quantity);
-    }
+    const item = currentPackItem();
+    if (onOpenOrder) onOpenOrder(item);
+    else if (onAddBundleToCart) onAddBundleToCart(item);
+    else onAddToCart(1);
   };
 
   const handleAddCartOnly = () => {
-    onAddToCart(selectedPack.size * quantity);
+    const item = currentPackItem();
+    if (onAddBundleToCart) onAddBundleToCart(item);
+    else onAddToCart(quantity);
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 2200);
+  };
+
+  const scrollToBrandValues = () => {
+    document.getElementById('brand-values')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
@@ -109,11 +118,11 @@ export default function Hero({ product, onAddToCart, onOpenNutrition, onOpenImag
                     </span>
                     {selectedPack.savings ? (
                       <span className="ml-2 text-xs font-bold text-[#5C7548] bg-[#5C7548]/20 px-2.5 py-0.5 rounded-full border border-[#5C7548]/40">
-                        Save ₹{selectedPack.savings * quantity}
+                        Prepaid save ₹{selectedPack.savings * quantity}
                       </span>
                     ) : (
                       <span className="ml-2 text-xs text-[#D8C08A]/80 font-bold">
-                        (Base Unit: ₹70 / 40g Bar)
+                        + delivery
                       </span>
                     )}
                   </div>
@@ -122,12 +131,11 @@ export default function Hero({ product, onAddToCart, onOpenNutrition, onOpenImag
                   </span>
                 </div>
 
-                {/* Pack Size Pills (1, 5, 10, 30, 40) */}
                 <div className="space-y-1.5">
                   <span className="text-[11px] font-black uppercase tracking-wider text-[#D8C08A] block">
                     Choose Pack Size:
                   </span>
-                  <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2">
                     {packOptions.map((pack) => {
                       const isCurrent = selectedPack.size === pack.size;
                       return (
@@ -195,7 +203,7 @@ export default function Hero({ product, onAddToCart, onOpenNutrition, onOpenImag
               {/* Quick Trust Row */}
               <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-[#D8C08A]/90">
                 <span className="flex items-center gap-1 text-[#5C7548]">
-                  <Truck className="w-3.5 h-3.5" /> Free Express Courier Across India
+                  <Truck className="w-3.5 h-3.5" /> Delivery extra • Express costs more
                 </span>
                 <span>•</span>
                 <button 
@@ -232,7 +240,7 @@ export default function Hero({ product, onAddToCart, onOpenNutrition, onOpenImag
 
                     {/* Badge */}
                     <div className="absolute top-3 left-3 bg-[#1A0F0B]/90 backdrop-blur-md border border-[#D8C08A]/50 text-[#FFFBED] text-[11px] font-black px-3 py-1 rounded-full shadow-md">
-                      ✨ Real Whole Food Texture • ₹70
+                      ✨ Real Whole Food Texture
                     </div>
 
                     <button 
@@ -314,50 +322,50 @@ export default function Hero({ product, onAddToCart, onOpenNutrition, onOpenImag
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8 items-center text-center">
             
-            <div className="space-y-2 flex flex-col items-center">
+            <button type="button" onClick={scrollToBrandValues} className="space-y-2 flex flex-col items-center">
               <div className="w-12 h-12 rounded-full border border-[#C9A46C] flex items-center justify-center bg-white/60 text-[#281A14] shadow-sm">
                 <Leaf className="w-5 h-5 text-[#5C7548]" />
               </div>
               <h4 className="text-xs sm:text-sm font-black text-[#281A14]">
                 100% Pure Ingredients
               </h4>
-            </div>
+            </button>
 
-            <div className="space-y-2 flex flex-col items-center">
+            <button type="button" onClick={scrollToBrandValues} className="space-y-2 flex flex-col items-center">
               <div className="w-12 h-12 rounded-full border border-[#C9A46C] flex items-center justify-center bg-white/60 text-[#281A14] shadow-sm">
                 <ShieldCheck className="w-5 h-5 text-[#281A14]" />
               </div>
               <h4 className="text-xs sm:text-sm font-black text-[#281A14]">
                 No Added Preservatives
               </h4>
-            </div>
+            </button>
 
-            <div className="space-y-2 flex flex-col items-center">
+            <button type="button" onClick={scrollToBrandValues} className="space-y-2 flex flex-col items-center">
               <div className="w-12 h-12 rounded-full border border-[#C9A46C] flex items-center justify-center bg-white/60 text-[#281A14] shadow-sm">
                 <Zap className="w-5 h-5 text-[#C9A46C]" />
               </div>
               <h4 className="text-xs sm:text-sm font-black text-[#281A14]">
                 High Plant Protein
               </h4>
-            </div>
+            </button>
 
-            <div className="space-y-2 flex flex-col items-center">
+            <button type="button" onClick={scrollToBrandValues} className="space-y-2 flex flex-col items-center">
               <div className="w-12 h-12 rounded-full border border-[#C9A46C] flex items-center justify-center bg-white/60 text-[#281A14] shadow-sm">
                 <Sparkles className="w-5 h-5 text-[#281A14]" />
               </div>
               <h4 className="text-xs sm:text-sm font-black text-[#281A14]">
                 Nuts, Seeds & Oats
               </h4>
-            </div>
+            </button>
 
-            <div className="col-span-2 md:col-span-1 space-y-2 flex flex-col items-center">
+            <button type="button" onClick={scrollToBrandValues} className="col-span-2 md:col-span-1 space-y-2 flex flex-col items-center">
               <div className="w-12 h-12 rounded-full border border-[#C9A46C] flex items-center justify-center bg-white/60 text-[#281A14] shadow-sm">
                 <Heart className="w-5 h-5 text-[#4A241B]" />
               </div>
               <h4 className="text-xs sm:text-sm font-black text-[#281A14]">
                 Jain Inspired Purity
               </h4>
-            </div>
+            </button>
 
           </div>
         </div>

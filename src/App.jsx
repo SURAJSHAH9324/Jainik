@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import BundleBuilder from './components/BundleBuilder';
@@ -14,21 +15,16 @@ import QuickActionDock from './components/QuickActionDock';
 import IngredientMatchGame from './components/IngredientMatchGame';
 import NutritionModal from './components/NutritionModal';
 import ImageModal from './components/ImageModal';
-import { JAINIK_PRODUCT } from './data/products';
+import UpcomingProducts from './components/UpcomingProducts';
+import OrderHistory from './components/OrderHistory';
+import BlogSection from './components/BlogSection';
+import { JAINIK_PRODUCT, PACKS } from './data/products';
 import { Check, MessageSquare } from 'lucide-react';
 import { openWhatsAppDirectChat, DISPLAY_PHONE_NUMBER } from './utils/whatsapp';
 
 export default function App() {
-  const [cart, setCart] = useState([
-    {
-      id: 'jainik-pack-10',
-      name: 'Jainik Energy Bar (Pack of 10)',
-      price: 650,
-      quantity: 1,
-      badge: 'Weekly Box',
-      accentColor: '#241611'
-    }
-  ]);
+  const { pathname } = useLocation();
+  const [cart, setCart] = useState([]);
 
   const [cartOpen, setCartOpen] = useState(false);
   const [nutritionOpen, setNutritionOpen] = useState(false);
@@ -40,13 +36,28 @@ export default function App() {
 
   // Open Direct Order Modal with full address, requirement note & success screen
   const handleOpenOrder = (productItem) => {
+    const starter = PACKS[0];
     setOrderModalItem(productItem || {
-      name: 'Jainik Energy Bar (40g Single Bar)',
-      price: 70,
-      image: '/jainik-bar-hero.jpg'
+      id: `pack-${starter.size}`,
+      name: `Jainik Energy Bar (${starter.label})`,
+      price: starter.regularPrice,
+      regularPrice: starter.regularPrice,
+      specialPrice: starter.specialPrice,
+      image: starter.image,
+      size: starter.size,
     });
     setOrderModalOpen(true);
   };
+
+  useEffect(() => {
+    if (pathname !== '/') return;
+    const id = window.location.hash.replace('#', '');
+    if (!id) return;
+    const timer = window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+    return () => window.clearTimeout(timer);
+  }, [pathname]);
 
   // Cart Handlers
   const handleAddToCart = (quantity = 1) => {
@@ -77,16 +88,17 @@ export default function App() {
   };
 
   const handleAddBundleToCart = (bundleItem) => {
+    const addQty = bundleItem.quantity || 1;
     setCart(prevCart => {
       const existing = prevCart.find(item => item.id === bundleItem.id);
       if (existing) {
         return prevCart.map(item =>
           item.id === bundleItem.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + addQty }
             : item
         );
       } else {
-        return [...prevCart, { ...bundleItem, quantity: 1 }];
+        return [...prevCart, { ...bundleItem, quantity: addQty }];
       }
     });
 
@@ -138,26 +150,26 @@ export default function App() {
 
       {/* Floating WhatsApp Quick Order Button (Desktop Left) */}
       <button 
-        onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I would like to order Jainik Energy Bars (₹70/bar)!')}
+        onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I need a payment or order update.')}
         className="hidden md:flex fixed bottom-6 left-6 z-40 bg-[#241611] hover:bg-[#1A0F0B] text-[#D8C08A] font-bold text-xs px-4 py-3 rounded-full shadow-2xl items-center gap-2.5 transition-all hover:scale-105 border border-[#D8C08A]/40"
         title={`Direct WhatsApp: ${DISPLAY_PHONE_NUMBER}`}
       >
         <MessageSquare className="w-4 h-4 text-[#25D366] fill-[#25D366]" />
-        <span>WhatsApp: {DISPLAY_PHONE_NUMBER} (₹70/Bar)</span>
+        <span>WhatsApp updates: {DISPLAY_PHONE_NUMBER}</span>
       </button>
 
       {/* Mobile Sticky Bottom Conversion Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#1A0F0B]/95 backdrop-blur-xl border-t border-[#D8C08A]/30 px-4 py-3 flex items-center justify-between shadow-2xl">
         <div>
           <span className="text-[10px] text-[#C9A46C] font-black block tracking-wider uppercase">JAINIK ENERGY BAR</span>
-          <span className="text-[#FFFBED] font-black text-sm">₹70 <span className="text-xs text-[#D8C08A] font-normal">/ Bar</span></span>
+          <span className="text-[#FFFBED] font-black text-sm">From ₹350 <span className="text-xs text-[#D8C08A] font-normal">+ delivery</span></span>
         </div>
         <div className="flex items-center gap-2">
           <button 
-            onClick={() => handleOpenOrder({ name: 'Jainik Energy Bar (40g Single Bar)', price: 70, image: '/jainik-bar-hero.jpg' })}
+            onClick={() => handleOpenOrder()}
             className="bg-[#C9A46C] text-[#1A0F0B] font-black text-xs py-2.5 px-4 rounded-xl shadow-md"
           >
-            Order on WA
+            Order
           </button>
         </div>
       </div>
@@ -172,38 +184,42 @@ export default function App() {
 
       {/* Main Page Content */}
       <main>
-        {/* 1. Hero Section: High contrast, readable, featuring jainik-bar-hero.jpg */}
-        <Hero 
-          product={JAINIK_PRODUCT}
-          onAddToCart={handleAddToCart}
-          onOpenNutrition={() => setNutritionOpen(true)}
-          onOpenImage={handleOpenImage}
-          onOpenOrder={handleOpenOrder}
-        />
+        {pathname.startsWith('/upcoming') ? (
+          <UpcomingProducts />
+        ) : (
+          <>
+            <Hero 
+              product={JAINIK_PRODUCT}
+              onAddToCart={handleAddToCart}
+              onAddBundleToCart={handleAddBundleToCart}
+              onOpenNutrition={() => setNutritionOpen(true)}
+              onOpenImage={handleOpenImage}
+              onOpenOrder={handleOpenOrder}
+            />
 
-        {/* 2. Barefruit-Style Product Collection Grid: 3, 6, 12, 24 Packs with Package.png */}
-        <BundleBuilder 
-          product={JAINIK_PRODUCT}
-          onAddBundleToCart={handleAddBundleToCart}
-          onOpenOrder={handleOpenOrder}
-        />
+            <BundleBuilder 
+              product={JAINIK_PRODUCT}
+              onAddBundleToCart={handleAddBundleToCart}
+              onOpenOrder={handleOpenOrder}
+            />
 
-        {/* 3. Visual Brand Gallery: Interactive showcase for jainik-1.png to jainik-5.png */}
-        <VisualShowcase 
-          onOpenImage={handleOpenImage}
-        />
+            <WhyJainik />
 
-        {/* 4. 10 Superfoods & Key Nutrition Chips (Streamlined) */}
-        <IngredientSpotlight />
+            <VisualShowcase 
+              onOpenImage={handleOpenImage}
+            />
 
-        {/* 5. Why Jainik: 4 Clean Heritage & Quality Pillars */}
-        <WhyJainik />
+            <IngredientSpotlight />
 
-        {/* 6. Customer Testimonials */}
-        <Testimonials />
+            <BlogSection />
 
-        {/* 7. Frequently Asked Questions */}
-        <FAQ />
+            <Testimonials />
+
+            <OrderHistory />
+
+            <FAQ />
+          </>
+        )}
       </main>
 
       {/* Footer */}

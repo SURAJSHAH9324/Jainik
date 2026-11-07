@@ -1,42 +1,33 @@
-import React, { useState } from 'react';
-import { Star, ShoppingBag, MessageSquare, Truck, Crown, Flame, Sparkles, Check } from 'lucide-react';
-import { PACKS } from '../data/products';
+import React from 'react';
+import { Star, ShoppingBag, MessageSquare, Truck, Sparkles } from 'lucide-react';
+import { DELIVERY_FEES, PACKS } from '../data/products';
+import OffersPanel from './OffersPanel';
 
-export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder }) {
-  const [isFirstCustomer, setIsFirstCustomer] = useState(false);
+function packToOrderItem(pack) {
+  return {
+    id: `pack-${pack.size}`,
+    name: `Jainik Energy Bar (${pack.label})`,
+    price: pack.regularPrice,
+    regularPrice: pack.regularPrice,
+    specialPrice: pack.specialPrice,
+    image: pack.image,
+    size: pack.size,
+    isBundle: true,
+    packSize: pack.size,
+    badge: pack.badge,
+    accentColor: '#241611',
+  };
+}
 
+export default function BundleBuilder({ onAddBundleToCart, onOpenOrder }) {
   const handleOrderClick = (pack) => {
-    const firstOrderDiscount = isFirstCustomer ? Math.round(pack.price * 0.10) : 0;
-    const finalPrice = pack.price - firstOrderDiscount;
-
-    if (onOpenOrder) {
-      onOpenOrder({
-        name: `Jainik Energy Bar (${pack.label})`,
-        price: finalPrice,
-        image: pack.image,
-        size: pack.size,
-        isFirstCustomer: isFirstCustomer
-      });
-    } else {
-      handleAddToCart(pack);
-    }
+    const item = packToOrderItem(pack);
+    if (onOpenOrder) onOpenOrder(item);
+    else onAddBundleToCart(item);
   };
 
   const handleAddToCart = (pack) => {
-    const firstOrderDiscount = isFirstCustomer ? Math.round(pack.price * 0.10) : 0;
-    const finalPrice = pack.price - firstOrderDiscount;
-
-    const bundleItem = {
-      id: `pack-${pack.size}-${isFirstCustomer ? 'first-order' : 'standard'}`,
-      name: `Jainik Energy Bar (${pack.label})`,
-      price: finalPrice,
-      isBundle: true,
-      packSize: pack.size,
-      badge: pack.label,
-      accentColor: '#241611'
-    };
-
-    onAddBundleToCart(bundleItem);
+    onAddBundleToCart(packToOrderItem(pack));
   };
 
   return (
@@ -48,51 +39,22 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
         <div className="text-center max-w-2xl mx-auto space-y-2 mb-12">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#F3E8DD] border border-[#D8C08A] text-[#281A14] text-xs font-black uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5 text-[#C9A46C]" />
-            <span>OUR PRODUCTS • ₹70 BASE UNIT</span>
+            <span>PACKS • DELIVERY EXTRA</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-serif font-black text-[#241611] tracking-tight">
             Pure Energy. <span className="italic font-normal text-[#C9A46C]">In Every Bite.</span>
           </h2>
           <p className="text-[#3D2211] text-xs sm:text-sm font-medium">
-            Handcrafted in Karanja (Lad), Maharashtra. Dispatched fresh in 24 hours with free delivery across India.
+            Handcrafted in Karanja (Lad), Maharashtra. Pack price plus delivery. Express delivery is ₹{DELIVERY_FEES.express}.
           </p>
         </div>
 
-        {/* First Time Customer Welcome Discount Banner */}
-        <div className="max-w-3xl mx-auto mb-10 bg-[#F3E8DD] border border-[#D8C08A] rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#241611] text-[#C9A46C] flex items-center justify-center flex-shrink-0">
-              <Crown className="w-5 h-5 text-[#C9A46C]" />
-            </div>
-            <div>
-              <span className="text-xs sm:text-sm font-black text-[#241611] block">
-                First Time Ordering? Get an extra 10% Welcome Discount
-              </span>
-              <span className="text-[11px] text-[#3D2211] font-medium">
-                Special welcome offer on your first order. Automatically calculated.
-              </span>
-            </div>
-          </div>
+        <OffersPanel />
 
-          <button
-            type="button"
-            onClick={() => setIsFirstCustomer(!isFirstCustomer)}
-            className={`px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap ${
-              isFirstCustomer 
-                ? 'bg-[#241611] text-[#FFFBED] shadow-sm' 
-                : 'bg-white border border-[#D8C08A] text-[#241611] hover:bg-[#FAF6F0]'
-            }`}
-          >
-            {isFirstCustomer ? '✓ 10% First Order Applied' : '+ Apply 10% First Order'}
-          </button>
-        </div>
-
-        {/* 5 Product Pack Grid (Pack of 1, 5, 10, 30, and 40) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {PACKS.map((pack) => {
-            const firstOrderDiscount = isFirstCustomer ? Math.round(pack.price * 0.10) : 0;
-            const finalPrice = pack.price - firstOrderDiscount;
-            const effectivePerBar = (finalPrice / pack.size).toFixed(0);
+            const shownPrice = pack.specialPrice || pack.regularPrice;
+            const effectivePerBar = Math.round(shownPrice / pack.size);
 
             return (
               <div
@@ -152,24 +114,23 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
                     <div>
                       <div className="flex items-baseline gap-1.5">
                         <span className="text-xl font-black text-[#241611]">
-                          ₹{finalPrice}
+                          ₹{shownPrice}
                         </span>
-                        {pack.regularPrice > pack.price && (
+                        {pack.specialPrice && (
                           <span className="text-xs font-semibold text-[#8B4513] line-through">
                             ₹{pack.regularPrice}
                           </span>
                         )}
                       </div>
                       <span className="text-[11px] font-black text-[#5C7548] block">
-                        ₹{effectivePerBar} / Bar
+                        ₹{effectivePerBar} / Bar + delivery
                       </span>
+                      {pack.specialPrice && (
+                        <span className="text-[10px] font-bold text-[#5C361D] block">
+                          COD ₹{pack.regularPrice} • no special offer
+                        </span>
+                      )}
                     </div>
-
-                    {isFirstCustomer && (
-                      <span className="text-[9px] font-black text-[#241611] bg-[#C9A46C] px-2 py-0.5 rounded-full">
-                        -10% First Order
-                      </span>
-                    )}
                   </div>
 
                   {/* Action Buttons */}
@@ -202,7 +163,7 @@ export default function BundleBuilder({ product, onAddBundleToCart, onOpenOrder 
         {/* Free Shipping Footer Bar */}
         <div className="mt-10 text-center flex items-center justify-center gap-2 text-xs font-black text-[#241611]">
           <Truck className="w-4 h-4 text-[#5C7548]" />
-          <span>All orders include Free Express Courier Delivery Across India</span>
+          <span>Delivery extra — standard ₹{DELIVERY_FEES.standard}, express ₹{DELIVERY_FEES.express}</span>
         </div>
 
       </div>

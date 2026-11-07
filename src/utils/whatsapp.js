@@ -1,76 +1,74 @@
 export const WHATSAPP_PHONE_NUMBER = '919588417743';
 export const DISPLAY_PHONE_NUMBER = '+91 95884 17743';
 
-/**
- * Formats order data with a clean, professional table-like text layout
- * Sends to WhatsApp +91 95884 17743 without broken emojis or weird code blocks
- */
-export function openWhatsAppOrder({ 
-  customerName, 
-  customerPhone, 
-  items, 
-  total, 
-  notes, 
-  isReturningCustomer = false, 
-  isFirstCustomer = false,
-  discountAmount = 0 
+export function openWhatsAppOrder({
+  customerName,
+  customerPhone,
+  items,
+  total,
+  notes,
+  discountAmount = 0,
+  orderRef,
+  paymentMethod = 'prepaid',
+  deliveryFee = 0,
 }) {
   const dateStr = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'short',
-    year: 'numeric'
+    year: 'numeric',
   });
 
-  const orderCode = 'JNK-' + Math.floor(1000 + Math.random() * 9000);
-
-  // Clean, structured line items
+  const ref = orderRef || 'PENDING';
   const formattedItems = items && items.length > 0
-    ? items.map((item, index) => {
-        const itemTotal = (item.price * item.quantity).toFixed(0);
-        return `• ${item.name} | Qty: ${item.quantity} | Total: Rs. ${itemTotal}`;
+    ? items.map((item) => {
+        const qty = item.quantity || item.qty || 1;
+        const itemTotal = Math.round(item.price * qty);
+        return `• ${item.name} | Qty: ${qty} | Total: Rs. ${itemTotal}`;
       }).join('\n')
-    : '• 1x Jainik Energy Bar (Rs. 70)';
+    : '• Jainik Energy Bar pack';
 
-  const isEligibleDiscount = isFirstCustomer || isReturningCustomer;
-  const customerTag = isEligibleDiscount ? 'First Order Customer (10% Welcome Discount)' : 'Valued Customer';
-  const subtotal = (total + (discountAmount || 0)).toFixed(0);
+  const paymentLabel = paymentMethod === 'cod'
+    ? 'Cash on delivery (no pack special offer)'
+    : 'Prepaid / UPI';
 
-  const fullMessage = 
-`*JAINIK ENERGY BAR - ORDER INVOICE*
-*Built on Purity • 100% Natural • 40g*
+  const fullMessage =
+`*JAINIK ENERGY BAR - ORDER*
+*Built on Purity • 40g*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-*ORDER DETAILS*
-• Order Ref   : #${orderCode}
+*ORDER*
+• Order Ref   : #${ref}
 • Date        : ${dateStr}
-• Base Rate   : Rs. 70 / Bar
+• Payment     : ${paymentLabel}
 
-*CUSTOMER INFORMATION*
-• Name        : ${customerName || 'Direct Website Customer'}
-• Phone       : ${customerPhone || 'Direct Inquiry'}
-• Type        : ${customerTag}
-${notes ? `• Address / Note:\n  ${notes}\n` : ''}
+*CUSTOMER*
+• Name        : ${customerName || 'Website customer'}
+• Phone       : ${customerPhone || '—'}
+${notes ? `• Details:\n${notes}\n` : ''}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-*ORDER ITEMS*
+*ITEMS*
 ${formattedItems}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-• Subtotal    : Rs. ${subtotal}
-${discountAmount > 0 ? `• First Order Disc: -Rs. ${discountAmount.toFixed(0)}\n` : ''}• Shipping    : FREE (Direct Dispatch)
-*FINAL TOTAL  : Rs. ${total.toFixed(0)}*
+${discountAmount > 0 ? `• Discount    : -Rs. ${Math.round(discountAmount)}\n` : ''}• Delivery    : Rs. ${Math.round(deliveryFee)}
+*FINAL TOTAL  : Rs. ${Math.round(total)}*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-*Message to Team Jainik:*
-"Please confirm my order and share your UPI / QR code for instant payment. Looking forward to fresh energy bars!"
+Please confirm this order on WhatsApp.
+Payment updates and order status updates will stay on this chat.
 
-*Direct Kitchen Helpline:* +91 95884 17743`;
+*Helpline:* +91 95884 17743`;
 
   const encodedUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(fullMessage)}`;
   window.open(encodedUrl, '_blank');
 }
 
-/**
- * Direct WhatsApp chat launcher with clean prefilled message
- */
-export function openWhatsAppDirectChat(customText = 'Hi Jainik Team, I would like to inquire about Jainik Energy Bars (Rs. 70/bar)!') {
+export function openWhatsAppOrderUpdate(orderRef = '') {
+  const refLine = orderRef ? ` My order reference is ${orderRef}.` : '';
+  openWhatsAppDirectChat(
+    `Hi Jainik Team, I need a payment or order update.${refLine}`
+  );
+}
+
+export function openWhatsAppDirectChat(customText = 'Hi Jainik Team, I would like to enquire about Jainik Energy Bars.') {
   const encodedUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(customText)}`;
   window.open(encodedUrl, '_blank');
 }

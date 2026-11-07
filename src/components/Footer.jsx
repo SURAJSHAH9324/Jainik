@@ -18,13 +18,13 @@ export default function Footer() {
               Connect Directly with Team Jainik
             </h3>
             <p className="text-[#F3E8DD]/80 text-sm leading-relaxed">
-              Order your fresh pack boxes (1, 5, 10, 30, 40 bars), ask bulk order queries, or claim your 10% first customer discount directly at <strong>{DISPLAY_PHONE_NUMBER}</strong> / <strong>+91 99223 22906</strong>.
+              Order packs of 5, 10, 30, 50, 70, or 100 bars. Payment and order updates stay on WhatsApp at <strong>{DISPLAY_PHONE_NUMBER}</strong> / <strong>+91 99223 22906</strong>.
             </p>
           </div>
 
           <div className="lg:col-span-5 flex flex-col sm:flex-row gap-3">
             <button 
-              onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I would like to order Jainik Energy Bars (₹70/bar)!')}
+              onClick={() => openWhatsAppDirectChat('Hi Jainik Team, I need a payment or order update.')}
               className="w-full px-6 py-4 rounded-xl bg-[#C9A46C] hover:bg-[#D8BA8A] text-[#1A0F0B] font-black text-sm flex items-center justify-center gap-2 shadow-lg transition-all"
             >
               <MessageSquare className="w-5 h-5 fill-[#1A0F0B]" /> WhatsApp: {DISPLAY_PHONE_NUMBER}
@@ -68,11 +68,12 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-black uppercase tracking-wider text-[#FFFBED] mb-4">Pack Options</h4>
             <ul className="space-y-2.5 text-xs text-[#F3E8DD]/70">
-              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 1 (₹70)</a></li>
-              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 5 (₹350)</a></li>
-              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 10 (₹650)</a></li>
-              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 30 (₹2,010)</a></li>
-              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 40 (₹2,640)</a></li>
+              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 5 (₹350 + delivery)</a></li>
+              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 10 (₹670 + delivery)</a></li>
+              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 30 (₹2,000 / prepaid ₹1,950)</a></li>
+              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 50 (₹3,150 / prepaid ₹3,000)</a></li>
+              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 70 (₹4,060 / prepaid ₹4,000)</a></li>
+              <li><a href="#packs" className="hover:text-[#C9A46C] transition-colors">Pack of 100 (₹5,700 / prepaid ₹5,500)</a></li>
             </ul>
           </div>
 
@@ -92,11 +93,11 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-black uppercase tracking-wider text-[#FFFBED] mb-4">Certifications</h4>
             <ul className="space-y-2.5 text-xs text-[#F3E8DD]/70">
-              <li className="text-[#5C7548] font-black">FSSAI Lic. 21526066000742</li>
-              <li>100% Pure Vegetarian</li>
+              <li><a href="#brand-values" className="text-[#5C7548] font-black hover:text-[#C9A46C]">FSSAI Lic. 21526066000742</a></li>
+              <li><a href="#brand-values" className="hover:text-[#C9A46C] transition-colors">Shelf-life certification</a></li>
+              <li><a href="#brand-values" className="hover:text-[#C9A46C] transition-colors">100% Pure Vegetarian</a></li>
               <li>No Preservatives / Chemicals</li>
               <li>No Refined White Sugar</li>
-              <li>Handmade with Care</li>
             </ul>
           </div>
 

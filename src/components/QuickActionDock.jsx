@@ -52,7 +52,7 @@ export default function QuickActionDock({ onOpenCart, onOpenNutrition, onOpenGam
         className="card-artisanal px-4 py-3 flex items-center gap-3 text-xs font-bold text-warm-900 hover:text-warm-700 border-warm-300 shadow-warm-md hover:scale-105 active:scale-95 bg-white"
       >
         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs animate-ping" />
-        <span>Order on WhatsApp (₹70)</span>
+        <span>Order on WhatsApp</span>
         <ChevronRight className="w-4 h-4 text-warm-500" />
       </button>
 
@@ -60,7 +60,7 @@ export default function QuickActionDock({ onOpenCart, onOpenNutrition, onOpenGam
       <div className="card-artisanal p-1.5 flex items-center gap-1.5 border-warm-300 shadow-warm-md bg-white">
         <a
           href="#packs"
-          title="Box Packs (3/6/12/24)"
+          title="Packs"
           className="p-2 rounded-xl hover:bg-warm-100 text-warm-700 hover:text-warm-950 transition-colors"
         >
           <Package className="w-4 h-4" />
