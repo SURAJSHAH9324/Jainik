@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, MessageSquare, Truck, ShieldCheck, ShoppingBag, ArrowRight, User, Phone, MapPin, FileText, Check } from 'lucide-react';
 import { openWhatsAppOrder, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
+import { saveOrderToBackend } from '../utils/api';
 
 export default function OrderModal({ isOpen, onClose, selectedProduct, isReturning = false, isFirstCustomer = false }) {
   const [formData, setFormData] = useState({
@@ -19,31 +20,42 @@ export default function OrderModal({ isOpen, onClose, selectedProduct, isReturni
   const totalPrice = unitPrice * quantity;
   const isFirstOrder = isFirstCustomer || isReturning || selectedProduct.isFirstCustomer || selectedProduct.isReturning;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.phone.trim() || !formData.address.trim()) {
       alert('Please fill in your name, phone number, and delivery address.');
       return;
     }
 
-    const generatedId = 'JNK-' + Math.floor(100000 + Math.random() * 900000);
-    setOrderId(generatedId);
-
-    // Prepare items list for WhatsApp
     const orderItems = [
       {
         name: selectedProduct.name || 'Jainik Energy Bar (40g Bar)',
-        quantity: quantity,
-        price: unitPrice
-      }
+        quantity,
+        price: unitPrice,
+      },
     ];
 
-    // Combine address and customer requirement into the WhatsApp message
     const formattedNotes = `Delivery Address: ${formData.address.trim()}${
       formData.requirements.trim() ? `\nSpecial Requirement / Note: ${formData.requirements.trim()}` : ''
     }`;
 
-    // Open WhatsApp with all required message data
+    const saved = await saveOrderToBackend({
+      customerName: formData.name.trim(),
+      phone: formData.phone.trim(),
+      address: formData.address.trim(),
+      items: orderItems,
+      totalAmount: totalPrice,
+      discountApplied: 0,
+      isFirstCustomer: isFirstOrder,
+      notes: formattedNotes,
+    });
+
+    const ref =
+      saved.success && saved.data?.order_ref
+        ? saved.data.order_ref
+        : `JNK-${Math.floor(1000 + Math.random() * 9000)}`;
+    setOrderId(ref);
+
     openWhatsAppOrder({
       customerName: formData.name.trim(),
       customerPhone: formData.phone.trim(),
@@ -51,10 +63,9 @@ export default function OrderModal({ isOpen, onClose, selectedProduct, isReturni
       total: totalPrice,
       notes: formattedNotes,
       isFirstCustomer: isFirstOrder,
-      discountAmount: 0
+      discountAmount: 0,
     });
 
-    // Show the Order Successful Confirmation View!
     setIsSuccess(true);
   };
 

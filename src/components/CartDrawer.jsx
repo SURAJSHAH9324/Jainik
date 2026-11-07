@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag, MessageSquare, Tag, Check, User, Phone, FileText, Crown } from 'lucide-react';
 import { openWhatsAppOrder, DISPLAY_PHONE_NUMBER } from '../utils/whatsapp';
+import { saveOrderToBackend, checkPhoneOrdered } from '../utils/api';
 
 export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem }) {
   const [customerName, setCustomerName] = useState('');
@@ -34,12 +35,33 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
     }
   };
 
-  const handleSendWhatsAppOrder = (e) => {
+  const syncFirstCustomerFromPhone = useCallback(async (phone) => {
+    const clean = phone.replace(/\D/g, '');
+    if (clean.length < 10) return;
+    const info = await checkPhoneOrdered(phone);
+    setIsFirstCustomer(Boolean(info.eligible_for_first_order_discount));
+  }, []);
+
+  const handleSendWhatsAppOrder = async (e) => {
     e.preventDefault();
     if (cartItems.length === 0) return;
 
-    const newId = 'JNK-' + Math.floor(100000 + Math.random() * 900000);
-    setOrderId(newId);
+    const saved = await saveOrderToBackend({
+      customerName,
+      phone: customerPhone,
+      address: notes.trim() || 'Address to be confirmed on WhatsApp',
+      items: cartItems,
+      totalAmount: grandTotal,
+      discountApplied: discountAmount,
+      isFirstCustomer,
+      notes,
+    });
+
+    const ref =
+      saved.success && saved.data?.order_ref
+        ? saved.data.order_ref
+        : `JNK-${Math.floor(1000 + Math.random() * 9000)}`;
+    setOrderId(ref);
 
     openWhatsAppOrder({
       customerName,
@@ -48,7 +70,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
       total: grandTotal,
       notes,
       isFirstCustomer,
-      discountAmount
+      discountAmount,
     });
 
     setIsSuccess(true);
@@ -247,6 +269,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                       placeholder="Your WhatsApp / Mobile Number *"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
+                      onBlur={() => syncFirstCustomerFromPhone(customerPhone)}
                       className="w-full bg-warm-50 border border-warm-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-warm-900 focus:outline-none focus:border-warm-600 font-medium"
                     />
                   </div>

@@ -11,6 +11,7 @@ import CartDrawer from './components/CartDrawer';
 import OrderModal from './components/OrderModal';
 import Footer from './components/Footer';
 import QuickActionDock from './components/QuickActionDock';
+import IngredientMatchGame from './components/IngredientMatchGame';
 import NutritionModal from './components/NutritionModal';
 import ImageModal from './components/ImageModal';
 import { JAINIK_PRODUCT } from './data/products';
@@ -35,6 +36,7 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState('');
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [orderModalItem, setOrderModalItem] = useState(null);
+  const [gameOpen, setGameOpen] = useState(false);
 
   // Open Direct Order Modal with full address, requirement note & success screen
   const handleOpenOrder = (productItem) => {
@@ -124,6 +126,7 @@ export default function App() {
       <QuickActionDock 
         onOpenCart={() => setCartOpen(true)}
         onOpenNutrition={() => setNutritionOpen(true)}
+        onOpenGame={() => setGameOpen(true)}
       />
 
       {/* Toast Notification */}
@@ -238,6 +241,12 @@ export default function App() {
         cartItems={cart}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
+      />
+
+      <IngredientMatchGame
+        isOpen={gameOpen}
+        onClose={() => setGameOpen(false)}
+        onOpenCart={() => setCartOpen(true)}
       />
 
     </div>

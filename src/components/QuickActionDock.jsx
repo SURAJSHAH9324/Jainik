@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { MessageSquare, ArrowUp, ChevronRight, Package, ShieldCheck } from 'lucide-react';
+import { MessageSquare, ArrowUp, ChevronRight, Package, ShieldCheck, Gamepad2 } from 'lucide-react';
 import { openWhatsAppDirectChat } from '../utils/whatsapp';
 
-export default function QuickActionDock({ onOpenCart, onOpenNutrition }) {
+export default function QuickActionDock({ onOpenCart, onOpenNutrition, onOpenGame }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isDockRaised, setIsDockRaised] = useState(false);
 
@@ -72,6 +72,15 @@ export default function QuickActionDock({ onOpenCart, onOpenNutrition }) {
           className="p-2 rounded-xl hover:bg-warm-100 text-warm-700 hover:text-sage-700 transition-colors"
         >
           <ShieldCheck className="w-4 h-4" />
+        </button>
+
+        <button
+          onClick={onOpenGame}
+          title="Match superfoods — win 15% off"
+          className="p-2 rounded-xl hover:bg-amber-50 text-warm-700 hover:text-amber-800 transition-colors relative"
+        >
+          <Gamepad2 className="w-4 h-4" />
+          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
         </button>
 
         <button
